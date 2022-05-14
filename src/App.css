@@ -1,38 +1,222 @@
-.App {
-  text-align: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;800&display=swap');
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.c-app {
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  font-family: 'Heebo', sans-serif;
+  background-color: rgb(var(--bg-color--light));
+  overflow: hidden;
+}
+
+.c-app__content {
+  flex: 1;
+  display: flex;
+  background-color: rgb(var(--bg-color));
+  transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  margin-bottom: 7.3rem;
+  overflow: hidden;
+}
+
+.c-app__logo {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: .7rem;
+  left: .5rem;
+}
+
+.c-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.c-container__pages {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.c-container__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 60px;
+  padding-bottom: 0;
+}
+
+.c-container__header__title {
+  font-size: 2.4em;
+  font-weight: 500;
+}
+
+.c-container__header__actions {
+  display: flex;
+  align-items: center;
+}
+
+/* CONTAINER CONTENT */
+
+.c-container__content {
+  flex: 1;
+  position: relative;
+  padding: 0px 60px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.c-container__content__title {
+  position: fixed;
+  width: 100%;
+  font-weight: 500;
+  padding: 1.5rem 0;
+  font-size: 1.3em;
+  background-color: rgb(var(--bg-color));
+  z-index: 5;
+}
+
+.c-grid-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4rem;
+  padding: 1.3rem 0;
+}
+
+.c-grid-list__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: max-content;
+  width: max-content;
+  max-width: 160px;
+  padding: .35rem;
+  padding-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .5rem;
+}
+.c-grid-list__item:hover {
+  background-color: rgb(var(--border-color), .4);
+  border-color: rgb(var(--border-color), .5);
+}
+
+.c-grid-list__item__thumbnail {
+  background-color:  rgb(var(--bg-color--light));
+  width: 10rem;
+  height: 10rem;
+  border-radius: .3rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.c-grid-list__item__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: .3rem;
+  box-shadow: 0 0px 3px rgba(0, 0, 0, 0.2);
+}
+
+.c-grid-list__item__icon {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 3.5em;
+  color: rgb(var(--text-color), .7);
+}
+.c-grid-list__item__icon__list {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 3rem;
+  padding: 3px;
+  background-color: rgb(var(--bg-color--light));
+  font-size: 2rem;
 }
 
-.App-link {
-  color: #61dafb;
+.c-grid-list__item__title {
+  font-weight: 500;
+  font-size: .875em;
+  padding: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(var(--title-color));
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.c-grid-list__item:hover .c-grid-list__item__actions {
+  opacity: 1;
+}
+
+.c-grid-list__item__actions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.c-grid-list__item__actions__item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgb(var(--bg-color--light));
+  height: 2rem;
+  width: 2rem;
+  border: 1px solid rgb(var(--border-color--dark), .4);
+  color: rgb(var(--text-color), .7);
+  font-size: .7em;
+  pointer-events: all;
+}
+.c-grid-list__item__actions__item:hover {
+  background-color: rgb(var(--bg-color--solid));
+}
+
+.c-grid-list__item__actions__item--checkbox {
+  top: 1rem;
+  left: 1rem;
+  height: auto;
+  width: auto;
+  border: none;
+  background-color: transparent;
+}
+.c-grid-list__item__actions__item--play {
+  bottom: 3.5rem;
+  left: 1rem;
+}
+.c-grid-list__item__actions__item--options {
+  bottom: 3.5rem;
+  right: 1rem;
+}
+.c-grid-list__item__actions__item--options svg {
+  width: .5rem;
+  height: .5rem;
+}
+
+@media (max-width: 655px) {
+
+  .c-app__logo {
+    top: .3rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .c-container__header {
+    padding: 40px 20px;
+    padding-bottom: 0;
+  }
+  .c-container__content {
+    padding: 0px 20px;
   }
 }

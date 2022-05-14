@@ -1,0 +1,27 @@
+:root {
+    --border: 1px solid rgb(var(--border-color));
+
+    --bg-color: 247, 250, 252;
+    --bg-color--solid: 253, 254, 254;
+    --bg-color--light: 239, 244, 249;
+
+    --title-color: 24, 24, 24;
+    --text-color: 54, 54, 54;
+    --text-color--light: 120, 120, 120;
+    --text-color--dark: 24, 24, 24;
+    --border-color: 230, 230, 240;
+    --border-color--dark: 24, 24, 24;
+    --link-color: var(--blue-color);
+
+    --accent-color: var(--blue-color--dark);
+    --red-color: 255, 50, 50;
+    --green-color: 50, 255, 50;
+    --blue-color: 50, 100, 225;
+    --blue-color--dark: 48, 102, 127;
+    --yellow-color: 255, 255, 50;
+    --purple-color: 255, 50, 255;
+    --pink-color: 255, 50, 255;
+    --orange-color: 255, 165, 50;
+    --brown-color: 165, 165, 165;
+    --gray-color: 240, 240, 245;
+}

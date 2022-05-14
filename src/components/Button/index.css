@@ -1,0 +1,22 @@
+.c-button {
+    /* color: rgb(var(--text-color--light)); */
+    font-size: .85em;
+}
+
+.c-button__label {
+    /* color: rgb(var(--title-color)); */
+}
+
+.c-button__icon {
+    font-size: .7rem;
+}
+
+@media (max-width: 655px) {
+    .c-button__icon {
+        margin-right: 0;
+    }
+
+    .c-button__label {
+        display: none;
+    }
+}

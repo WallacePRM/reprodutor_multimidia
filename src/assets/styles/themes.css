@@ -1,0 +1,14 @@
+.window--unfocused {
+    --bg-color: 249, 249, 249;
+    --bg-color--light: 243, 243, 243;
+}
+
+.theme--dark {
+    --bg-color: 37, 40, 44;
+    --bg-color--light: 29, 33, 37;
+    --bg-color--solid: 51, 52, 55;
+    --border-color: 25, 30, 34;
+    --title-color: 255, 255, 255;
+    --text-color: 255, 255, 255;
+    --text-color--light: 104, 105, 107;
+}

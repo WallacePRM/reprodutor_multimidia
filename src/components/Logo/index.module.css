@@ -1,0 +1,16 @@
+.c-logo {
+    display: flex;
+    align-items: center;
+}
+
+.c-logo__image {
+    width: 1.5rem;
+    margin-right: .5rem;
+}
+
+.c-logo__title {
+    font-size: .75rem;
+    color: rgb(var(--title-color));
+    font-weight: 500;
+    white-space: nowrap;
+}
