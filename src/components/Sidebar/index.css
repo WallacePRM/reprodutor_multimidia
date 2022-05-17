@@ -56,13 +56,10 @@
     background-color: rgb(var(--border-color), .5);
 }
 
-.c-sidebar__item.c-sidebar__item--active {
+.c-sidebar__item--active {
     background-color: rgb(var(--border-color), .5);
 }
 
-html.theme--dark .c-sidebar__item__icon {
-    filter: invert(1);
-}
 
 .c-sidebar__item__icon {
     padding-bottom: 2px;
@@ -79,7 +76,7 @@ html.theme--dark .c-sidebar__item__icon {
 
 .c-sidebar__separator {
     margin: 5px 0;
-    border-bottom: 1px solid rgb(var(--border-color));
+    border-bottom: 1px solid rgb(var(--border-color--light));
     width: 100%;
 }
 

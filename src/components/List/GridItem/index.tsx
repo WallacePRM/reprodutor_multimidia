@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactComponent as MoreAlt } from '@icon/themify-icons/icons/more-alt.svg';
 import { ReactComponent as ControlPlay } from '@icon/themify-icons/icons/control-play.svg';
 
-import { PlaylistProps } from "../Player/config";
-
+import { PlaylistProps } from "../../Player/config";
+import './index.css';
 
 function File(props: FileProps) {
     return (
@@ -16,10 +16,10 @@ function File(props: FileProps) {
                     <div className="checkbox-box"></div>
                 </div>
                 <div className="c-grid-list__item__actions__item c-grid-list__item__actions__item--play">
-                    <ControlPlay />
+                    <ControlPlay className="icon--color" />
                 </div>
                 <div className="c-grid-list__item__actions__item c-grid-list__item__actions__item--options">
-                    <MoreAlt />
+                    <MoreAlt className="icon--color" />
                 </div>
             </div>
             <div className="c-grid-list__item__thumbnail" style={ !props.file.cover ? { border: '1px solid rgb(var(--border-color--dark), .1)'} : {}}>

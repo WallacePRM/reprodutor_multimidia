@@ -5,7 +5,7 @@ import "./index.css";
 function PreviousRouter(props: PreviousRouterProps) {
     return (
         <div title={ props.title ? props.title : '' } className={'c-previous-router btn--icon' + (!window.history.state ? ' icon--disabled' : '')}>
-            <ArrowLeft />
+            <ArrowLeft className="icon--color"/>
         </div>
     );
 }

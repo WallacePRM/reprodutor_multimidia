@@ -1,10 +1,5 @@
 .c-button {
-    /* color: rgb(var(--text-color--light)); */
     font-size: .85em;
-}
-
-.c-button__label {
-    /* color: rgb(var(--title-color)); */
 }
 
 .c-button__icon {
@@ -18,5 +13,12 @@
 
     .c-button__label {
         display: none;
+    }
+
+    .c-button--no-media-style .c-button__label {
+        display: block;
+    }
+    .c-button--no-media-style .c-button__icon {
+        margin-right: 10px;
     }
 }

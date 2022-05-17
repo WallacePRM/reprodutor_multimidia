@@ -1,12 +1,12 @@
 import { ReactComponent as Search } from '@icon/themify-icons/icons/search.svg';
 
-import styles from './index.module.css';
+import './index.css';
 
 function Searchbar() {
     return (
-        <div className={styles['c-searchbar']}>
-            <input className={styles['c-searchbar__field'] + ' box-field'} type="text" placeholder="Pesquisar"/>
-            <Search className={styles['c-searchbar__icon'] + ' icon--inverted'} />
+        <div className="c-searchbar">
+            <input className="c-searchbar__field box-field" type="text" placeholder="Pesquisar"/>
+            <Search className="c-searchbar__icon icon--color" title="Clique para pesquisar"/>
         </div>
     );
 }

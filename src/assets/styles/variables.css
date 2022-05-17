@@ -11,6 +11,8 @@
     --text-color--dark: 24, 24, 24;
     --border-color: 230, 230, 240;
     --border-color--dark: 24, 24, 24;
+    --border-color--light: 230, 230, 240;
+
     --link-color: var(--blue-color);
 
     --accent-color: var(--blue-color--dark);

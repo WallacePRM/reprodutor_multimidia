@@ -7,13 +7,14 @@ import Logo from './components/Logo';
 import ToggleSidebar from './components/ToggleSidebar';
 import PreviousRouter from './components/PreviousRouter';
 import Home from './components/pages/Home';
+import Musics from './components/pages/Musics';
+import { useWindowState } from './App.hook';
 
 import './App.css';
-import { useWindowState } from './App.hook';
 
 function App() {
 
-  const [ containerMargin, setContainerMargin, windowFocused ] = useWindowState();
+  const [ containerMargin, setContainerMargin, windowFocused, playerTransparent, setPlayerTransparent ] = useWindowState();
 
   return (
     <>
@@ -27,11 +28,12 @@ function App() {
                 <div className="z-index-6"><Logo/></div>
               </div> : null }
               <div className="c-container__pages">
-                <Home />
+                {/* <Home changePlayerTransparency={setPlayerTransparent}/> */}
+                <Musics changePlayerTransparency={setPlayerTransparent}/>
               </div>
           </div>
         </main>
-        <Player />
+        <Player isTansparent={playerTransparent} />
       </div>
 
       {/* <PreLoad /> */}

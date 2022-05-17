@@ -1,32 +1,38 @@
-
 /* width */
 ::-webkit-scrollbar {
-    width: .15rem;
+    position: relative;
+    width: 3px;
 }
 
-  /* Track */
+/* Track */
 ::-webkit-scrollbar-track {
     background: transparent;
 }
 
-  /* Handle */
+/* Handle */
 ::-webkit-scrollbar-thumb {
     background: rgb(var(--text-color), .5);
     border-radius: 5rem;
 }
 
-  /* Handle on hover */
+/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: rgb(var(--text-color), .7);
 }
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 .box-field {
@@ -34,8 +40,9 @@
     align-items: center;
     font-family: 'Heebo', sans-serif;
     background-color: rgb(var(--bg-color--solid));
-    border: 1px solid rgb(var(--border-color), .6);
+    border: 1px solid rgb(var(--border-color--light), .6);
     border-bottom: 1px solid rgb(var(--border-color--dark), .2);
+    color: rgb(var(--text-color));
     padding: 5px 10px;
     height: 21px;
     border-radius: .3rem;
@@ -47,13 +54,25 @@
     background-color: rgb(var(--bg-color--light), .5);
 }
 
-.box-field-icon {
+.box-field--transparent {
+    background-color: transparent;
+    border-color: transparent;
+}
+.box-field--transparent:hover {
+    background-color: transparent;
+    border: 1px solid rgb(var(--border-color--light), .6);
+    border-bottom: 1px solid rgb(var(--border-color--dark), .2);
+}
+
+.box-field__icon {
     font-size: .8rem;
+    color: rgb(var(--text-color--light));
 }
 
 .icon--inverted {
     transform: scaleX(-1);
 }
+
 .icon--disabled {
     opacity: .2;
     pointer-events: none;
@@ -67,6 +86,7 @@
     background-color: transparent;
     padding: 0 10px;
 }
+
 .btn:hover {
     background-color: rgb(var(--bg-color--light));
 }
@@ -75,6 +95,7 @@
     background-color: rgb(var(--accent-color));
     color: #fff;
 }
+
 .btn--primary:hover {
     background-color: rgb(var(--accent-color));
     opacity: .9;
@@ -90,6 +111,10 @@
     white-space: nowrap;
     font-size: .9em;
     height: 1em;
+}
+
+.icon--color {
+    color: rgb(var(--text-color), 1);
 }
 
 .btn--icon:hover {
@@ -109,12 +134,13 @@
     transition: .2s;
     margin-bottom: .6rem;
 }
+
 .input--slider::before {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
-    width: 50%;
+    width: 0;
     height: 100%;
     background: rgb(var(--accent-color));
     border-radius: 10rem;
@@ -124,7 +150,8 @@
 
 .input--slider::-webkit-slider-thumb {
     position: relative;
-    -webkit-appearance: none; /* Override default look */
+    -webkit-appearance: none;
+    /* Override default look */
     appearance: none;
     width: 1.2rem;
     height: 1.25rem;
@@ -134,6 +161,7 @@
     box-shadow: 0 .1px 2px rgba(0, 0, 0, 0.4);
     transition: .3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
+
 .input--slider::-webkit-slider-thumb:hover {
     border: .2rem solid rgb(var(--bg-color--solid));
     filter: brightness(1.2);
@@ -142,6 +170,7 @@
 .checkbox-input {
     display: none;
 }
+
 .checkbox-box {
     display: flex;
     align-items: center;
@@ -154,21 +183,32 @@
     flex-shrink: 0;
     transition: .15s;
 }
+
 .checkbox-box::after {
     content: '\2714';
     color: #fff;
     transform: scale(0);
     transition: transform .15s;
 }
+
 .checkbox-box:hover {
     background-color: rgb(var(--bg-color--solid));
 }
 
-.checkbox-input:checked + .checkbox-box {
+.checkbox-input:checked+.checkbox-box {
     background: rgba(var(--accent-color), 1);
     border-color: rgba(var(--accent-color), 1);
 }
 
-.checkbox-input:checked + .checkbox-box::after {
+.checkbox-input:checked+.checkbox-box::after {
     transform: scale(.9);
+}
+
+.list--align {
+    margin-top: 4rem;
+    padding: 1.3rem 0;
+}
+
+.accent--color {
+    color: rgb(var(--accent-color));
 }
