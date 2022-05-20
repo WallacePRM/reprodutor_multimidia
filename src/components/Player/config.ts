@@ -1,5 +1,6 @@
 
 export const playlist = [{
+    id: 0,
     type: 'music',
     name: 'Despacito',
     singer: 'Luis Fonsi',
@@ -7,6 +8,7 @@ export const playlist = [{
     musicSrc: 'http://res.cloudinary.com/alick/video/upload/v1502689683/Luis_Fonsi_-_Despacito_ft._Daddy_Yankee_uyvqw9.mp3',
   },
   {
+    id: 1,
     type: 'music',
     name: 'Dorost Nemisham',
     singer: 'Sirvan Khosravi',
@@ -14,6 +16,7 @@ export const playlist = [{
     musicSrc: 'https://res.cloudinary.com/ehsanahmadi/video/upload/v1573550770/Sirvan-Khosravi-Dorost-Nemisham-128_kb8urq.mp3',
   },
   {
+    id: 2,
     type: 'folder',
     name: 'Múscas favoritas',
     singer: '',
@@ -21,15 +24,16 @@ export const playlist = [{
     musicSrc: 'https://res.cloudinary.com/ehsanahmadi/video/upload/v1573550770/Sirvan-Khosravi-Dorost-Nemisham-128_kb8urq.mp3',
   },
   {
+    id: 3,
     type: 'music',
     name: 'Bedtime Stories',
     singer: 'Jay Chou',
     cover:
       'http://res.cloudinary.com/alick/image/upload/v1502375978/bedtime_stories_bywggz.jpg',
-    musicSrc:
-      'http://res.cloudinary.com/alick/video/upload/v1502375674/Bedtime_Stories.mp3',
+    musicSrc: 'http://res.cloudinary.com/alick/video/upload/v1502375674/Bedtime_Stories.mp3',
   },
   {
+    id: 4,
     type: 'folder',
     name: 'Music',
     singer: '',
@@ -37,6 +41,7 @@ export const playlist = [{
     musicSrc: 'https://res.cloudinary.com/ehsanahmadi/video/upload/v1573550770/Sirvan-Khosravi-Dorost-Nemisham-128_kb8urq.mp3',
   },
   {
+    id: 5,
     type: 'music',
     name: `anson seabra - that's us // lyrics`,
     singer: 'Cloundy',
@@ -44,6 +49,7 @@ export const playlist = [{
     musicSrc: 'http://res.cloudinary.com/alick/video/upload/v1502689683/Luis_Fonsi_-_Despacito_ft._Daddy_Yankee_uyvqw9.mp3',
   },
   {
+    id: 6,
     type: 'video',
     name: 'Black Desert 2022.05.10 - 02.58.01.01',
     singer: '',
@@ -51,6 +57,7 @@ export const playlist = [{
     musicSrc: 'https://res.cloudinary.com/ehsanahmadi/video/upload/v1573550770/Sirvan-Khosravi-Dorost-Nemisham-128_kb8urq.mp3',
   },
   {
+    id: 7,
     type: 'music',
     name: 'Te Amar Dói',
     singer: 'Barreto',
@@ -58,6 +65,7 @@ export const playlist = [{
     musicSrc: 'http://res.cloudinary.com/alick/video/upload/v1502375674/Bedtime_Stories.mp3',
   },
   {
+    id: 8,
     type: 'music',
     name: '/Surrender - (Lyrics) 🎵',
     singer: 'Natalie Taylor',
@@ -65,6 +73,7 @@ export const playlist = [{
     musicSrc: 'http://res.cloudinary.com/alick/video/upload/v1502375674/Bedtime_Stories.mp3',
   },
   {
+    id: 9,
     type: 'music',
     name: '5 Seconds Of Summer - Ghost Of You (Lyrics)',
     singer: 'Gold Coast Music',
@@ -74,9 +83,11 @@ export const playlist = [{
 ];
 
 export type PlaylistProps = {
+  id: number,
   name?: string;
   singer?: string;
   cover?: string,
   musicSrc?: string,
+  duration?: number,
   onClick?: () => void;
 }

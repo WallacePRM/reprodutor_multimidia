@@ -4,7 +4,7 @@ function EmptyMessage(props: EmptyMessage) {
     return (
         <div className="c-empty-message">
             <div className="d-flex a-items-center j-content-center">
-                <img className="c-empty-message__icon" src={props.icon} />
+                { props.icon && <img className="c-empty-message__icon" src={props.icon} />}
                 <div className="c-empty-message__box">
                     <h3 className="c-empty-message__title">{props.title}</h3>
                     { props.description ? <span className="c-empty-message__description">{props.description}</span> : null}
@@ -18,7 +18,7 @@ function EmptyMessage(props: EmptyMessage) {
 type EmptyMessage = {
     title: string,
     description?: string,
-    icon: any,
+    icon?: any,
     button?: any
 };
 

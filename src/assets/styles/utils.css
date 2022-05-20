@@ -121,6 +121,11 @@
     background-color: rgb(var(--border-color), .5);
 }
 
+.link {
+    color: rgb(var(--accent-color));
+    text-decoration: underline;
+}
+
 .input--slider {
     position: relative;
     width: 100%;

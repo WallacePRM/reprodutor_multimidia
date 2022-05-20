@@ -27,7 +27,7 @@
   border-radius: .5rem;
   background-color: rgb(var(--bg-color--solid));
   border: 1px solid rgb(var(--border-color));
-  color: rgb(var(--text-color));
+  color: rgb(var(--title-color));
   margin-bottom: .3rem;
   font-size: .765em;
   padding: .5rem 1rem;

@@ -7,19 +7,22 @@ import File from '../../List/GridItem';
 
 import { playlist } from "../../Player/config";
 import { checkNearToBottom } from "../../../common/utils";
+import { WindowState } from "../../../App.hook";
 
 const listItems = playlist;
 
 function Home(props: HomeProps) {
 
+    const [ , , , , setPlayerTransparent ] = props.windowState;
+
     const onScrollToBottom = () => {
 
         // 116.8
         if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            props.changePlayerTransparency(false);
+            setPlayerTransparent(false);
         }
         else {
-            props.changePlayerTransparency(true);
+            setPlayerTransparent(true);
         }
     }
 
@@ -51,7 +54,7 @@ function Home(props: HomeProps) {
                 /> :
                 <>
                     <div onScroll={onScrollToBottom} className="c-list c-grid-list">
-                        {listItems.map((item) => <File file={item} />)}
+                        {listItems.map((item) => <File file={item} key={item.id}/>)}
                     </div>
                 </>
                 }
@@ -61,7 +64,7 @@ function Home(props: HomeProps) {
 }
 
 type HomeProps = {
-    changePlayerTransparency?: any
+    windowState: WindowState;
 }
 
 export default Home;

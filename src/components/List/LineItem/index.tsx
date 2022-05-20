@@ -5,11 +5,14 @@ import { ReactComponent as Play } from '@icon/themify-icons/icons/control-play.s
 import './index.css';
 
 function LineItem(props: FileProps) {
+
+    const inputId = (Date.now() + Math.random().toString());
+
     return (
         <div className={'c-line-list__item' + (props.className ? ` ${props.className}` : '')}>
             <div className="c-line-list__item__actions">
-                <input className="checkbox-input" type="checkbox" />
-                <div className="checkbox-box"></div>
+                <input id={inputId} className="checkbox-input" type="checkbox" />
+                <label htmlFor={inputId} className="checkbox-box"></label>
                 <div className="c-line-list__item__actions__item">
                     <Play className="icon--color" />
                 </div>

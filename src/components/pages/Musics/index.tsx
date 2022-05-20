@@ -1,33 +1,26 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faShuffle } from "@fortawesome/free-solid-svg-icons";
-import { faFolderOpen } from "@fortawesome/free-regular-svg-icons";
+import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
 import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/music-gradient.svg';
 import File from '../../List/LineItem';
 
-import { playlist } from "../../Player/config";
+import { playlist, PlaylistProps } from "../../Player/config";
 import { checkNearToBottom, hasSymbol, isOdd, sortAsc, isVisible } from "../../../common/utils";
 import { useState } from "react";
+import { WindowState } from "../../../App.hook";
 
 function Musics(props: MusicsProps) {
 
+    const [ , , , , setPlayerTransparent ] = props.windowState;
 
     const filterField = 'name';
     const listItems = playlist.filter(item => item.type === 'music').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
-    const listSeparators: string[] = listItems.reduce((obj, item) => {
+    const listSeparators = createSeparators(listItems, filterField);
 
-        const firstLetter = mapListSeparators((item as any)[filterField].charAt(0).toLocaleUpperCase());
-        if (!obj.index[firstLetter]) {
-            obj.index[firstLetter] = true;
-
-            obj.separators.push(firstLetter);
-        }
-
-        return obj;
-
-    }, { index: {} as any, separators: [] as string[] }).separators;
     let timeoutId: any;
+    let fileIndex: number = 0;
 
     const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0]);
 
@@ -35,32 +28,18 @@ function Musics(props: MusicsProps) {
 
         // 116.8
         if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            props.changePlayerTransparency(false);
+            setPlayerTransparent(false);
         }
         else {
-            props.changePlayerTransparency(true);
+            setPlayerTransparent(true);
         }
 
         if (timeoutId) clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
 
-            const separators: HTMLElement[] = Array.prototype.slice.call(document.querySelectorAll('.c-line-list__separator:not(.c-line-list__separator--fixed)') as NodeListOf<HTMLElement>, 0);
-            const separatorsFormatd = separators.map(separator => ({
-                isVisible: isVisible(separator),
-                letter: separator.innerText
-            }));
-
-            const firstIndex = separatorsFormatd.findIndex(separator => separator.isVisible);
-
-            if (firstIndex > 0) {
-                const lastSeparator = separatorsFormatd[firstIndex - 1];
-                setLastSeparatorInvisible(lastSeparator.letter);
-            }
-            else {
-                setLastSeparatorInvisible(separatorsFormatd[0].letter);
-            }
+            setLastSeparatorInvisible(createLastSeparator());
         }, 100);
-    }
+    };
 
     return (
         <div className="c-page c-musics">
@@ -68,7 +47,7 @@ function Musics(props: MusicsProps) {
                 <h1 className="c-container__header__title">Música</h1>
                 <div className="c-container__header__actions">
                     { Object.keys(listItems[0]).length > 0 ? <>
-                    <Button title="Adicionar uma pasta à biblioteca de músicas" label="Adicionar uma pasta" icon={faFolderOpen} />
+                    <Button icon={faFolderClosed} title="Adicionar uma pasta à biblioteca de músicas" label="Adicionar uma pasta" />
                     </> : null }
                 </div>
             </div>
@@ -92,7 +71,7 @@ function Musics(props: MusicsProps) {
                     description="Use este aplicativo para reproduzir seus arquivos de áudio e vídeo e explorar suas bibliotecas pessoais."
                     button={
                     <div className="d-flex a-items-center">
-                        <Button className="btn--primary" title="Adicionar uma pasta à biblioteca de músicas" label="Adicionar uma pasta" icon={faFolderOpen} />
+                        <Button className="btn--primary" icon={faFolderClosed} title="Adicionar uma pasta à biblioteca de músicas" label="Adicionar uma pasta" />
                     </div>}
                 /> :
                 <>
@@ -103,12 +82,13 @@ function Musics(props: MusicsProps) {
                             listSeparators.map((separator) => {
 
                                 const elements: React.ReactNode[] = [];
-                                elements.push(<div className={'c-line-list__separator'}>{separator}</div>);
+                                elements.push(<div className={'c-line-list__separator'} key={separator}>{separator}</div>);
 
                                 const listItemsFiltred = listItems.filter(item => mapListSeparators((item as any)[filterField].charAt(0).toLocaleUpperCase()) === separator);
-                                listItemsFiltred.forEach((item, index) => {
+                                listItemsFiltred.forEach((item) => {
 
-                                    elements.push(<File className={isOdd(index) ? 'c-line-list__item--nostyle' : ''} file={item}/>);
+                                    elements.push(<File className={isOdd(fileIndex) ? 'c-line-list__item--nostyle' : ''} file={item} key={item.id}/>);
+                                    fileIndex++;
                                 });
 
                                 return elements;
@@ -133,8 +113,45 @@ function mapListSeparators(letter: string) {
     return letter;
 }
 
+function createSeparators(listItems: PlaylistProps[], filterField = 'name') {
+
+    const listSeparators: string[] = listItems.reduce((obj, item) => {
+
+        const firstLetter = mapListSeparators((item as any)[filterField].charAt(0).toLocaleUpperCase());
+        if (!obj.index[firstLetter]) {
+            obj.index[firstLetter] = true;
+
+            obj.separators.push(firstLetter);
+        }
+
+        return obj;
+
+    }, { index: {} as any, separators: [] as string[] }).separators;
+
+    return listSeparators;
+}
+
+function createLastSeparator() {
+
+    const separators: HTMLElement[] = Array.prototype.slice.call(document.querySelectorAll('.c-line-list__separator:not(.c-line-list__separator--fixed)') as NodeListOf<HTMLElement>, 0);
+    const separatorsFormatd = separators.map(separator => ({
+        isVisible: isVisible(separator),
+        letter: separator.innerText
+    }));
+
+    const firstIndex = separatorsFormatd.findIndex(separator => separator.isVisible);
+
+    if (firstIndex > 0) {
+        const lastSeparator = separatorsFormatd[firstIndex - 1];
+        return (lastSeparator.letter);
+    }
+    else {
+        return (separatorsFormatd[0].letter);
+    }
+}
+
 type MusicsProps = {
-    changePlayerTransparency?: any
+    windowState: WindowState
 }
 
 export default Musics;

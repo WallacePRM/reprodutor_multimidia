@@ -11,6 +11,6 @@
 .c-logo__title {
     font-size: .75rem;
     color: rgb(var(--title-color));
-    font-weight: 500;
+    font-weight: normal;
     white-space: nowrap;
 }
