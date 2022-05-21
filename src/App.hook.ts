@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { delay } from './common/utils';
 
 export function useWindowState(): WindowState {
 
-  const [containerMargin, setContainerMargin] = useState(3);
-  const [playerTransparent, setPlayerTransparent] = useState(false);
-  const [windowFocused, setWindowFocused] = useState(true);
+  const [ containerMargin, setContainerMargin ] = useState(3);
+  const [ playerTransparent, setPlayerTransparent ] = useState(false);
+  const [ windowFocused, setWindowFocused ] = useState(true);
+  const [ sidebarOpened, setSidebarOpened ] = useState(false);
 
   useEffect(() => {
 
@@ -34,6 +35,8 @@ export function useWindowState(): WindowState {
         if (document.body.clientWidth >= 1000) {
           setContainerMargin(20);
         }
+
+        setSidebarOpened(false);
       }, 0);
     };
 
@@ -49,8 +52,10 @@ export function useWindowState(): WindowState {
     setContainerMargin,
     windowFocused,
     playerTransparent,
-    setPlayerTransparent
+    setPlayerTransparent,
+    sidebarOpened,
+    setSidebarOpened,
   ]
 };
 
-export type WindowState = [ number, (n: number) => void, boolean, boolean, (p: boolean) => void ];
+export type WindowState = [ number, (n: number) => void, boolean, boolean, (p: boolean) => void, boolean, (p: boolean) => void ];

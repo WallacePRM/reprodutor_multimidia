@@ -17,12 +17,12 @@ function Musics(props: MusicsProps) {
 
     const filterField = 'name';
     const listItems = playlist.filter(item => item.type === 'music').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
-    const listSeparators = createSeparators(listItems, filterField);
+    const listSeparators = createSeparators(listItems as any, filterField);
+    const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0] || '');
 
     let timeoutId: any;
     let fileIndex: number = 0;
 
-    const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0]);
 
     const onScrollToBottom = () => {
 
@@ -55,7 +55,7 @@ function Musics(props: MusicsProps) {
             { Object.keys(listItems[0]).length > 0 ?
             <div className="c-container__content__title">
                 <div className="d-flex a-items-center">
-                    <Button className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} />
+                    <Button className="btn--primary" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
                     <div className="c-container__content__title__actions">
                         <div className="box-field box-field--transparent">
                             <label>Ordernar por: <span className="accent--color">A - Z</span></label>
@@ -65,13 +65,13 @@ function Musics(props: MusicsProps) {
                 </div>
             </div> : null }
 
-            <div className="c-container__content">
+            <div className="c-container__content" style={{ height: Object.keys(listItems[0]).length === 0 ? '100%' : '' }}>
                 { Object.keys(listItems[0]).length === 0 ?  <EmptyMessage icon={emptyMessageIcon}
-                    title="Conheça o novo Reprodutor Multimídia"
-                    description="Use este aplicativo para reproduzir seus arquivos de áudio e vídeo e explorar suas bibliotecas pessoais."
+                    title="Não foi possível encontrar nenhuma música"
+                    description="Sua biblioteca de música não contém nenhum conteúdo de música."
                     button={
                     <div className="d-flex a-items-center">
-                        <Button className="btn--primary" icon={faFolderClosed} title="Adicionar uma pasta à biblioteca de músicas" label="Adicionar uma pasta" />
+                        <Button className="btn--primary box-field--nom" icon={faFolderClosed} title="Adicionar pasta" label="Adicionar uma pasta" />
                     </div>}
                 /> :
                 <>
@@ -84,7 +84,7 @@ function Musics(props: MusicsProps) {
                                 const elements: React.ReactNode[] = [];
                                 elements.push(<div className={'c-line-list__separator'} key={separator}>{separator}</div>);
 
-                                const listItemsFiltred = listItems.filter(item => mapListSeparators((item as any)[filterField].charAt(0).toLocaleUpperCase()) === separator);
+                                const listItemsFiltred = listItems.filter(item => mapListSeparators(((item as any)[filterField] || '').charAt(0).toLocaleUpperCase()) === separator);
                                 listItemsFiltred.forEach((item) => {
 
                                     elements.push(<File className={isOdd(fileIndex) ? 'c-line-list__item--nostyle' : ''} file={item} key={item.id}/>);
@@ -117,7 +117,7 @@ function createSeparators(listItems: PlaylistProps[], filterField = 'name') {
 
     const listSeparators: string[] = listItems.reduce((obj, item) => {
 
-        const firstLetter = mapListSeparators((item as any)[filterField].charAt(0).toLocaleUpperCase());
+        const firstLetter = mapListSeparators(((item as any)[filterField] || '').charAt(0).toLocaleUpperCase());
         if (!obj.index[firstLetter]) {
             obj.index[firstLetter] = true;
 

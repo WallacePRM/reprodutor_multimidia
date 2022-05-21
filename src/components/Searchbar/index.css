@@ -34,9 +34,22 @@
     height: .7em;
     width: .875em;
     right: 1.8rem;
+    transition: .2s;
 }
 .c-searchbar__icon:hover {
     background-color: rgb(var(--border-color), .5);
+}
+
+/* SEACHBAR--OPENED */
+
+.c-searchbar--opened .c-searchbar__field{
+    opacity: 1;
+    pointer-events: all;
+}
+.c-searchbar--opened .c-searchbar__icon {
+    right: 1.8rem;
+    height: .7em;
+    padding: 8px;
 }
 
 @media (max-width: 999px) {

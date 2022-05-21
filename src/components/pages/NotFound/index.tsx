@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom';
+import { WindowState } from '../../../App.hook';
 import { ReactComponent as ErrorSvg } from '../../../assets/img/404.svg';
 import './index.css';
 
-function NotFound() {
+function NotFound(props: NotFoundProps) {
+
+    const [ , , , playerTransparent ] = props.windowState;
+
     return (
-        <div className="c-notfound">
+        <div className="c-notfound" style={{ marginBottom: playerTransparent ? '7.3rem' : '' }}>
             <div className="c-notfound__img">
                 <ErrorSvg />
             </div>
@@ -15,6 +19,10 @@ function NotFound() {
             <Link to="/" className="link">Voltar para o início</Link>
         </div>
     );
+}
+
+type NotFoundProps = {
+    windowState: WindowState
 }
 
 export default NotFound;

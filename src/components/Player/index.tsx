@@ -33,9 +33,10 @@ function Player(props: PlayerProps) {
                     </div>
                 </div>
                 <div className="c-player__controls">
-                    <div className="c-player__controls__item player--button">
+                    { document.body.clientWidth > 655 &&
+                    <div className="c-player__controls__item player--button  c-player__controls__item--shuffle">
                         <ShuffleIcon className="icon--color"/>
-                    </div>
+                    </div>}
                     <div className="c-player__controls__item player--button">
                         <FontAwesomeIcon icon={faBackwardStep}/>
                     </div>
@@ -45,9 +46,10 @@ function Player(props: PlayerProps) {
                     <div className="c-player__controls__item player--button">
                         <FontAwesomeIcon icon={faForwardStep}/>
                     </div>
-                    <div className="c-player__controls__item player--button">
+                    { document.body.clientWidth > 655 &&
+                    <div className="c-player__controls__item player--button  c-player__controls__item--repeat">
                         <ReloadIcon className="icon--color"/>
-                    </div>
+                    </div>}
                 </div>
                 <div className="c-player__options">
                     <div className="c-player__controls__options__item player--button">

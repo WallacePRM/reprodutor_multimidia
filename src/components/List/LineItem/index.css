@@ -83,6 +83,12 @@
   margin-left: .5rem;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.c-line-list__item__title span,
+.c-line-list__item__singer span,
+.c-line-list__item__duration span {
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 

@@ -7,7 +7,7 @@ import { ReactComponent as LayoutWidthDefault } from '@icon/themify-icons/icons/
 import { ReactComponent as LayoutListThumb } from '@icon/themify-icons/icons/layout-list-thumb.svg';
 import { ReactComponent as Settings } from '@icon/themify-icons/icons/settings.svg';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Logo from '../Logo';
 import PreviousRouter from '../PreviousRouter';
 import Searchbar from '../Searchbar';
@@ -27,18 +27,23 @@ function Sidebar(props: SidebarProps) {
         }
     }, [ref.current]);
 
+    const handleToggleSidebar = () => {
+
+        props.toggleSidebar();
+    };
+
     return (
-        <div ref={ref} className="c-sidebar">
+        <div ref={ref} className={'c-sidebar' + (props.sidebarIsOpened ? ' c-sidebar--opened' : '')}>
             <div className="c-sidebar__header">
                 { document.body.clientWidth > 655 ? <PreviousRouter title="Voltar"/> : null }
                 { document.body.clientWidth >= 1000 ? <><span className="ml-10"></span><Logo/></> : null }
             </div>
             <div className="c-sidebar__content">
                 {document.body.clientWidth < 1000 && document.body.clientWidth > 655 ?
-                    <div className="m-5 mb-0" title="Abrir navegação"><ToggleSidebar /></div>
+                    <div className="m-5 mb-0" title="Abrir navegação"><ToggleSidebar toggleSidebar={handleToggleSidebar}/></div>
                 : null }
                 <div className="c-sidebar__search-field" title="Ctrl+E">
-                    <Searchbar />
+                    <Searchbar sidebarIsOpened={props.sidebarIsOpened} toggleSidebar={handleToggleSidebar}/>
                 </div>
                 <nav className="c-sidebar__nav">
                     <Link to="/" className={'c-sidebar__item' + (pathname === '/' ? ' c-sidebar__item--active' : '')}  title="Início (Ctrl+Shifht+F)">
@@ -94,6 +99,8 @@ function Sidebar(props: SidebarProps) {
 
 type SidebarProps = {
     changeContainerMargin: any;
+    sidebarIsOpened: boolean;
+    toggleSidebar: () => void;
 }
 
 export default Sidebar;

@@ -44,8 +44,8 @@ function Home(props: HomeProps) {
                 </div>
             : null }
 
-            <div className="c-container__content">
-                { listItems.length === 0 ?  <EmptyMessage icon={emptyMessageIcon}
+            <div className="c-container__content" style={{ height: Object.keys(listItems[0]).length === 0 ? '100%' : '' }}>
+                { Object.keys(listItems[0]).length == 0 ?  <EmptyMessage icon={emptyMessageIcon}
                     title="Conheça o novo Reprodutor Multimídia"
                     description="Use este aplicativo para reproduzir seus arquivos de áudio e vídeo e explorar suas bibliotecas pessoais."
                     button={<div className="d-flex a-items-center">

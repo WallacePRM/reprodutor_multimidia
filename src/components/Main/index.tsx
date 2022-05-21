@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import PreLoad from '../../components/PreLoad';
 import Sidebar from '../../components/Sidebar';
@@ -13,15 +13,27 @@ import { Outlet } from 'react-router-dom';
 
 function Main(props: MainProps) {
 
-    const [ containerMargin, setContainerMargin, windowFocused, playerTransparent ] = props.windowState;
-    const file = playlist.filter(item => item.type === 'music').sort((a, b) => sortAsc(a.name.toLocaleLowerCase(), b.name.toLocaleLowerCase()))[7];
+    const [ containerMargin, setContainerMargin, windowFocused, playerTransparent, , sidebarOpened, setSidebarOpened ] = props.windowState;
     const [ isLoading, setIsLoading ] = useState(true);
+
+    const file = playlist.filter(item => item.type === 'music').sort((a, b) => sortAsc(a.name.toLocaleLowerCase(), b.name.toLocaleLowerCase()))[2];
 
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false);
         }, 1000);
+
+        const hideSidebar = () => {
+            setSidebarOpened(false);
+        };
+
+        document.addEventListener('click', hideSidebar);
+        return () => document.removeEventListener('click', hideSidebar);
     }, []);
+
+    const handleToggleSidebar = () => {
+        setSidebarOpened(!sidebarOpened);
+    };
 
     if (isLoading) {
         return <PreLoad />
@@ -29,11 +41,11 @@ function Main(props: MainProps) {
     return (
         <div className={'c-app noselect' + (windowFocused ? '' : ' window--unfocused')}>
             <main className="c-app__content">
-            <Sidebar changeContainerMargin={setContainerMargin} />
+            <Sidebar changeContainerMargin={setContainerMargin} sidebarIsOpened={sidebarOpened} toggleSidebar={handleToggleSidebar}/>
             <div style={{ marginLeft: `${containerMargin}rem`}} className="c-container">
                 {document.body.clientWidth < 1000 ?
                 <div className="c-app__logo">
-                    { document.body.clientWidth <= 655 ? <div className="d-flex a-items-center z-index-6"><PreviousRouter /> <ToggleSidebar /> <span className="ml-10"></span></div>  : null }
+                    { document.body.clientWidth <= 655 ? <div className="d-flex a-items-center z-index-6"><PreviousRouter /> <ToggleSidebar toggleSidebar={handleToggleSidebar}/> <span className="ml-10"></span></div>  : null }
                     <div className="z-index-6"><Logo/></div>
                 </div> : null }
                 <div className="c-container__pages">

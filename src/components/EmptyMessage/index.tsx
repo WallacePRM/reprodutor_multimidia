@@ -3,7 +3,7 @@ import './index.css';
 function EmptyMessage(props: EmptyMessage) {
     return (
         <div className="c-empty-message">
-            <div className="d-flex a-items-center j-content-center">
+            <div className="d-flex a-items-center j-content-center" style={{ marginBottom: '7.3rem' }}>
                 { props.icon && <img className="c-empty-message__icon" src={props.icon} />}
                 <div className="c-empty-message__box">
                     <h3 className="c-empty-message__title">{props.title}</h3>
