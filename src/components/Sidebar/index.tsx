@@ -1,20 +1,21 @@
-import { faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useRef, useState } from 'react';
 
+import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactComponent as Home } from '@icon/themify-icons/icons/home.svg';
 import { ReactComponent as MusicAlt } from '@icon/themify-icons/icons/music-alt.svg';
 import { ReactComponent as LayoutWidthDefault } from '@icon/themify-icons/icons/layout-width-default.svg';
 import { ReactComponent as LayoutListThumb } from '@icon/themify-icons/icons/layout-list-thumb.svg';
 import { ReactComponent as Settings } from '@icon/themify-icons/icons/settings.svg';
 
-import React, { useEffect, useRef, useState } from 'react';
 import Logo from '../Logo';
 import PreviousRouter from '../PreviousRouter';
 import Searchbar from '../Searchbar';
 import ToggleSidebar from '../ToggleSidebar';
+import { Link, useLocation } from 'react-router-dom';
 
 import './index.css';
-import { Link, useLocation } from 'react-router-dom';
 
 function Sidebar(props: SidebarProps) {
 
@@ -85,7 +86,13 @@ function Sidebar(props: SidebarProps) {
                 </nav>
             </div>
             <div className="c-sidebar__footer">
-                <Link to="/configs" className={'c-sidebar__item c-sidebar__item--rotate' + (pathname === '/configs' ? ' c-sidebar__item--active' : '')} title="Configurações">
+                <a className="c-sidebar__item" title="Entrar">
+                    <div className="d-flex a-items-center">
+                        <FontAwesomeIcon icon={faUser} className="c-sidebar__item__icon pl-3" />
+                        <label className="c-sidebar__item__label">Entrar</label>
+                    </div>
+                </a>
+                <Link to="/configs" className={'c-sidebar__item c-sidebar__item--rotate' + (pathname === '/configs' ? ' c-sidebar__item--active' : '')} title="Configurações (Ctrl+G)">
                     <div className="d-flex a-items-center">
                         <Settings className="c-sidebar__item__icon icon--color" />
                         <label className="c-sidebar__item__label">Configurações</label>

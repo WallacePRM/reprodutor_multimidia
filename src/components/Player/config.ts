@@ -18,7 +18,7 @@ export const playlist = [{
   {
     id: 2,
     type: 'folder',
-    name: 'Múscas favoritas',
+    name: 'Sad Songs (2020)',
     singer: '',
     cover: '',
     musicSrc: 'https://res.cloudinary.com/ehsanahmadi/video/upload/v1573550770/Sirvan-Khosravi-Dorost-Nemisham-128_kb8urq.mp3',
@@ -35,7 +35,7 @@ export const playlist = [{
   {
     id: 4,
     type: 'folder',
-    name: 'Music',
+    name: 'Starset - Músicas',
     singer: '',
     cover: '',
     musicSrc: 'https://res.cloudinary.com/ehsanahmadi/video/upload/v1573550770/Sirvan-Khosravi-Dorost-Nemisham-128_kb8urq.mp3',

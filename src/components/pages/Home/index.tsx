@@ -1,10 +1,10 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { faFolder, faFolderOpen } from "@fortawesome/free-regular-svg-icons";
+import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
+
 import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/men-headset.svg';
 import File from '../../List/GridItem';
-
 import { playlist } from "../../Player/config";
 import { checkNearToBottom } from "../../../common/utils";
 import { WindowState } from "../../../App.hook";
@@ -24,7 +24,7 @@ function Home(props: HomeProps) {
         else {
             setPlayerTransparent(true);
         }
-    }
+    };
 
     return (
         <div className="c-page c-home">
@@ -32,7 +32,7 @@ function Home(props: HomeProps) {
                 <h1 className="c-container__header__title">Início</h1>
                 <div className="c-container__header__actions">
                     { listItems.length > 0 ? <>
-                    <Button title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderOpen} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
+                    <Button title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
                     <Button title="Mais opções para abrir mídia" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/>
                     </> : null }
                 </div>
@@ -49,7 +49,7 @@ function Home(props: HomeProps) {
                     title="Conheça o novo Reprodutor Multimídia"
                     description="Use este aplicativo para reproduzir seus arquivos de áudio e vídeo e explorar suas bibliotecas pessoais."
                     button={<div className="d-flex a-items-center">
-                    <Button className="btn--primary" label="Abrir arquivo" icon={faFolder} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
+                    <Button className="btn--primary" label="Abrir arquivo" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
                     <Button className="btn--primary" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/></div>}
                 /> :
                 <>

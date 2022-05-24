@@ -19,7 +19,7 @@ function App() {
         <Route path="/" element={<Main windowState={windowState} /> }>
           <Route path="/" element={<Home windowState={windowState} />} />
           <Route path="/musics" element={<Musics windowState={windowState}/>} />
-          <Route path="*" element={<NotFound windowState={windowState} />}></Route>
+          <Route path="*" element={<NotFound windowState={windowState} />} />
         </Route>
       </Routes>
     </BrowserRouter>
