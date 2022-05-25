@@ -6,13 +6,16 @@ import './index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardStep, faEllipsis, faForwardStep, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { PlaylistProps } from './config';
+import { useSelector } from 'react-redux';
+import { selectPlayerTransparency } from '../../store/playerTransparent';
 
 function Player(props: PlayerProps) {
 
     const { file } = props;
+    const isTansparent = useSelector(selectPlayerTransparency);
 
     return (
-        <div className={'c-player' + (!file ? ' c-player--disabled ' : '') + (props.isTansparent ? ' c-player--transparent' : '')}>
+        <div className={'c-player' + (!file ? ' c-player--disabled ' : '') + (isTansparent ? ' c-player--transparent' : '')}>
             <div className="c-player__progress">
                 <span className="c-player__progress__time">00:00:00</span>
                 <div className="c-player__progress__bar">
@@ -66,7 +69,6 @@ function Player(props: PlayerProps) {
 
 type PlayerProps = {
     file?: PlaylistProps
-    isTansparent: any
 };
 
 export default Player;

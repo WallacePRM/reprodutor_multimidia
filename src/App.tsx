@@ -17,9 +17,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main windowState={windowState} /> }>
-          <Route path="/" element={<Home windowState={windowState} />} />
-          <Route path="/musics" element={<Musics windowState={windowState}/>} />
-          <Route path="*" element={<NotFound windowState={windowState} />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/musics" element={<Musics />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

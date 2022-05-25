@@ -8,21 +8,22 @@ import File from '../../List/GridItem';
 import { playlist } from "../../Player/config";
 import { checkNearToBottom } from "../../../common/utils";
 import { WindowState } from "../../../App.hook";
+import { useDispatch } from "react-redux";
+import { setPlayerTransparent } from "../../../store/playerTransparent";
 
 const listItems = playlist;
 
 function Home(props: HomeProps) {
 
-    const [ , , , , setPlayerTransparent ] = props.windowState;
-
+    const dispatch = useDispatch();
     const onScrollToBottom = () => {
 
         // 116.8
         if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            setPlayerTransparent(false);
+            dispatch(setPlayerTransparent({ isTransparent: false }));
         }
         else {
-            setPlayerTransparent(true);
+            dispatch(setPlayerTransparent({ isTransparent: true }));
         }
     };
 
@@ -64,7 +65,7 @@ function Home(props: HomeProps) {
 }
 
 type HomeProps = {
-    windowState: WindowState;
+
 }
 
 export default Home;

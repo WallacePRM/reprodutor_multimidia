@@ -1,14 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "..";
 
 const containerMarginSlice = createSlice({
     name: 'containerMargin',
     initialState: {
-      margin: 0,
+      margin: 3,
     },
     reducers: {
-      setContainerMargin: (state) => {
-        state.margin = (document.querySelector('.c-sidebar') as HTMLElement).offsetWidth * 0.0625; // PX to REM
+      setContainerMargin: (state, action: PayloadAction<{margin: number}>) => {
+        state.margin = action.payload.margin;
       }
     }
 });

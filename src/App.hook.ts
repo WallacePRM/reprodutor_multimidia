@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { delay } from './common/utils';
+import { setContainerMargin } from "./store/containerMargin";
+import { setSidebarOpened, toggleSidebar } from "./store/sidebarOpened";
 
 export function useWindowState(): WindowState {
 
-  const [ containerMargin, setContainerMargin ] = useState(3);
-  const [ playerTransparent, setPlayerTransparent ] = useState(false);
   const [ windowFocused, setWindowFocused ] = useState(true);
-  const [ sidebarOpened, setSidebarOpened ] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
 
@@ -25,18 +26,18 @@ export function useWindowState(): WindowState {
       delay(() => {
         if (document.body.clientWidth < 1000) {
           if (document.body.clientWidth <= 655) {
-            setContainerMargin(0);
+            dispatch(setContainerMargin({ margin: 0 }));
           }
           else {
-            setContainerMargin(3);
+            dispatch(setContainerMargin({ margin: 3 }));
           }
         }
 
         if (document.body.clientWidth >= 1000) {
-          setContainerMargin(20);
+          dispatch(setContainerMargin({ margin: 20 }));
         }
 
-        setSidebarOpened(false);
+        dispatch(setSidebarOpened({ isOpened: false }));
       }, 0);
     };
 
@@ -45,17 +46,11 @@ export function useWindowState(): WindowState {
     return () => {
       window.removeEventListener('resize', handleResize);
     }
-  }, [ setContainerMargin ]);
+  }, []);
 
   return [
-    containerMargin,
-    setContainerMargin,
     windowFocused,
-    playerTransparent,
-    setPlayerTransparent,
-    sidebarOpened,
-    setSidebarOpened,
   ]
 };
 
-export type WindowState = [ number, (n: number) => void, boolean, boolean, (p: boolean) => void, boolean, (p: boolean) => void ];
+export type WindowState = [ boolean ];

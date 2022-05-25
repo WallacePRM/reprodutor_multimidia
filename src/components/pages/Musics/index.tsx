@@ -10,28 +10,28 @@ import { playlist, PlaylistProps } from "../../Player/config";
 import { checkNearToBottom, hasSymbol, isOdd, sortAsc, isVisible } from "../../../common/utils";
 import { useState } from "react";
 import { WindowState } from "../../../App.hook";
+import { useDispatch } from "react-redux";
+import { setPlayerTransparent } from "../../../store/playerTransparent";
 
 function Musics(props: MusicsProps) {
-
-    const [ , , , , setPlayerTransparent ] = props.windowState;
 
     const filterField = 'name';
     const listItems = playlist.filter(item => item.type === 'music').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
     const listSeparators = createSeparators(listItems as any, filterField);
     const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0] || '');
+    const dispatch = useDispatch();
 
     let timeoutId: any;
     let fileIndex: number = 0;
-
 
     const onScrollToBottom = () => {
 
         // 116.8
         if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            setPlayerTransparent(false);
+            dispatch(setPlayerTransparent({ isTransparent: false }));
         }
         else {
-            setPlayerTransparent(true);
+            dispatch(setPlayerTransparent({ isTransparent: true }));
         }
 
         if (timeoutId) clearTimeout(timeoutId);
@@ -151,7 +151,7 @@ function createLastSeparator() {
 }
 
 type MusicsProps = {
-    windowState: WindowState
+
 }
 
 export default Musics;

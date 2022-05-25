@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "..";
 
 const sidebarOpenedSlice = createSlice({
     name: 'sidebarOpened',
@@ -7,13 +7,16 @@ const sidebarOpenedSlice = createSlice({
       isOpened: false,
     },
     reducers: {
-      setSidebarOpened: (state) => {
+      toggleSidebar: (state) => {
         state.isOpened = !state.isOpened;
+      },
+      setSidebarOpened: (state, action: PayloadAction<{ isOpened: boolean }>) => {
+        state.isOpened = action.payload.isOpened;
       }
     }
 });
 
-export const { setSidebarOpened } = sidebarOpenedSlice.actions;
+export const { toggleSidebar, setSidebarOpened } = sidebarOpenedSlice.actions;
 export const selectSidebarOpened = (state: RootState) => state.sidebarOpened.isOpened;
 
 export default sidebarOpenedSlice.reducer;

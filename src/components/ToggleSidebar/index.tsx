@@ -2,13 +2,16 @@ import React from 'react';
 import { ReactComponent as Menu } from '@icon/themify-icons/icons/menu.svg';
 
 import './index.css';
+import { useDispatch } from 'react-redux';
+import { toggleSidebar } from '../../store/sidebarOpened';
 
 function ToggleSidebar(props: ToggleSidebarProps) {
 
+    const dispatch = useDispatch();
     const handleToggleSidebar = (e: React.MouseEvent) => {
         e.stopPropagation();
 
-        props.toggleSidebar();
+        dispatch(toggleSidebar());
     };
 
     return (
@@ -19,7 +22,7 @@ function ToggleSidebar(props: ToggleSidebarProps) {
 };
 
 type ToggleSidebarProps = {
-    toggleSidebar: () => void;
+
 }
 
 export default ToggleSidebar;

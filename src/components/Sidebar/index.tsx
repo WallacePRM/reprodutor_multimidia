@@ -15,36 +15,38 @@ import Searchbar from '../Searchbar';
 import ToggleSidebar from '../ToggleSidebar';
 import { Link, useLocation } from 'react-router-dom';
 
+import { useSelector } from 'react-redux';
+import { selectSidebarOpened, toggleSidebar } from '../../store/sidebarOpened';
+import { useDispatch } from 'react-redux';
+import { setContainerMargin } from '../../store/containerMargin';
+
 import './index.css';
 
 function Sidebar(props: SidebarProps) {
 
     const ref = useRef<HTMLHeadingElement>(null);
     const { pathname } = useLocation();
+    const sidebarIsOpened = useSelector(selectSidebarOpened);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        if (props && props.changeContainerMargin) {
-            props.changeContainerMargin(document.body.offsetWidth > 655 ? (ref.current?.offsetWidth || 321) * 0.0625 : 0);
-        }
+
+        const margin = document.body.offsetWidth > 655 ? (ref.current?.offsetWidth || 321) * 0.0625 : 0;
+        dispatch(setContainerMargin({ margin }));
     }, [ref.current]);
 
-    const handleToggleSidebar = () => {
-
-        props.toggleSidebar();
-    };
-
     return (
-        <div ref={ref} className={'c-sidebar' + (props.sidebarIsOpened ? ' c-sidebar--opened' : '')}>
+        <div ref={ref} className={'c-sidebar' + (sidebarIsOpened ? ' c-sidebar--opened' : '')}>
             <div className="c-sidebar__header">
                 { document.body.clientWidth > 655 ? <PreviousRouter title="Voltar"/> : null }
                 { document.body.clientWidth >= 1000 ? <><span className="ml-10"></span><Logo/></> : null }
             </div>
             <div className="c-sidebar__content">
                 {document.body.clientWidth < 1000 && document.body.clientWidth > 655 ?
-                    <div className="m-5 mb-0" title="Abrir navegação"><ToggleSidebar toggleSidebar={handleToggleSidebar}/></div>
+                    <div className="m-5 mb-0" title="Abrir navegação"><ToggleSidebar /></div>
                 : null }
                 <div className="c-sidebar__search-field" title="Ctrl+E">
-                    <Searchbar sidebarIsOpened={props.sidebarIsOpened} toggleSidebar={handleToggleSidebar}/>
+                    <Searchbar />
                 </div>
                 <nav className="c-sidebar__nav">
                     <Link to="/" className={'c-sidebar__item' + (pathname === '/' ? ' c-sidebar__item--active' : '')}  title="Início (Ctrl+Shifht+F)">
@@ -105,9 +107,7 @@ function Sidebar(props: SidebarProps) {
 }
 
 type SidebarProps = {
-    changeContainerMargin: any;
-    sidebarIsOpened: boolean;
-    toggleSidebar: () => void;
+
 }
 
 export default Sidebar;

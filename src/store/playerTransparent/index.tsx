@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "..";
 
 const playerTransparentSlice = createSlice({
     name: 'playerTransparent',
@@ -7,8 +7,8 @@ const playerTransparentSlice = createSlice({
       isTransparent: false,
     },
     reducers: {
-      setPlayerTransparent: (state) => {
-        state.isTransparent = !state.isTransparent;
+      setPlayerTransparent: (state, action: PayloadAction<{ isTransparent: boolean }>) => {
+        state.isTransparent = action.payload.isTransparent;
       }
     }
 });
