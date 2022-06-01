@@ -3,13 +3,20 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactComponent as MoreAlt } from '@icon/themify-icons/icons/more-alt.svg';
 import { ReactComponent as ControlPlay } from '@icon/themify-icons/icons/control-play.svg';
+import { ReactComponent as MusicAlt } from '@icon/themify-icons/icons/music-alt.svg';
+import { ReactComponent as LayoutWidthDefault } from '@icon/themify-icons/icons/layout-width-default.svg';
+import { Media } from "../../../service/media/types";
 
-import { PlaylistProps } from "../../Player/config";
 import './index.css';
 
-function File(props: FileProps) {
+function GridItem(props: FileProps) {
+
+    const handleSelectFile = () => {
+        props.onClick(props.file);
+    };
+
     return (
-        <div className="c-grid-list__item">
+        <div onClick={ handleSelectFile } className="c-grid-list__item">
             <div className="c-grid-list__item__actions">
                 <div className="c-grid-list__item__actions__item c-grid-list__item__actions__item--checkbox">
                     <input className="checkbox-input" type="checkbox" />
@@ -24,11 +31,16 @@ function File(props: FileProps) {
             </div>
             <div className="c-grid-list__item__thumbnail" style={ !props.file.cover ? { border: '1px solid rgb(var(--border-color--dark), .1)'} : {}}>
                 { props.file.cover ?
-                <img src={props.file.cover} /> :
-                <div className="c-grid-list__item__icon">
-                    <FontAwesomeIcon className="c-grid-list__item__icon__folder" icon={faFolderClosed}></FontAwesomeIcon>
-                    <FontAwesomeIcon className="c-grid-list__item__icon__list" icon={faBars}></FontAwesomeIcon>
-                </div>
+                    <img src={props.file.cover} /> :
+                    <div className="c-grid-list__item__icon">
+                        { props.file.type === 'folder' ?
+                        <><FontAwesomeIcon className="c-grid-list__item__icon__folder" icon={faFolderClosed} />
+                        <FontAwesomeIcon className="c-grid-list__item__icon__list" icon={faBars}/></> : null}
+                        { props.file.type === 'music' ?
+                        <><MusicAlt className="icon--color" style={{ height: '3.5rem', width: '3.5rem' }}/></> : null}
+                        { props.file.type === 'video' ?
+                        <><LayoutWidthDefault className="icon--color" style={{ height: '3.5rem', width: '3.5rem' }}/></> : null}
+                    </div>
                 }
             </div>
             <span className="c-grid-list__item__title" title={props.file.name + (props.file.singer ? ` - ${props.file.singer}` : '')}>{props.file.name + (props.file.singer ? ` - ${props.file.singer}` : '')}</span>
@@ -37,7 +49,8 @@ function File(props: FileProps) {
 }
 
 type FileProps = {
-    file: PlaylistProps,
+    file: Media,
+    onClick: (file: Media) => void,
 };
 
-export default File;
+export default GridItem;

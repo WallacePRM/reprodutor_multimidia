@@ -42,8 +42,22 @@
 }
 
 .c-player__progress__bar {
+    position: relative;
     flex: 1;
     margin: 0 1.3rem;
+}
+
+.c-player__progress__inner-bar {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0.25rem;
+    background: rgb(var(--accent-color));
+    border-radius: 10rem;
+    /* -webkit-transition: .2s;
+    transition: .2s; */
 }
 
 .c-player__progress__bar input {

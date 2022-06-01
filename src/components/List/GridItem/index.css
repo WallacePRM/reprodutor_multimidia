@@ -10,7 +10,6 @@
   flex-direction: column;
   height: max-content;
   width: max-content;
-  max-width: 160px;
   padding: .35rem;
   padding-bottom: 1rem;
   border: 1px solid transparent;
@@ -68,6 +67,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: rgb(var(--title-color));
+  max-width: 160px;
 }
 
 .c-grid-list__item:hover .c-grid-list__item__actions {

@@ -7,22 +7,20 @@ import Logo from '../../components/Logo';
 import ToggleSidebar from '../../components/ToggleSidebar';
 import PreviousRouter from '../../components/PreviousRouter';
 import { WindowState } from '../../App.hook';
-import { playlist } from '../../components/Player/config';
-import { sortAsc } from '../../common/utils';
 import { Outlet } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setSidebarOpened, toggleSidebar } from '../../store/sidebarOpened';
+import { setSidebarOpened } from '../../store/sidebarOpened';
 import { useSelector } from 'react-redux';
 import { selectContainerMargin } from '../../store/containerMargin';
+import { selectCurrentMedia } from '../../store/player';
 
 function Main(props: MainProps) {
 
     const [ windowFocused ] = props.windowState;
     const [ isLoading, setIsLoading ] = useState(true);
-
-    const file = playlist.filter(item => item.type === 'music').sort((a, b) => sortAsc(a.name.toLocaleLowerCase(), b.name.toLocaleLowerCase()))[-1];
-    const dispatch = useDispatch();
+    const currentMedia = useSelector(selectCurrentMedia);
     const containerMargin = useSelector(selectContainerMargin);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setTimeout(() => {
@@ -61,7 +59,7 @@ function Main(props: MainProps) {
                 </div>
             </div>
             </main>
-            <Player file={file} />
+            <Player file={currentMedia} />
         </div>
     );
 }

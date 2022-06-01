@@ -4,18 +4,23 @@ import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
 import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/men-headset.svg';
-import File from '../../List/GridItem';
-import { playlist } from "../../Player/config";
-import { checkNearToBottom } from "../../../common/utils";
-import { WindowState } from "../../../App.hook";
-import { useDispatch } from "react-redux";
-import { setPlayerTransparent } from "../../../store/playerTransparent";
+import GridItem from '../../List/GridItem';
 
-const listItems = playlist;
+import { useDispatch, useSelector } from "react-redux";
+import { setPlayerTransparent } from "../../../store/playerTransparent";
+import { getMediaService } from "../../../service/media";
+import { selectMedias, setMedias } from "../../../store/medias";
+import { useEffect } from "react";
+import { Media } from "../../../service/media/types";
+import { setCurrentMedia } from "../../../store/player";
+import { checkNearToBottom } from "../../../common/dom";
+
 
 function Home(props: HomeProps) {
 
+    const listItems = useSelector(selectMedias);
     const dispatch = useDispatch();
+
     const onScrollToBottom = () => {
 
         // 116.8
@@ -26,6 +31,24 @@ function Home(props: HomeProps) {
             dispatch(setPlayerTransparent({ isTransparent: true }));
         }
     };
+
+    const handleSelectMedia = (file: Media) => {
+
+        dispatch(setCurrentMedia(file));
+    };
+
+    useEffect(() => {
+
+        if (listItems.length > 0) return;
+
+        const getMedias = async () => {
+
+            const result = await getMediaService().getMedias();
+            dispatch(setMedias(result));
+        };
+
+        getMedias();
+    }, []);
 
     return (
         <div className="c-page c-home">
@@ -39,14 +62,14 @@ function Home(props: HomeProps) {
                 </div>
             </div>
 
-            { Object.keys(listItems[0]).length > 0 ?
+            { listItems.length > 0 ?
                 <div className="c-container__content__title">
                     <h3 className="c-container__content__title__text">Mídia recente</h3>
                 </div>
             : null }
 
-            <div className="c-container__content" style={{ height: Object.keys(listItems[0]).length === 0 ? '100%' : '' }}>
-                { Object.keys(listItems[0]).length == 0 ?  <EmptyMessage icon={emptyMessageIcon}
+            <div className="c-container__content" style={{ height: listItems.length === 0 ? '100%' : '' }}>
+                { listItems.length == 0 ?  <EmptyMessage icon={emptyMessageIcon}
                     title="Conheça o novo Reprodutor Multimídia"
                     description="Use este aplicativo para reproduzir seus arquivos de áudio e vídeo e explorar suas bibliotecas pessoais."
                     button={<div className="d-flex a-items-center">
@@ -55,7 +78,7 @@ function Home(props: HomeProps) {
                 /> :
                 <>
                     <div onScroll={onScrollToBottom} className="c-list c-grid-list">
-                        {listItems.map((item) => <File file={item} key={item.id}/>)}
+                        {listItems.map((item) => <GridItem onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </div>
                 </>
                 }

@@ -1,9 +1,9 @@
-import styles from './index.module.css';
+import './index.css';
 
-function PreLoad() {
+function PreLoad(props: PreLoadProps) {
     return (
-        <div className={styles['c-preload']}>
-            <svg className={styles['c-preload__logo']} width="142" height="142" viewBox="0 0 142 142" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className={'c-preload ' + (props.className ? props.className : '')}>
+            <svg className="c-preload__logo" width="142" height="142" viewBox="0 0 142 142" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="71" cy="71" r="50" transform="rotate(-45 71 71)" fill="url(#paint0_linear_1_3)"/>
                 <circle cx="71" cy="71" r="45" fill="#333333"/>
                 <g filter="url(#filter0_d_1_3)">
@@ -29,5 +29,9 @@ function PreLoad() {
         </div>
     );
 }
+
+type PreLoadProps = {
+    className?: string;
+};
 
 export default PreLoad;

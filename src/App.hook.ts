@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { delay } from './common/utils';
+import { delay } from './common/async';
 import { setContainerMargin } from "./store/containerMargin";
 import { setSidebarOpened, toggleSidebar } from "./store/sidebarOpened";
 
