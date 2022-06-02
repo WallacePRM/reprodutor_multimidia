@@ -11,6 +11,7 @@ import './index.css';
 
 function GridItem(props: FileProps) {
 
+    const inputId = (Date.now() + Math.random().toString());
     const handleSelectFile = () => {
         props.onClick(props.file);
     };
@@ -19,8 +20,8 @@ function GridItem(props: FileProps) {
         <div onClick={ handleSelectFile } className="c-grid-list__item">
             <div className="c-grid-list__item__actions">
                 <div className="c-grid-list__item__actions__item c-grid-list__item__actions__item--checkbox">
-                    <input className="checkbox-input" type="checkbox" />
-                    <div className="checkbox-box"></div>
+                    <input id={inputId} className="checkbox-input" type="checkbox" />
+                    <label htmlFor={inputId} className="checkbox-box"></label>
                 </div>
                 <div className="c-grid-list__item__actions__item c-grid-list__item__actions__item--play">
                     <ControlPlay className="icon--color" />

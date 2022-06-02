@@ -1,12 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faShuffle } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faEllipsis, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
 import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/music-gradient.svg';
-import File from '../../List/LineItem';
-
-import { PlaylistProps } from "../../Player/config";
+import LineItem from '../../List/LineItem';
 import { checkNearToBottom, isVisible } from "../../../common/dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,11 +12,12 @@ import { setPlayerTransparent } from "../../../store/playerTransparent";
 import { getMediaService } from "../../../service/media";
 import { selectMedias, setMedias } from "../../../store/medias";
 import { Media } from "../../../service/media/types";
-import { selectCurrentMedia, setCurrentMedia } from "../../../store/player";
-import { sortAsc } from "../../../common/array";
+import { setCurrentMedias } from "../../../store/player";
+import { shuffle, sortAsc } from "../../../common/array";
 import { isOdd } from "../../../common/number";
-import { hasSymbol } from "../../../common/string";
+import { hasSymbol, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
+import { selectMediaPlaying } from "../../../store/mediaPlaying";
 
 function Musics(props: MusicsProps) {
 
@@ -29,7 +28,7 @@ function Musics(props: MusicsProps) {
     const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0] || '');
     const dispatch = useDispatch();
     const musics: any[] = [];
-    const mediaPlaying = useSelector(selectCurrentMedia);
+    const mediaPlaying = useSelector(selectMediaPlaying);
 
     let timeoutId: any;
     let fileIndex: number = 0;
@@ -60,13 +59,15 @@ function Musics(props: MusicsProps) {
             for (let i = 0; i < fileList.length; i++) {
 
                 musics.push({
-                    name: fileList[i].name.replace('.mp3', ''),
+                    id: i, // Para desenvolvimento
+                    name: removeExtension(fileList[i].name),
                     type: 'music',
                     musicSrc: await fileToDataUrl(fileList[i]),
-                    lastModified: fileList[i].lastModifiedDate,
+                    releaseDate: fileList[i].lastModifiedDate,
                     duration: 0,
                     singer: '',
                     cover: '',
+                    isPlaying: false,
                 });
             }
         }
@@ -74,9 +75,22 @@ function Musics(props: MusicsProps) {
         await getMediaService().insertMedias(musics);
         dispatch(setMedias(listItems.concat(musics)));
     };
+
     const handleSelectMedia = (file: Media) => {
 
-        dispatch(setCurrentMedia(file));
+        const playlist = listItems;
+        const fileIndex = playlist.findIndex((item) => item.id === file.id);
+        playlist.splice(fileIndex, 1);
+        playlist.unshift(file);
+
+        dispatch(setCurrentMedias(playlist));
+    };
+
+    const handleShuffle = () => {
+
+        const playlist = listItems as [];
+        const shuffled = shuffle(playlist);
+        dispatch(setCurrentMedias(shuffled));
     };
 
     return (
@@ -93,11 +107,14 @@ function Musics(props: MusicsProps) {
             { listItems.length > 0 ?
             <div className="c-container__content__title">
                 <div className="d-flex a-items-center">
-                    <Button className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
+                    <Button onClick={ handleShuffle } className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
                     <div className="c-container__content__title__actions">
-                        <div className="box-field box-field--transparent">
+                        <div className="c-container__content__title__actions__item box-field box-field--transparent">
                             <label>Ordernar por: <span className="accent--color">A - Z</span></label>
                             <FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} />
+                        </div>
+                        <div className="c-container__content__title__actions__item c-container__content__title__actions__item--options btn--icon">
+                            <FontAwesomeIcon icon={faEllipsis}/>
                         </div>
                     </div>
                 </div>
@@ -109,7 +126,7 @@ function Musics(props: MusicsProps) {
                     description="Sua biblioteca de música não contém nenhum conteúdo de música."
                     button={
                     <div className="d-flex a-items-center">
-                        <Button onRead={ handleSelectFile } className="btn--primary box-field--nom" icon={faFolderClosed} title="Adicionar pasta" label="Adicionar uma pasta" />
+                        <Button onRead={ handleSelectFile } className="btn--primary c-button--no-media-style" icon={faFolderClosed} title="Adicionar pasta" label="Adicionar uma pasta" />
                     </div>}
                 /> :
                 <>
@@ -125,7 +142,7 @@ function Musics(props: MusicsProps) {
                                 const listItemsFiltred = listItems.filter(item => mapListSeparators(((item as any)[filterField] || '').charAt(0).toLocaleUpperCase()) === separator);
                                 listItemsFiltred.forEach((item) => {
 
-                                    elements.push(<File onClick={ handleSelectMedia } className={(isOdd(fileIndex) ? 'c-line-list__item--nostyle' : '') + (item.id === mediaPlaying?.id ? ' c-line-list__item--active' : '')} file={item} key={item.id}/>);
+                                    elements.push(<LineItem onClick={ handleSelectMedia } className={(isOdd(fileIndex) ? 'c-line-list__item--nostyle' : '') + (item.id === mediaPlaying?.id ? ' c-line-list__item--active' : '')} file={item} key={item.id}/>);
                                     fileIndex++;
                                 });
 
@@ -151,7 +168,7 @@ function mapListSeparators(letter: string) {
     return letter;
 }
 
-function createSeparators(listItems: PlaylistProps[], filterField = 'name') {
+function createSeparators(listItems: Media[], filterField = 'name') {
 
     const listSeparators: string[] = listItems.reduce((obj, item) => {
 

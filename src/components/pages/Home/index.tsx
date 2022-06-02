@@ -12,7 +12,7 @@ import { getMediaService } from "../../../service/media";
 import { selectMedias, setMedias } from "../../../store/medias";
 import { useEffect } from "react";
 import { Media } from "../../../service/media/types";
-import { setCurrentMedia } from "../../../store/player";
+import { setCurrentMedias } from "../../../store/player";
 import { checkNearToBottom } from "../../../common/dom";
 
 
@@ -34,7 +34,7 @@ function Home(props: HomeProps) {
 
     const handleSelectMedia = (file: Media) => {
 
-        dispatch(setCurrentMedia(file));
+        dispatch(setCurrentMedias([file]));
     };
 
     useEffect(() => {

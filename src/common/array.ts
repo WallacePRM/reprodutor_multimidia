@@ -14,3 +14,11 @@ export const sortDesc = (a: any, b: any) => {
 
     return 0;
 };
+
+export const shuffle = (array: []) => {
+
+    return array
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+};

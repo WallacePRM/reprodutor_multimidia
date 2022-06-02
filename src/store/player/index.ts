@@ -5,16 +5,16 @@ import { Media } from "../../service/media/types";
 const playerSlice = createSlice({
     name: 'player',
     initialState: {
-      currentMedia: null as Media | null,
+      currentMedias: null as Media[] | null,
     },
     reducers: {
-      setCurrentMedia: (state, action: PayloadAction<Media | null>) => {
-        state.currentMedia = action.payload;
+      setCurrentMedias: (state, action: PayloadAction<Media[] | null>) => {
+        state.currentMedias = action.payload;
       }
     }
 });
 
-export const { setCurrentMedia } = playerSlice.actions;
-export const selectCurrentMedia = (state: RootState) => state.player.currentMedia;
+export const { setCurrentMedias } = playerSlice.actions;
+export const selectCurrentMedias = (state: RootState) => state.player.currentMedias;
 
 export default playerSlice.reducer;

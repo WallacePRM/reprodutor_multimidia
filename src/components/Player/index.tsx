@@ -12,12 +12,16 @@ import { selectPlayerTransparency } from '../../store/playerTransparent';
 import { Media } from '../../service/media/types';
 import { useEffect, useRef, useState } from 'react';
 import { formatHHMMSS } from '../../common/time';
+import { useDispatch } from 'react-redux';
+import { setMediaPlaying } from '../../store/mediaPlaying';
 
 import './index.css';
 
 function Player(props: PlayerProps) {
 
-    const { file } = props;
+    const { medias } = props;
+    let mediaIndex = 0;
+    const file = (medias || [])[mediaIndex];
     const isTansparent = useSelector(selectPlayerTransparency);
     const coverStyle = {
         border: '1px solid rgb(var(--border-color--dark), 0.1)',
@@ -34,23 +38,28 @@ function Player(props: PlayerProps) {
     });
     const currentTimePorcents =  playerState.duration ? playerState.currentTime / playerState.duration * 100 : 0;
     const audioRef = useRef<HTMLAudioElement>();
+    const dispath = useDispatch();
+    const firstMedia = medias && medias[0];
+    const lastMedia = medias && medias[medias.length - 1];
 
     const handlePlayPause = () => {
 
         if (!audioRef.current) return;
 
         if (audioRef.current.paused) {
+
             audioRef.current.play();
-        } else {
+        }
+        else {
             audioRef.current.pause();
         }
-
     };
 
     useEffect(() => {
         if (file) {
             audioRef.current = new Audio(file.musicSrc);
             audioRef.current.addEventListener('loadeddata', () => {
+
                 setPlayerState((previousState) => ({
                     ...previousState,
                     duration: audioRef.current?.duration || 0,
@@ -59,16 +68,38 @@ function Player(props: PlayerProps) {
                 audioRef.current?.play();
             });
             audioRef.current.addEventListener('timeupdate', () => {
+
                 setPlayerState((previousState) => ({
                     ...previousState,
                     currentTime: audioRef.current?.currentTime || 0,
                 }));
             });
             audioRef.current.addEventListener('ended', () => {
+
                 setPlayerState((previousState) => ({
                     ...previousState,
                     currentTime: 0,
                 }));
+
+                const newFile = {
+                    ...file,
+                    isPlaying: false,
+                };
+
+                dispath(setMediaPlaying(newFile));
+            });
+            audioRef.current.addEventListener('playing', () => {
+
+                const newFile = {
+                    ...file,
+                    isPlaying: true,
+                };
+                dispath(setMediaPlaying(newFile));
+            });
+            audioRef.current.addEventListener('error', () => {
+
+               alert('Falha ao carregar o arquivo');
+               return;
             });
         }
     }, [file]);
@@ -106,13 +137,13 @@ function Player(props: PlayerProps) {
                     <div className="c-player__controls__item player--button  c-player__controls__item--shuffle">
                         <ShuffleIcon className="icon--color"/>
                     </div>}
-                    <div className="c-player__controls__item player--button">
+                    <div className={'c-player__controls__item player--button' + (medias?.length === 1 || firstMedia?.id === file?.id ? ' disabled' : '')}>
                         <FontAwesomeIcon icon={faBackwardStep}/>
                     </div>
                     <div onClick={ handlePlayPause } className="c-player__controls__item player--button c-player__controls__item--play">
                         <FontAwesomeIcon icon={!audioRef.current || audioRef.current.paused ? faPlay : faPause}/>
                     </div>
-                    <div className="c-player__controls__item player--button">
+                    <div className={'c-player__controls__item player--button' + (medias?.length === 1 || lastMedia?.id  === file?.id ? ' disabled' : '')}>
                         <FontAwesomeIcon icon={faForwardStep}/>
                     </div>
                     { document.body.clientWidth > 655 &&
@@ -134,7 +165,7 @@ function Player(props: PlayerProps) {
 }
 
 type PlayerProps = {
-    file: Media | null
+    medias: Media[] | null
 };
 
 type PlayerState = {

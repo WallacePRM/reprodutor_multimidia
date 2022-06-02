@@ -16,7 +16,7 @@ import ToggleSidebar from '../ToggleSidebar';
 import { Link, useLocation } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
-import { selectSidebarOpened, toggleSidebar } from '../../store/sidebarOpened';
+import { selectSidebarOpened } from '../../store/sidebarOpened';
 import { useDispatch } from 'react-redux';
 import { setContainerMargin } from '../../store/containerMargin';
 
@@ -71,7 +71,7 @@ function Sidebar(props: SidebarProps) {
                         <div className="c-sidebar__highlighter"></div>
                     </Link>
                     <div className="c-sidebar__separator" ></div>
-                    <Link to="/playlists" className={'c-sidebar__item' + (pathname === '/playlists' ? ' c-sidebar__item--active' : '')} title="File de reproduções (Ctrl+Q)">
+                    <Link to="/queue" className={'c-sidebar__item' + (pathname === '/queue' ? ' c-sidebar__item--active' : '')} title="File de reprodução (Ctrl+Q)">
                         <div className="d-flex a-items-center">
                             <LayoutListThumb className="c-sidebar__item__icon icon--color" />
                             <label className="c-sidebar__item__label">Fila de reprodução</label>

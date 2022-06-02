@@ -76,7 +76,6 @@
 }
 
 .c-container__content {
-  /* height: 100%; */
   margin: 0 5px;
   overflow: hidden;
 }
@@ -85,6 +84,16 @@
   display: flex;
   align-items: center;
   margin-left: auto;
+}
+
+.c-container__content__title__actions__item {
+  margin-left: .5rem;
+}
+.c-container__content__title__actions__item--options {
+  background-color: rgb(var(--bg-color--solid));
+}
+.c-container__content__title__actions__item--options:hover {
+  background-color: rgb(var(--bg-color));
 }
 
 .c-container__content__title__text {

@@ -4,6 +4,7 @@ import sidebarOpenedReducer from './sidebarOpened';
 import containerMarginReducer from './containerMargin';
 import playerTransparentReducer from './playerTransparent';
 import mediasReducer from './medias';
+import mediaPlayingReducer from './mediaPlaying';
 import playerReducer from './player';
 
 // LOCAL STORAGE
@@ -31,6 +32,7 @@ export const store = configureStore({
     containerMargin: containerMarginReducer,
     playerTransparent: playerTransparentReducer,
     medias: mediasReducer,
+    mediaPlaying: mediaPlayingReducer,
     player: playerReducer
   },
   preloadedState: loadFromLocalStorage()
