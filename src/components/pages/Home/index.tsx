@@ -14,10 +14,14 @@ import { useEffect } from "react";
 import { Media } from "../../../service/media/types";
 import { setCurrentMedias } from "../../../store/player";
 import { checkNearToBottom } from "../../../common/dom";
+import { convertMediaType, removeExtension } from "../../../common/string";
+import { fileToDataUrl } from "../../../common/blob";
+import { setMediaPlaying } from "../../../store/mediaPlaying";
 
 
-function Home(props: HomeProps) {
+function Home() {
 
+    const medias: any = [];
     const listItems = useSelector(selectMedias);
     const dispatch = useDispatch();
 
@@ -32,9 +36,35 @@ function Home(props: HomeProps) {
         }
     };
 
+    const handleSelectFile = async (e: React.ChangeEvent<any>) => {
+
+        const input = e.currentTarget;
+        const fileList = input.files || [];
+
+        if (fileList.length > 0) {
+            for (let i = 0; i < fileList.length; i++) {
+                medias.push({
+                    id: Date.now() + Math.random(), // Para desenvolvimento
+                    name: removeExtension(fileList[i].name),
+                    type: convertMediaType(fileList[i].type),
+                    src: await fileToDataUrl(fileList[i]),
+                    releaseDate: fileList[i].lastModifiedDate.toString(),
+                    duration: 0,
+                    singer: '',
+                    cover: '',
+                    isPlaying: false,
+                });
+            }
+        }
+
+        await getMediaService().insertMedias(medias);
+        dispatch(setMedias(listItems.concat(medias)));
+    };
+
     const handleSelectMedia = (file: Media) => {
 
         dispatch(setCurrentMedias([file]));
+        dispatch(setMediaPlaying(file));
     };
 
     useEffect(() => {
@@ -56,7 +86,7 @@ function Home(props: HomeProps) {
                 <h1 className="c-container__header__title">Início</h1>
                 <div className="c-container__header__actions">
                     { listItems.length > 0 ? <>
-                    <Button title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
+                    <Button onRead={ handleSelectFile } accept="audio/*,video/*" title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
                     <Button title="Mais opções para abrir mídia" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/>
                     </> : null }
                 </div>
@@ -73,7 +103,7 @@ function Home(props: HomeProps) {
                     title="Conheça o novo Reprodutor Multimídia"
                     description="Use este aplicativo para reproduzir seus arquivos de áudio e vídeo e explorar suas bibliotecas pessoais."
                     button={<div className="d-flex a-items-center">
-                    <Button className="btn--primary" label="Abrir arquivo" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
+                    <Button onRead={ handleSelectFile } accept="audio/*,video/*" className="btn--primary c-button--no-media-style" label="Abrir arquivo" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
                     <Button className="btn--primary" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/></div>}
                 /> :
                 <>
@@ -85,10 +115,6 @@ function Home(props: HomeProps) {
             </div>
         </div>
     );
-}
-
-type HomeProps = {
-
 }
 
 export default Home;

@@ -5,7 +5,7 @@ export type Media = {
     singer?: string;
     genre?: string;
     cover?: string,
-    musicSrc: string,
+    src: string,
     duration: number,
     isPlaying: boolean,
     releaseDate: string,

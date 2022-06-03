@@ -47,8 +47,8 @@
   background-color: rgb(var(--border-color), .4);
 }
 
-.c-line-list__item--active {
-  color: rgb(var(--accent-color));
+.c-line-list__item.c-line-list__item--active {
+  color: rgb(var(--accent-color)) !important;
 }
 .c-line-list__item--active-icon {
   position: absolute;

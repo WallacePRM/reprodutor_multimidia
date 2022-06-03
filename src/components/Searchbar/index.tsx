@@ -25,7 +25,7 @@ function Searchbar(props: SearchbarProps) {
     return (
         <div onClick={handleToggleSidebar} className={'c-searchbar' + (sidebarIsOpened ? ' c-searchbar--opened' : '')}>
             <input ref={inputRef} className="c-searchbar__field box-field" type="text" placeholder="Pesquisar"/>
-            <Search className="c-searchbar__icon icon--color icon--inverted" title="Clique para pesquisar"/>
+            <Search className="c-searchbar__icon icon-color icon--inverted" title="Clique para pesquisar"/>
         </div>
     );
 }

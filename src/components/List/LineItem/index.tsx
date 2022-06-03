@@ -14,15 +14,16 @@ import { faFilm, faMusic } from '@fortawesome/free-solid-svg-icons';
 function LineItem(props: FileProps) {
 
     const { file } = props;
-    const inputId = (Date.now() + Math.random().toString());
+    let duration = file.duration;
+    const inputId = Date.now() + Math.random().toString();
     const mediaPlaying = useSelector(selectMediaPlaying);
 
     const audioRef = useRef<HTMLAudioElement>();
     useEffect(() => {
         if (file) {
-            audioRef.current = new Audio(file.musicSrc);
+            audioRef.current = new Audio(file.src);
             audioRef.current.addEventListener('loadedmetadata', () => {
-                file.duration = audioRef.current?.duration || 0;
+                duration = audioRef.current?.duration || 0;
             });
         }
     }, [file]);
@@ -41,7 +42,7 @@ function LineItem(props: FileProps) {
                 </div>
             }
             {props.fileTypeVisible &&
-                <div className={'c-line-list__item__type-icon' + (mediaPlaying?.isPlaying ? ' accent--color' : '')}>
+                <div className={'c-line-list__item__type-icon' + (mediaPlaying?.isPlaying ? ' accent--color' : ' icon-color--light')}>
                     { file?.type === 'music' && <FontAwesomeIcon icon={faMusic} /> }
                     { file?.type === 'video' && <FontAwesomeIcon icon={faFilm} /> }
                 </div>}
@@ -49,7 +50,7 @@ function LineItem(props: FileProps) {
                 <input id={inputId} className="checkbox-input" type="checkbox" />
                 <label htmlFor={inputId} className="checkbox-box"></label>
                 <div onClick={ handleSelectFile } className="c-line-list__item__actions__item">
-                    <Play className="icon--color" />
+                    <Play className="icon-color" />
                 </div>
             </div>
             <div className="c-line-list__item__info c-line-list__item__title" >
@@ -63,7 +64,7 @@ function LineItem(props: FileProps) {
                 <span className="ml-10"> {file.genre ? file.genre : 'Gênero desconhecido'}</span>
             </div>
             <div className="c-line-list__item__info c-line-list__item__duration">
-                <span>{file.duration ? formatMMSS(file.duration) : '00:00'}</span>
+                <span>{duration ? formatMMSS(duration) : '00:00'}</span>
             </div>
         </div>
     );

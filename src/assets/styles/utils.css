@@ -118,8 +118,11 @@
     height: 1em;
 }
 
-.icon--color {
+.icon-color {
     color: rgb(var(--text-color), 1);
+}
+.icon-color--light {
+    filter: invert(.4);
 }
 
 .btn--icon:hover {
@@ -221,7 +224,7 @@
 }
 
 .accent--color {
-    color: rgb(var(--accent-color));
+    color: rgb(var(--accent-color)) !important;
 }
 
 .c-line-animated {

@@ -51,21 +51,21 @@ function Sidebar(props: SidebarProps) {
                 <nav className="c-sidebar__nav">
                     <Link to="/" className={'c-sidebar__item' + (pathname === '/' ? ' c-sidebar__item--active' : '')}  title="Início (Ctrl+Shifht+F)">
                         <div className="d-flex a-items-center">
-                            <Home className="c-sidebar__item__icon icon--color" />
+                            <Home className="c-sidebar__item__icon icon-color" />
                             <label className="c-sidebar__item__label" >Início</label>
                         </div>
                         <div className="c-sidebar__highlighter"></div>
                     </Link>
                     <Link to="/musics" className={'c-sidebar__item' + (pathname === '/musics' ? ' c-sidebar__item--active' : '')} title="Biblioteca de músicas (Ctrl+R)">
                         <div className="d-flex a-items-center">
-                            <MusicAlt className="c-sidebar__item__icon icon--color" />
+                            <MusicAlt className="c-sidebar__item__icon icon-color" />
                             <label className="c-sidebar__item__label" >Biblioteca de músicas</label>
                         </div>
                         <div className="c-sidebar__highlighter" ></div>
                     </Link>
                     <Link to="/videos" className={'c-sidebar__item' + (pathname === '/videos' ? ' c-sidebar__item--active' : '')} title="Biblioteca de vídeos (Ctrl+D)">
                         <div className="d-flex a-items-center">
-                            <LayoutWidthDefault className="c-sidebar__item__icon icon--color" />
+                            <LayoutWidthDefault className="c-sidebar__item__icon icon-color" />
                             <label className="c-sidebar__item__label" >Biblioteca de vídeos</label>
                         </div>
                         <div className="c-sidebar__highlighter"></div>
@@ -73,7 +73,7 @@ function Sidebar(props: SidebarProps) {
                     <div className="c-sidebar__separator" ></div>
                     <Link to="/queue" className={'c-sidebar__item' + (pathname === '/queue' ? ' c-sidebar__item--active' : '')} title="File de reprodução (Ctrl+Q)">
                         <div className="d-flex a-items-center">
-                            <LayoutListThumb className="c-sidebar__item__icon icon--color" />
+                            <LayoutListThumb className="c-sidebar__item__icon icon-color" />
                             <label className="c-sidebar__item__label">Fila de reprodução</label>
                         </div>
                         <div className="c-sidebar__highlighter"></div>
@@ -96,7 +96,7 @@ function Sidebar(props: SidebarProps) {
                 </a>
                 <Link to="/configs" className={'c-sidebar__item c-sidebar__item--rotate' + (pathname === '/configs' ? ' c-sidebar__item--active' : '')} title="Configurações (Ctrl+G)">
                     <div className="d-flex a-items-center">
-                        <Settings className="c-sidebar__item__icon icon--color" />
+                        <Settings className="c-sidebar__item__icon icon-color" />
                         <label className="c-sidebar__item__label">Configurações</label>
                     </div>
                     <div className="c-sidebar__highlighter"></div>

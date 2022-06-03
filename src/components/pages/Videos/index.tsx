@@ -11,6 +11,10 @@ import { setPlayerTransparent } from "../../../store/playerTransparent";
 import GridItem from "../../List/GridItem";
 import { setCurrentMedias } from "../../../store/player";
 import { Media } from "../../../service/media/types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+
+import './index.css';
 
 function Videos() {
 
@@ -40,9 +44,22 @@ function Videos() {
             <div className="c-container__header">
                 <h1 className="c-container__header__title">Vídeo</h1>
                 <div className="c-container__header__actions">
-                    { listItems.length > 0 && <Button title="Procure arquivos para reproduzir" label="Adicionar pasta" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>}
+                    { listItems.length > 0 && <Button title="Procure arquivos para reproduzir" label="Adicionar pasta" icon={faFolderClosed} />}
                 </div>
             </div>
+
+            { listItems.length > 0 &&
+            <div className="c-container__content__title">
+                <div className="d-flex a-items-center">
+                    <div className="c-container__content__title__actions">
+                        <div className="c-container__content__title__actions__item box-field box-field--transparent">
+                            <label>Ordernar por: <span className="accent--color">A - Z</span></label>
+                            <FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
 
             <div className="c-container__content" style={{ height: listItems.length === 0 ? '100%' : '' }}>
                 { listItems.length == 0 ?  <EmptyMessage icon={emptyMessageIcon}
@@ -54,7 +71,7 @@ function Videos() {
                 /> :
                 <>
                     <div onScroll={onScrollToBottom} className="c-list c-grid-list">
-                        {listItems.map((item) => <GridItem onClick={ handleSelectMedia } file={item} key={item.id}/>)}
+                        {listItems.map((item) => <GridItem className="c-grid-list__item--video"  onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </div>
                 </>
                 }

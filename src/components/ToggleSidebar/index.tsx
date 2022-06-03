@@ -16,7 +16,7 @@ function ToggleSidebar(props: ToggleSidebarProps) {
 
     return (
         <div onClick={handleToggleSidebar} className="c-toggle-sidebar btn--icon">
-            <Menu className="icon--color"/>
+            <Menu className="icon-color"/>
         </div>
     );
 };

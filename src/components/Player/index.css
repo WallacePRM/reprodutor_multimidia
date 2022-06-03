@@ -101,6 +101,12 @@
     box-shadow: 0 0px 3px rgb(0 0 0 / 20%);
 }
 
+.c-player__file__cover--video {
+    border-radius: .3rem;
+    min-width: 4.5rem;
+    width: 8rem;
+}
+
 .c-player__file__info {
     flex: 1;
     display: flex;

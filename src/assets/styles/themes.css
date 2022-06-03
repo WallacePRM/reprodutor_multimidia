@@ -27,7 +27,8 @@
     --text-color--light: 104, 105, 107;
 }
 
-.theme--dark .icon--color {
+.theme--dark .icon-color,
+.theme--dark .icon-color--light {
     filter: invert(1);
 }
 

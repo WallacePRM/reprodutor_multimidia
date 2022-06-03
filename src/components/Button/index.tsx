@@ -18,7 +18,7 @@ function Button(props: ButtonProps) {
                 { props.icon ? <FontAwesomeIcon className={'c-button__icon' + (props.label ? ' mr-10' : '')} icon={props.icon} /> : null }
                 { props.label ? <span className="c-button__label">{props.label}</span> : null }
             </button>
-            { !props.onClick ? <input onChange={ props.onRead } ref={ ref } type="file" multiple accept="[\w]+\.(mp3)" hidden/> : null}
+            { !props.onClick ? <input onChange={ props.onRead } ref={ ref } type="file" multiple accept={props.accept ? props.accept : '*'} hidden/> : null}
         </>
     );
 }
@@ -29,6 +29,7 @@ type ButtonProps = {
     style?: object,
     title?: string,
     className?: string,
+    accept?: string,
     onClick?: () => void,
     onRead?: ChangeEventHandler<HTMLInputElement>,
 };

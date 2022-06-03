@@ -15,7 +15,7 @@ export const sortDesc = (a: any, b: any) => {
     return 0;
 };
 
-export const shuffle = (array: []) => {
+export const shuffle = (array: any[]) => {
 
     return array
     .map(value => ({ value, sort: Math.random() }))

@@ -14,7 +14,7 @@ function PreviousRouter(props: PreviousRouterProps) {
 
     return (
         <div title={ props.title ? props.title : '' } className={'c-previous-router btn--icon' + (window.history.state && window.history.state.idx === 0 ? ' icon--disabled' : '')}>
-            <ArrowLeft onClick={handleBackToPrevious} className="icon--color"/>
+            <ArrowLeft onClick={handleBackToPrevious} className="icon-color"/>
         </div>
     );
 }

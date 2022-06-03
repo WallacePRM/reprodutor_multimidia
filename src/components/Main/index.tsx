@@ -12,13 +12,11 @@ import { useDispatch } from 'react-redux';
 import { setSidebarOpened } from '../../store/sidebarOpened';
 import { useSelector } from 'react-redux';
 import { selectContainerMargin } from '../../store/containerMargin';
-import { selectCurrentMedias } from '../../store/player';
 
 function Main(props: MainProps) {
 
     const [ windowFocused ] = props.windowState;
     const [ isLoading, setIsLoading ] = useState(true);
-    const currentMedias = useSelector(selectCurrentMedias);
     const containerMargin = useSelector(selectContainerMargin);
     const dispatch = useDispatch();
 
@@ -59,7 +57,7 @@ function Main(props: MainProps) {
                 </div>
             </div>
             </main>
-            <Player medias={currentMedias} />
+            <Player />
         </div>
     );
 }
