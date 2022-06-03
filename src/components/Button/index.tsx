@@ -1,10 +1,11 @@
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
-import { ChangeEventHandler, useRef } from 'react';
+import { ChangeEventHandler, DOMElement, useRef } from 'react';
 import './index.css';
 
 function Button(props: ButtonProps) {
 
     const ref: any = useRef(null);
+    const inputAtt: any = props.onlyFolder ? { directory: "", webkitdirectory: "" } : '';
 
     const handleTriggerInput = () => {
         if (ref.current) {
@@ -18,7 +19,7 @@ function Button(props: ButtonProps) {
                 { props.icon ? <FontAwesomeIcon className={'c-button__icon' + (props.label ? ' mr-10' : '')} icon={props.icon} /> : null }
                 { props.label ? <span className="c-button__label">{props.label}</span> : null }
             </button>
-            { !props.onClick ? <input onChange={ props.onRead } ref={ ref } type="file" multiple accept={props.accept ? props.accept : '*'} hidden/> : null}
+            { !props.onClick ? <input onChange={ props.onRead } ref={ ref } type="file" accept={props.accept ? props.accept : '*'}  {...inputAtt} multiple hidden/> : null}
         </>
     );
 }
@@ -30,6 +31,7 @@ type ButtonProps = {
     title?: string,
     className?: string,
     accept?: string,
+    onlyFolder?: boolean,
     onClick?: () => void,
     onRead?: ChangeEventHandler<HTMLInputElement>,
 };

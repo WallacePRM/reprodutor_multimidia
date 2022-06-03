@@ -1,9 +1,9 @@
 import React from 'react';
 import { ReactComponent as Menu } from '@icon/themify-icons/icons/menu.svg';
-
-import './index.css';
 import { useDispatch } from 'react-redux';
 import { toggleSidebar } from '../../store/sidebarOpened';
+
+import './index.css';
 
 function ToggleSidebar(props: ToggleSidebarProps) {
 

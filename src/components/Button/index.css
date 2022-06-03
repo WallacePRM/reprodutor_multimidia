@@ -1,6 +1,7 @@
 .c-button {
     font-size: .85em;
     height: 32px;
+    white-space: nowrap;
 }
 
 .c-button__icon {

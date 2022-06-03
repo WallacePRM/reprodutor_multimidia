@@ -16,13 +16,13 @@ import { setCurrentMedias } from "../../../store/player";
 import { checkNearToBottom } from "../../../common/dom";
 import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
-import { setMediaPlaying } from "../../../store/mediaPlaying";
-
+import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 
 function Home() {
 
     const medias: any = [];
     const listItems = useSelector(selectMedias);
+    const mediaPlaying = useSelector(selectMediaPlaying);
     const dispatch = useDispatch();
 
     const onScrollToBottom = () => {
@@ -64,7 +64,13 @@ function Home() {
     const handleSelectMedia = (file: Media) => {
 
         dispatch(setCurrentMedias([file]));
-        dispatch(setMediaPlaying(file));
+        if (mediaPlaying?.id !== file.id) {
+            dispatch(setMediaPlaying(file));
+        }
+        else {
+            dispatch(setMediaPlaying(null));
+            setTimeout(() => dispatch(setMediaPlaying(file)), 0);
+        }
     };
 
     useEffect(() => {

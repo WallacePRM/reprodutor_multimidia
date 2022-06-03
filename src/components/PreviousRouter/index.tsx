@@ -1,7 +1,5 @@
 import { ReactComponent as ArrowLeft } from '@icon/themify-icons/icons/arrow-left.svg';
-import { useNavigate,  } from 'react-router-dom'
-
-
+import { useNavigate,  } from 'react-router-dom';
 
 import "./index.css";
 

@@ -6,10 +6,11 @@ import Main from './components/Main';
 import Home from './components/pages/Home';
 import Musics from './components/pages/Musics';
 import NotFound from './components/pages/NotFound';
-
-import './App.css';
 import PlayQueue from './components/pages/PlayQueue';
 import Videos from './components/pages/Videos';
+import Playlists from './components/pages/Playlists';
+
+import './App.css';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/musics" element={<Musics />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="/queue" element={<PlayQueue />} />
+          <Route path="/playlists/youtube" element={<Playlists />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -5,7 +5,6 @@ import { ReactComponent as ReloadIcon } from '@icon/themify-icons/icons/reload.s
 import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
 import { faBars, faPause } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as MusicAlt } from '@icon/themify-icons/icons/music-alt.svg';
-import { ReactComponent as LayoutWidthDefault } from '@icon/themify-icons/icons/layout-width-default.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardStep, faEllipsis, faForwardStep, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { selectPlayerTransparency } from '../../store/playerTransparent';

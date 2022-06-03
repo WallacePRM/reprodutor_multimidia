@@ -6,7 +6,7 @@ import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/music-gradient.svg';
 import LineItem from '../../List/LineItem';
 import { checkNearToBottom, isVisible } from "../../../common/dom";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPlayerTransparent } from "../../../store/playerTransparent";
 import { getMediaService } from "../../../service/media";
@@ -22,12 +22,12 @@ import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying
 function Musics(props: MusicsProps) {
 
     const filterField = 'name';
-    let listItems = useSelector(selectMedias);
-    listItems = listItems.filter(item => item.type === 'music').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
-    const listSeparators = createSeparators(listItems as any, filterField);
+    const listItems = useSelector(selectMedias);
+    const musics = listItems.filter(item => item.type === 'music').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
+    const listSeparators = createSeparators(musics as any, filterField);
     const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0] || '');
     const dispatch = useDispatch();
-    const musics: any[] = [];
+    const files: any[] = [];
     const mediaPlaying = useSelector(selectMediaPlaying);
 
     let timeoutId: any;
@@ -58,32 +58,29 @@ function Musics(props: MusicsProps) {
         if (fileList.length > 0) {
             for (let i = 0; i < fileList.length; i++) {
 
-                const reader = new FileReader();
-                reader.onload = async (event: any) => {
-                    musics.push({
+                if (convertMediaType(fileList[i].type) === 'music') {
+                    files.push({
                         id: Date.now() + Math.random(), // Para desenvolvimento
                         name: removeExtension(fileList[i].name),
-                        type: convertMediaType(fileList[i].type),
+                        type: 'music',
                         src: await fileToDataUrl(fileList[i]),
                         releaseDate: fileList[i].lastModifiedDate.toString(),
                         duration: 0,
                         singer: '',
-                        cover: event.target.result,
+                        cover: '',
                         isPlaying: false,
                     });
-                };
-
-                reader.readAsDataURL(fileList[i]);
-            }
+                }
+            };
         }
 
-        await getMediaService().insertMedias(musics);
-        dispatch(setMedias(listItems.concat(musics)));
+        await getMediaService().insertMedias(files);
+        dispatch(setMedias(listItems.concat(files)));
     };
 
     const handleSelectMedia = (file: Media) => {
 
-        dispatch(setCurrentMedias(listItems));
+        dispatch(setCurrentMedias(musics));
         if (mediaPlaying?.id !== file.id) {
             dispatch(setMediaPlaying(file));
         }
@@ -95,7 +92,7 @@ function Musics(props: MusicsProps) {
 
     const handleShuffle = () => {
 
-        const shuffled = shuffle(listItems);
+        const shuffled = shuffle(musics);
         dispatch(setCurrentMedias(shuffled));
         if (mediaPlaying?.id !== shuffled[0].id) {
             dispatch(setMediaPlaying(shuffled[0]));
@@ -111,13 +108,13 @@ function Musics(props: MusicsProps) {
             <div className="c-container__header">
                 <h1 className="c-container__header__title">Música</h1>
                 <div className="c-container__header__actions">
-                    { listItems.length > 0 ? <>
-                    <Button onRead={ handleSelectFile } accept="audio/mp3" icon={faFolderClosed} title="Adicionar uma pasta à biblioteca de músicas" label="Adicionar uma pasta" />
+                    { musics.length > 0 ? <>
+                    <Button onRead={ handleSelectFile } onlyFolder accept="audio/mp3" icon={faFolderClosed} title="Adicionar uma pasta à biblioteca de músicas" label="Adicionar uma pasta" />
                     </> : null }
                 </div>
             </div>
 
-            { listItems.length > 0 ?
+            { musics.length > 0 ?
             <div className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <Button onClick={ handleShuffle } className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
@@ -133,13 +130,13 @@ function Musics(props: MusicsProps) {
                 </div>
             </div> : null }
 
-            <div className="c-container__content" style={{ height: listItems.length === 0 ? '100%' : '' }}>
-                { listItems.length === 0 ?  <EmptyMessage icon={emptyMessageIcon}
+            <div className="c-container__content" style={{ height: musics.length === 0 ? '100%' : '' }}>
+                { musics.length === 0 ?  <EmptyMessage icon={emptyMessageIcon}
                     title="Não foi possível encontrar nenhuma música"
                     description="Sua biblioteca de música não contém nenhum conteúdo de música."
                     button={
                     <div className="d-flex a-items-center">
-                        <Button onRead={ handleSelectFile } accept="audio/mp3" className="btn--primary c-button--no-media-style" icon={faFolderClosed} title="Adicionar pasta" label="Adicionar uma pasta" />
+                        <Button onRead={ handleSelectFile } onlyFolder accept="audio/mp3" className="btn--primary c-button--no-media-style" icon={faFolderClosed} title="Adicionar pasta" label="Adicionar uma pasta" />
                     </div>}
                 /> :
                 <>
@@ -152,8 +149,8 @@ function Musics(props: MusicsProps) {
                                 const elements: React.ReactNode[] = [];
                                 elements.push(<div className={'c-line-list__separator'} key={separator}>{separator}</div>);
 
-                                const listItemsFiltred = listItems.filter(item => mapListSeparators(((item as any)[filterField] || '').charAt(0).toLocaleUpperCase()) === separator);
-                                listItemsFiltred.forEach((item) => {
+                                const musicsFiltred = musics.filter(item => mapListSeparators(((item as any)[filterField] || '').charAt(0).toLocaleUpperCase()) === separator);
+                                musicsFiltred.forEach((item) => {
 
                                     elements.push(<LineItem onClick={ handleSelectMedia } className={(isOdd(fileIndex) ? 'c-line-list__item--nostyle' : '') + (item.id === mediaPlaying?.id ? ' c-line-list__item--active' : '')} file={item} key={item.id}/>);
                                     fileIndex++;
