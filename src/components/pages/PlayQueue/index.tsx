@@ -1,11 +1,8 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderClosed, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faChevronDown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentMedias, setCurrentMedias } from "../../../store/player";
 import Button from "../../Button";
-import { checkNearToBottom } from "../../../common/dom";
-import { setPlayerTransparent } from "../../../store/playerTransparent";
 import LineItem from "../../List/LineItem";
 import { Media } from "../../../service/media/types";
 import { isOdd } from "../../../common/number";
@@ -25,17 +22,6 @@ function PlayQueue() {
         playlist.unshift(file);
 
         dispatch(setCurrentMedias(playlist));
-    };
-
-    const onScrollToBottom = () => {
-
-        // 116.8
-        if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            dispatch(setPlayerTransparent({ isTransparent: false }));
-        }
-        else {
-            dispatch(setPlayerTransparent({ isTransparent: true }));
-        }
     };
 
     const handleClearQueue = () => {
@@ -63,7 +49,7 @@ function PlayQueue() {
 
             <div className="c-container__content" style={{ height: listItems.length === 0 ? '100%' : '' }}>
                 { listItems.length > 0 &&
-                    <div onScroll={onScrollToBottom} className="c-list c-line-list">
+                    <div className="c-list c-line-list">
                         { listItems.map((item, index) => <LineItem onClick={ handleSelectMedia } fileTypeVisible className={(isOdd(index) ? 'c-line-list__item--nostyle' : '') + (item.id === mediaPlaying?.id ? ' c-line-list__item--active' : '')} file={item} key={item.id} />) }
                     </div>
                 }

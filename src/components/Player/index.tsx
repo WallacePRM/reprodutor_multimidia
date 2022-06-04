@@ -1,3 +1,5 @@
+import React, { useEffect, useRef, useState } from 'react';
+
 import { useSelector } from 'react-redux';
 import { ReactComponent as VolumeIcon } from '@icon/themify-icons/icons/volume.svg';
 import { ReactComponent as ShuffleIcon } from '@icon/themify-icons/icons/control-shuffle.svg';
@@ -7,14 +9,16 @@ import { faBars, faPause } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as MusicAlt } from '@icon/themify-icons/icons/music-alt.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardStep, faEllipsis, faForwardStep, faPlay } from '@fortawesome/free-solid-svg-icons';
-import { selectPlayerTransparency } from '../../store/playerTransparent';
-import { useEffect, useRef, useState } from 'react';
 import { formatHHMMSS } from '../../common/time';
 import { useDispatch } from 'react-redux';
 import { selectMediaPlaying, setMediaPlaying } from '../../store/mediaPlaying';
 import { selectCurrentMedias } from '../../store/player';
+import ReactDOM from 'react-dom';
+import { selectPlayerMode, setPlayerMode } from '../../store/playerMode';
 
 import './index.css';
+import PreviousRouter from '../PreviousRouter';
+import Logo from '../Logo';
 
 function Player() {
 
@@ -22,12 +26,13 @@ function Player() {
         duration: 0,
         currentTime: 0,
     });
+    const [ playerHidden, setPlayerHidden ] = useState(false);
 
     const medias = useSelector(selectCurrentMedias) || [];
     const file = useSelector(selectMediaPlaying);
-    const isTansparent = useSelector(selectPlayerTransparency);
     const currentTimePorcents =  playerState.duration ? playerState.currentTime / playerState.duration * 100 : 0;
     const mediaRef = useRef<HTMLAudioElement>();
+    const playerMode = useSelector(selectPlayerMode);
     const dispatch = useDispatch();
     const firstMedia = medias && medias[0];
     const lastMedia = medias && medias[medias.length - 1];
@@ -47,6 +52,7 @@ function Player() {
         if (mediaRef.current.paused) {
 
             mediaRef.current.play();
+            file.type === 'video' && setPlayerHidden(true);
         }
         else {
             mediaRef.current.pause();
@@ -73,6 +79,24 @@ function Player() {
         if (index < medias.length - 1) {
             const newFile = medias[index + 1];
             dispatch(setMediaPlaying(newFile));
+        }
+    };
+
+    const handleChangeFullMode = () => {
+        console.log('change full mode');
+        if (playerMode === 'mini') {
+            dispatch(setPlayerMode('full'));
+        }
+        else {
+            dispatch(setPlayerMode('mini'));
+        }
+    };
+
+    const toggleVideoInterface = (e: React.MouseEvent) => {
+        if (playerMode === 'full') {
+            e.stopPropagation();
+
+            (file?.isPlaying || playerHidden) && setPlayerHidden(!playerHidden);
         }
     };
 
@@ -118,6 +142,8 @@ function Player() {
                     const nextFile = medias[index + 1];
                     dispatch(setMediaPlaying(nextFile));
                 }
+
+                file.type === 'video' && setPlayerHidden(false);
             });
             mediaRef.current.addEventListener('playing', () => {
 
@@ -144,8 +170,54 @@ function Player() {
         }
     }, [file?.id]);
 
+    let videoComponent = (
+    <video id="player-video" onClick={toggleVideoInterface} className={'c-player__file__cover c-player__file__cover--video' + (playerMode === 'full' ? ' player-full-mode' : '')} style={{ transition: '.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
+        <source src={file?.src} typeof="video/mp4"/>
+    </video>);
+
+    let audioComponent = (
+    <div className={'c-player__file__cover' + (playerMode === 'full' ? ' c-player__file__cover--audio' : '')} style={ file && !file?.cover ? coverStyle : {} }>
+        { file?.cover && <img src={file?.cover}/> }
+        { !file?.cover && file?.type === 'folder' &&
+        <><FontAwesomeIcon className="c-grid-list__item__icon__folder" icon={faFolderClosed} />
+        <FontAwesomeIcon className="c-grid-list__item__icon__list" icon={faBars}/></> }
+
+        { !file?.cover && file?.type === 'music' && <MusicAlt className="icon-color--light" style={{ height: '1.5rem', width: '1.5rem' }}/>}
+    </div>);
+    const audioComponentStyle = {
+        backgroundImage: `url(${file?.cover || ''})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+    }
+
+    if (playerMode === 'full') {
+        if (file?.type === 'music') {
+            audioComponent = ReactDOM.createPortal( <div onClick={(e) => e.stopPropagation()} className="c-player-fullscreen" style={ audioComponentStyle }>
+            <div style={{ display: 'flex', alignItems: 'flex-end', height: 'calc(100% - 7.3rem)', width: '100%', background: file?.cover ? 'rgb(var(--bg-color--solid), .8)' : 'rgb(var(--bg-color--solid), 1)', backdropFilter: 'blur(1.5rem)' }}>
+                <div className="c-player-fullscreen__header">
+                    <PreviousRouter onClick={ () => dispatch(setPlayerMode('mini')) }/>
+                    <Logo className="ml-10"/>
+                </div>
+                {audioComponent}
+            </div>
+        </div>, document.body );
+        }
+        else {
+            videoComponent = ReactDOM.createPortal( <div className="c-player-fullscreen">
+                <div className={'c-player-fullscreen__header' + (playerHidden ? ' c-player-fullscreen__header--hidden' : '')} style={{ backgroundColor: 'rgb(24, 24 , 24, .7)' }}>
+                    <PreviousRouter className="c-player-fullscreen__icon"  onClick={ () => dispatch(setPlayerMode('mini')) }/>
+                    <Logo className="c-player-fullscreen__logo ml-10"/>
+                </div>
+                {videoComponent}
+            </div>, document.body );
+        }
+    }
+
     return (
-        <div className={'c-player' + (!file ? ' c-player--disabled ' : '') + (isTansparent ? ' c-player--transparent' : '')}>
+        <div className={'c-player' + (playerHidden ? ' c-player--hidden' : '') +
+        (playerMode === 'full' && file?.type === 'video' ? ' c-player--full-mode theme--dark' : '') +
+        (!file ? ' c-player--disabled ' : '')}>
             <div className="c-player__progress">
                 <span className="c-player__progress__time">{formatHHMMSS(playerState.currentTime) || '00:00:00'}</span>
                 <div className="c-player__progress__bar">
@@ -156,19 +228,8 @@ function Player() {
             </div>
             <div  className="c-player__actions">
                 <div className="c-player__file">
-                    <div className="c-player__file__track">
-                        { file?.type !== 'video' ?
-                        <div className="c-player__file__cover" style={ file && !file?.cover ? coverStyle : {} }>
-                            { file?.cover && <img src={file?.cover}/> }
-                            { !file?.cover && file?.type === 'folder' &&
-                            <><FontAwesomeIcon className="c-grid-list__item__icon__folder" icon={faFolderClosed} />
-                            <FontAwesomeIcon className="c-grid-list__item__icon__list" icon={faBars}/></> }
-
-                            { !file?.cover && file?.type === 'music' && <MusicAlt className="icon-color--light" style={{ height: '1.5rem', width: '1.5rem' }}/>}
-                        </div>
-                        : <video id="player-video" className="c-player__file__cover c-player__file__cover--video" >
-                            <source src={file.src} typeof="video/mp4"/>
-                        </video> }
+                    <div className="c-player__file__track" onClick={handleChangeFullMode}>
+                        { file?.type !== 'video' ? audioComponent : videoComponent }
                         <div className="c-player__file__info">
                             <h3 className="c-player__file__info__title">{file?.name}</h3>
                             <p className="c-player__file__info__singer">{file?.singer}</p>

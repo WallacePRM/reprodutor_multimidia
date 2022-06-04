@@ -1,14 +1,10 @@
-import { useSelector } from 'react-redux';
-import { selectPlayerTransparency } from '../../store/playerTransparent';
 import './index.css';
 
 function EmptyMessage(props: EmptyMessage) {
 
-    const playerIsTransparent = useSelector(selectPlayerTransparency);
-
     return (
         <div className="c-empty-message">
-            <div className="c-empty-message__container" style={playerIsTransparent ? { marginBottom: '7.3rem' } : {}}>
+            <div className="c-empty-message__container">
                 { props.icon && <img className="c-empty-message__icon" src={props.icon} />}
                 <div className="c-empty-message__box">
                     <h3 className="c-empty-message__title">{props.title}</h3>

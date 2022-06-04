@@ -8,13 +8,11 @@ import { ReactComponent as MusicAlt } from '@icon/themify-icons/icons/music-alt.
 import { ReactComponent as LayoutWidthDefault } from '@icon/themify-icons/icons/layout-width-default.svg';
 import { ReactComponent as LayoutListThumb } from '@icon/themify-icons/icons/layout-list-thumb.svg';
 import { ReactComponent as Settings } from '@icon/themify-icons/icons/settings.svg';
-
 import Logo from '../Logo';
 import PreviousRouter from '../PreviousRouter';
 import Searchbar from '../Searchbar';
 import ToggleSidebar from '../ToggleSidebar';
 import { Link, useLocation } from 'react-router-dom';
-
 import { useSelector } from 'react-redux';
 import { selectSidebarOpened } from '../../store/sidebarOpened';
 import { useDispatch } from 'react-redux';
@@ -22,18 +20,25 @@ import { setContainerMargin } from '../../store/containerMargin';
 
 import './index.css';
 
-function Sidebar(props: SidebarProps) {
+function Sidebar() {
 
     const ref = useRef<HTMLHeadingElement>(null);
     const { pathname } = useLocation();
     const sidebarIsOpened = useSelector(selectSidebarOpened);
     const dispatch = useDispatch();
+    const [ rotate, setRotate ] = useState(false);
 
     useEffect(() => {
 
         const margin = document.body.offsetWidth > 655 ? (ref.current?.offsetWidth || 321) * 0.0625 : 0;
         dispatch(setContainerMargin({ margin }));
     }, [ref.current]);
+
+    const setRotateAnimation = () => {
+
+        setRotate(true);
+        setTimeout(() => setRotate(false), 700);
+    };
 
     return (
         <div ref={ref} className={'c-sidebar' + (sidebarIsOpened ? ' c-sidebar--opened' : '')}>
@@ -94,7 +99,7 @@ function Sidebar(props: SidebarProps) {
                         <label className="c-sidebar__item__label">Entrar</label>
                     </div>
                 </a>
-                <Link to="/configs" className={'c-sidebar__item c-sidebar__item--rotate' + (pathname === '/configs' ? ' c-sidebar__item--active' : '')} title="Configurações (Ctrl+G)">
+                <Link onClick={setRotateAnimation} to="/configs" className={'c-sidebar__item' + (rotate ? ' c-sidebar__item--rotate' : '') + (pathname === '/configs' ? ' c-sidebar__item--active' : '')} title="Configurações (Ctrl+G)">
                     <div className="d-flex a-items-center">
                         <Settings className="c-sidebar__item__icon icon-color" />
                         <label className="c-sidebar__item__label">Configurações</label>
@@ -104,10 +109,6 @@ function Sidebar(props: SidebarProps) {
             </div>
         </div>
     )
-}
-
-type SidebarProps = {
-
 }
 
 export default Sidebar;

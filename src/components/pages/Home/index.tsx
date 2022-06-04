@@ -7,16 +7,15 @@ import emptyMessageIcon from '../../../assets/img/men-headset.svg';
 import GridItem from '../../List/GridItem';
 
 import { useDispatch, useSelector } from "react-redux";
-import { setPlayerTransparent } from "../../../store/playerTransparent";
 import { getMediaService } from "../../../service/media";
 import { selectMedias, setMedias } from "../../../store/medias";
 import { useEffect } from "react";
 import { Media } from "../../../service/media/types";
 import { setCurrentMedias } from "../../../store/player";
-import { checkNearToBottom } from "../../../common/dom";
 import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
+import { setPlayerMode } from "../../../store/playerMode";
 
 function Home() {
 
@@ -24,17 +23,6 @@ function Home() {
     const listItems = useSelector(selectMedias);
     const mediaPlaying = useSelector(selectMediaPlaying);
     const dispatch = useDispatch();
-
-    const onScrollToBottom = () => {
-
-        // 116.8
-        if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            dispatch(setPlayerTransparent({ isTransparent: false }));
-        }
-        else {
-            dispatch(setPlayerTransparent({ isTransparent: true }));
-        }
-    };
 
     const handleSelectFile = async (e: React.ChangeEvent<any>) => {
 
@@ -62,6 +50,10 @@ function Home() {
     };
 
     const handleSelectMedia = (file: Media) => {
+
+        if (file.type === 'video') {
+            dispatch(setPlayerMode('full'));
+        }
 
         dispatch(setCurrentMedias([file]));
         if (mediaPlaying?.id !== file.id) {
@@ -113,7 +105,7 @@ function Home() {
                     <Button className="btn--primary" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/></div>}
                 /> :
                 <>
-                    <div onScroll={onScrollToBottom} className="c-list c-grid-list">
+                    <div className="c-list c-grid-list">
                         {listItems.map((item) => <GridItem onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </div>
                 </>

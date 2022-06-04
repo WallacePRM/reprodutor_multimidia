@@ -2,10 +2,10 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 
 import sidebarOpenedReducer from './sidebarOpened';
 import containerMarginReducer from './containerMargin';
-import playerTransparentReducer from './playerTransparent';
 import mediasReducer from './medias';
 import mediaPlayingReducer from './mediaPlaying';
 import playerReducer from './player';
+import playerModeReducer from './playerMode';
 
 // LOCAL STORAGE
 const saveToLocalStorage = (state: any) => {
@@ -30,10 +30,10 @@ export const store = configureStore({
   reducer: {
     sidebarOpened: sidebarOpenedReducer,
     containerMargin: containerMarginReducer,
-    playerTransparent: playerTransparentReducer,
     medias: mediasReducer,
     mediaPlaying: mediaPlayingReducer,
-    player: playerReducer
+    player: playerReducer,
+    playerMode: playerModeReducer,
   },
   preloadedState: loadFromLocalStorage()
 });

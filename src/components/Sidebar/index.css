@@ -63,11 +63,21 @@
 
 .c-sidebar__item__icon {
     padding-bottom: 2px;
-    transition: .7s cubic-bezier(0.68, -0.55, 0.265, 0.5);
+
     height: 1em;
 }
-.c-sidebar__item--rotate:hover .c-sidebar__item__icon {
-    transform: rotate(360deg);
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.c-sidebar__item--rotate .c-sidebar__item__icon {
+    animation: rotate .7s cubic-bezier(0.68, -0.55, 0.265, 0.5);
 }
 
 .c-sidebar__item__label {

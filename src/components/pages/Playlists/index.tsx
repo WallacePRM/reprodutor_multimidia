@@ -2,8 +2,6 @@ import { faChevronDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 import emptyMessageIcon from '../../../assets/img/yt-gradient.svg';
-import { checkNearToBottom } from '../../../common/dom';
-import { setPlayerTransparent } from '../../../store/playerTransparent';
 import Button from '../../Button';
 import EmptyMessage from '../../EmptyMessage';
 import GridItem from '../../List/GridItem';
@@ -15,17 +13,6 @@ function Playlists() {
 
     const handleSelectMedia = () => {
 
-    };
-
-    const onScrollToBottom = () => {
-
-        // 116.8
-        if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            dispatch(setPlayerTransparent({ isTransparent: false }));
-        }
-        else {
-            dispatch(setPlayerTransparent({ isTransparent: true }));
-        }
     };
 
     return (
@@ -55,7 +42,7 @@ function Playlists() {
                     </div>}
                 /> :
                 <>
-                    <div onScroll={onScrollToBottom} className="c-list c-grid-list">
+                    <div className="c-list c-grid-list">
                         {playlists.map((item) => <GridItem className="c-grid-list__item--video"  onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </div>
                 </>

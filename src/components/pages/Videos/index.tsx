@@ -5,9 +5,7 @@ import { selectMedias, setMedias } from "../../../store/medias";
 import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from "../../../assets/img/video.svg";
-import { checkNearToBottom } from "../../../common/dom";
 import { useDispatch } from "react-redux";
-import { setPlayerTransparent } from "../../../store/playerTransparent";
 import GridItem from "../../List/GridItem";
 import { setCurrentMedias } from "../../../store/player";
 import { Media } from "../../../service/media/types";
@@ -69,17 +67,6 @@ function Videos() {
         }
     };
 
-    const onScrollToBottom = () => {
-
-        // 116.8
-        if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            dispatch(setPlayerTransparent({ isTransparent: false }));
-        }
-        else {
-            dispatch(setPlayerTransparent({ isTransparent: true }));
-        }
-    };
-
     return (
         <div className="c-page c-videos">
             <div className="c-container__header">
@@ -111,7 +98,7 @@ function Videos() {
                     </div>}
                 /> :
                 <>
-                    <div onScroll={onScrollToBottom} className="c-list c-grid-list">
+                    <div className="c-list c-grid-list">
                         {videoList.map((item) => <GridItem className="c-grid-list__item--video"  onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </div>
                 </>

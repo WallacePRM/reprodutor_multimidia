@@ -3,7 +3,7 @@ import { RootState } from "..";
 import { Media } from "../../service/media/types";
 
 const playerSlice = createSlice({
-    name: 'player',
+    name: 'playerFullMode',
     initialState: {
       currentMedias: null as Media[] | null,
     },

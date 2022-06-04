@@ -8,7 +8,6 @@ import LineItem from '../../List/LineItem';
 import { checkNearToBottom, isVisible } from "../../../common/dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPlayerTransparent } from "../../../store/playerTransparent";
 import { getMediaService } from "../../../service/media";
 import { selectMedias, setMedias } from "../../../store/medias";
 import { Media } from "../../../service/media/types";
@@ -32,23 +31,6 @@ function Musics(props: MusicsProps) {
 
     let timeoutId: any;
     let fileIndex: number = 0;
-
-    const onScrollToBottom = () => {
-
-        // 116.8
-        if (checkNearToBottom(document.querySelector('.c-list'), 120)) {
-            dispatch(setPlayerTransparent({ isTransparent: false }));
-        }
-        else {
-            dispatch(setPlayerTransparent({ isTransparent: true }));
-        }
-
-        if (timeoutId) clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-
-            setLastSeparatorInvisible(createLastSeparator());
-        }, 100);
-    };
 
     const handleSelectFile = async (e: React.ChangeEvent<any>) => {
 
@@ -140,7 +122,7 @@ function Musics(props: MusicsProps) {
                     </div>}
                 /> :
                 <>
-                    <div onScroll={onScrollToBottom} className="c-list c-line-list">
+                    <div className="c-list c-line-list">
                     <div className={'c-line-list__separator c-line-list__separator--fixed z-index-1'}>{lastSeparatorInvisible}</div>
 
                         {
