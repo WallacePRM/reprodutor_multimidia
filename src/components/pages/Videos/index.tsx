@@ -18,6 +18,8 @@ import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying
 import { setPlayerMode } from "../../../store/playerMode";
 
 import './index.css';
+import Margin from "../../Animations/Margin";
+import Opacity from "../../Animations/Opacity";
 
 function Videos() {
 
@@ -82,7 +84,7 @@ function Videos() {
             </div>
 
             { videoList.length > 0 &&
-            <div className="c-container__content__title">
+            <Opacity className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <div className="c-container__content__title__actions">
                         <div className="c-container__content__title__actions__item box-field box-field--transparent">
@@ -91,7 +93,7 @@ function Videos() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Opacity>
             }
 
             <div className="c-container__content" style={{ height: videoList.length === 0 ? '100%' : '' }}>
@@ -103,9 +105,9 @@ function Videos() {
                     </div>}
                 /> :
                 <>
-                    <div className="c-list c-grid-list">
+                    <Margin className="c-list c-grid-list">
                         {videoList.map((item) => <GridItem className="c-grid-list__item--video"  onClick={ handleSelectMedia } file={item} key={item.id}/>)}
-                    </div>
+                    </Margin>
                 </>
                 }
             </div>

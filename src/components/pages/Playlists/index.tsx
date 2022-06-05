@@ -4,7 +4,9 @@ import { useDispatch } from 'react-redux';
 import emptyMessageIcon from '../../../assets/img/yt-gradient.svg';
 import Button from '../../Button';
 import EmptyMessage from '../../EmptyMessage';
+import Margin from '../../Animations/Margin';
 import GridItem from '../../List/GridItem';
+import Opacity from '../../Animations/Opacity';
 
 function Playlists() {
 
@@ -22,7 +24,7 @@ function Playlists() {
             </div>
 
             { playlists.length > 0 ?
-            <div className="c-container__content__title">
+            <Opacity className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <Button className="btn--primary c-button--no-media-style" label="Nova playlist" icon={faPlus} />
                     <div className="c-container__content__title__actions">
@@ -32,7 +34,7 @@ function Playlists() {
                         </div>
                     </div>
                 </div>
-            </div> : null }
+            </Opacity> : null }
 
             <div className="c-container__content" style={{ height: playlists.length === 0 ? '100%' : '' }}>
                 { playlists.length == 0 ?  <EmptyMessage icon={emptyMessageIcon}
@@ -42,9 +44,9 @@ function Playlists() {
                     </div>}
                 /> :
                 <>
-                    <div className="c-list c-grid-list">
+                    <Margin className="c-list c-grid-list">
                         {playlists.map((item) => <GridItem className="c-grid-list__item--video"  onClick={ handleSelectMedia } file={item} key={item.id}/>)}
-                    </div>
+                    </Margin>
                 </>
                 }
             </div>

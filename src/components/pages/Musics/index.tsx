@@ -17,6 +17,8 @@ import { isOdd } from "../../../common/number";
 import { convertMediaType, hasSymbol, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
+import Margin from "../../Animations/Margin";
+import Opacity from "../../Animations/Opacity";
 
 function Musics(props: MusicsProps) {
 
@@ -94,7 +96,7 @@ function Musics(props: MusicsProps) {
     };
 
     return (
-        <div className="c-page c-musics">
+        <div className="c-app c-musics">
             <div className="c-container__header">
                 <h1 className="c-container__header__title">Música</h1>
                 <div className="c-container__header__actions">
@@ -105,7 +107,7 @@ function Musics(props: MusicsProps) {
             </div>
 
             { musics.length > 0 ?
-            <div className="c-container__content__title">
+            <Opacity className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <Button onClick={ handleShuffle } className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
                     <div className="c-container__content__title__actions">
@@ -118,7 +120,7 @@ function Musics(props: MusicsProps) {
                         </div>
                     </div>
                 </div>
-            </div> : null }
+            </Opacity> : null }
 
             <div className="c-container__content" style={{ height: musics.length === 0 ? '100%' : '' }}>
                 { musics.length === 0 ?  <EmptyMessage icon={emptyMessageIcon}
@@ -129,9 +131,10 @@ function Musics(props: MusicsProps) {
                         <Button onRead={ handleSelectFile } onlyFolder accept="audio/mp3" className="btn--primary c-button--no-media-style" icon={faFolderClosed} title="Adicionar pasta" label="Adicionar uma pasta" />
                     </div>}
                 /> :
+
                 <>
-                    <div onScroll={onScrollToBottom} className="c-list c-line-list">
-                    <div className={'c-line-list__separator c-line-list__separator--fixed z-index-1'}>{lastSeparatorInvisible}</div>
+                    <Margin onScroll={onScrollToBottom} className="c-list c-line-list">
+                        <div className={'c-line-list__separator c-line-list__separator--fixed z-index-1'}>{lastSeparatorInvisible}</div>
 
                         {
                             listSeparators.map((separator) => {
@@ -149,7 +152,7 @@ function Musics(props: MusicsProps) {
                                 return elements;
                             })
                         }
-                    </div>
+                    </Margin>
                 </>
                 }
             </div>

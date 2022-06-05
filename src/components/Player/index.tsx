@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardStep, faEllipsis, faForwardStep, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { formatHHMMSS } from '../../common/time';
 import { useDispatch } from 'react-redux';
-import mediaPlaying, { selectMediaPlaying, setMediaPlaying } from '../../store/mediaPlaying';
+import { selectMediaPlaying, setMediaPlaying } from '../../store/mediaPlaying';
 import { selectCurrentMedias } from '../../store/player';
 import ReactDOM from 'react-dom';
 import { selectPlayerMode, setPlayerMode } from '../../store/playerMode';
@@ -55,7 +55,6 @@ function Player() {
         if (mediaRef.current.paused) {
 
             mediaRef.current.play();
-            // playerMode === 'full' && file.type === 'video' && setPlayerHidden(true);
         }
         else {
             mediaRef.current.pause();

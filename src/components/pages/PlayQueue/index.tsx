@@ -7,6 +7,8 @@ import LineItem from "../../List/LineItem";
 import { Media } from "../../../service/media/types";
 import { isOdd } from "../../../common/number";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
+import Margin from "../../Animations/Margin";
+import Opacity from "../../Animations/Opacity";
 
 function PlayQueue() {
 
@@ -38,20 +40,20 @@ function PlayQueue() {
                     <Button title="Mais opções para abrir mídia" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/>
                 </div>
             </div>
-            <div className="c-container__content__title">
+            <Opacity className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <div className={'c-container__content__title__actions' + (listItems.length === 0 ? ' disabled' : '')} style={{ margin: '0' }}>
                         <Button onClick={handleClearQueue} className="mr-10" label="Limpar" icon={faTrashCan} title="Limpar (Ctrl+Shift+X)" />
                         <Button label="Adicionar a" icon={faPlus} />
                     </div>
                 </div>
-            </div>
+            </Opacity>
 
             <div className="c-container__content" style={{ height: listItems.length === 0 ? '100%' : '' }}>
                 { listItems.length > 0 &&
-                    <div className="c-list c-line-list">
+                    <Margin className="c-list c-line-list">
                         { listItems.map((item, index) => <LineItem onClick={ handleSelectMedia } fileTypeVisible className={(isOdd(index) ? 'c-line-list__item--nostyle' : '') + (item.id === mediaPlaying?.id ? ' c-line-list__item--active' : '')} file={item} key={item.id} />) }
-                    </div>
+                    </Margin>
                 }
             </div>
         </div>

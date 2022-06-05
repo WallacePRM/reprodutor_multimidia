@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { AnimatePresence } from "framer-motion";
 
 import PreLoad from '../../components/PreLoad';
 import Sidebar from '../../components/Sidebar';
@@ -53,7 +54,9 @@ function Main(props: MainProps) {
                     <div className="z-index-6"><Logo/></div>
                 </div> : null }
                 <div className="c-container__pages">
-                    <Outlet />
+                    <AnimatePresence>
+                        <Outlet />
+                    </AnimatePresence>
                 </div>
             </div>
             </main>

@@ -17,6 +17,8 @@ import { fileToDataUrl } from "../../../common/blob";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import { setPlayerMode } from "../../../store/playerMode";
 import { revertOrder } from "../../../common/array";
+import Margin from "../../Animations/Margin";
+import Opacity from "../../Animations/Opacity";
 
 function Home() {
 
@@ -80,7 +82,7 @@ function Home() {
     }, []);
 
     return (
-        <div className="c-page c-home">
+        <div className="c-app c-home">
             <div className="c-container__header">
                 <h1 className="c-container__header__title">Início</h1>
                 <div className="c-container__header__actions">
@@ -92,9 +94,9 @@ function Home() {
             </div>
 
             { listItems.length > 0 ?
-                <div className="c-container__content__title">
+                <Opacity className="c-container__content__title">
                     <h3 className="c-container__content__title__text">Mídia recente</h3>
-                </div>
+                </Opacity>
             : null }
 
             <div className="c-container__content" style={{ height: listItems.length === 0 ? '100%' : '' }}>
@@ -106,9 +108,9 @@ function Home() {
                     <Button className="btn--primary" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/></div>}
                 /> :
                 <>
-                    <div className="c-list c-grid-list">
+                    <Margin className="c-list c-grid-list">
                         {listItems.map((item) => <GridItem onClick={ handleSelectMedia } file={item} key={item.id}/>)}
-                    </div>
+                    </Margin>
                 </>
                 }
             </div>
