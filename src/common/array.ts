@@ -22,3 +22,8 @@ export const shuffle = (array: any[]) => {
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
 };
+
+export const revertOrder = (array: any[]) => {
+
+    return array.slice().reverse();
+};

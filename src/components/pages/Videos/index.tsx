@@ -15,6 +15,7 @@ import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
 import { getMediaService } from "../../../service/media";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
+import { setPlayerMode } from "../../../store/playerMode";
 
 import './index.css';
 
@@ -41,7 +42,7 @@ function Videos() {
                         name: removeExtension(fileList[i].name),
                         type: 'video',
                         src: await fileToDataUrl(fileList[i]),
-                        releaseDate: fileList[i].lastModifiedDate.toString(),
+                        releaseDate: (fileList[i].lastModifiedDate || '').toString(),
                         duration: 0,
                         singer: '',
                         cover: '',
@@ -57,7 +58,11 @@ function Videos() {
 
     const handleSelectMedia = (file: Media) => {
 
-        dispatch(setCurrentMedias([file]));
+        if (file.type === 'video') {
+            dispatch(setPlayerMode('full'));
+        }
+
+        dispatch(setCurrentMedias(videoList));
         if (mediaPlaying?.id !== file.id) {
             dispatch(setMediaPlaying(file));
         }

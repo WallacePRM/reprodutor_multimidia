@@ -28,9 +28,8 @@ function Musics(props: MusicsProps) {
     const dispatch = useDispatch();
     const files: any[] = [];
     const mediaPlaying = useSelector(selectMediaPlaying);
-
-    let timeoutId: any;
     let fileIndex: number = 0;
+    let timeoutId: any = null;
 
     const handleSelectFile = async (e: React.ChangeEvent<any>) => {
 
@@ -46,7 +45,7 @@ function Musics(props: MusicsProps) {
                         name: removeExtension(fileList[i].name),
                         type: 'music',
                         src: await fileToDataUrl(fileList[i]),
-                        releaseDate: fileList[i].lastModifiedDate.toString(),
+                        releaseDate: (fileList[i].lastModifiedDate || '').toString(),
                         duration: 0,
                         singer: '',
                         cover: '',
@@ -83,6 +82,15 @@ function Musics(props: MusicsProps) {
             dispatch(setMediaPlaying(null));
             setTimeout(() => dispatch(setMediaPlaying(shuffled[0])), 0);
         }
+    };
+
+    const onScrollToBottom = () => {
+
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+
+            setLastSeparatorInvisible(createLastSeparator());
+        }, 100);
     };
 
     return (
@@ -122,7 +130,7 @@ function Musics(props: MusicsProps) {
                     </div>}
                 /> :
                 <>
-                    <div className="c-list c-line-list">
+                    <div onScroll={onScrollToBottom} className="c-list c-line-list">
                     <div className={'c-line-list__separator c-line-list__separator--fixed z-index-1'}>{lastSeparatorInvisible}</div>
 
                         {

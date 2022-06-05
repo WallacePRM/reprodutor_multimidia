@@ -17,8 +17,8 @@ function LineItem(props: FileProps) {
     let duration = file.duration;
     const inputId = Date.now() + Math.random().toString();
     const mediaPlaying = useSelector(selectMediaPlaying);
-
     const audioRef = useRef<HTMLAudioElement>();
+
     useEffect(() => {
         if (file) {
             audioRef.current = new Audio(file.src);

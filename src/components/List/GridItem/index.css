@@ -81,7 +81,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: rgb(var(--bg-color--light));
+  background-color: rgb(var(--bg-color--light), .9);
   height: 2rem;
   width: 2rem;
   border: 1px solid rgb(var(--border-color--dark), .4);
@@ -97,7 +97,7 @@
 }
 
 .c-grid-list__item__actions__item:hover {
-  background-color: rgb(var(--bg-color--solid));
+  background-color: rgb(var(--bg-color--solid), .8);
 }
 
 .c-grid-list__item__actions__item--checkbox {

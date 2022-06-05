@@ -36,8 +36,11 @@
     right: 0;
     height: 100%;
     width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     overflow: hidden;
-    z-index: 6;
+    z-index: 7;
 }
 
 .c-player-fullscreen__header {
@@ -47,9 +50,9 @@
     display: flex;
     align-items: center;
     width: 100%;
-    background-color: rgb(var(--bg-color--solid), .6);
+    background-color: rgb(var(--bg-color--solid), .7);
     transition: .7s cubic-bezier(0.215, 0.610, 0.355, 1);
-    z-index: 7;
+    z-index: 9;
     padding: 0 .5rem;
 }
 .c-player-fullscreen__header--hidden {
@@ -90,8 +93,10 @@
 }
 
 .c-player__progress__bar {
-    position: relative;
     flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
     margin: 0 1.3rem;
 }
 
@@ -142,6 +147,7 @@
     min-width: 4.5rem;
     width: 4.5rem;
     height: 4.5rem;
+    transition: .5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .c-player__file__cover img {
@@ -175,11 +181,18 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 1rem;
     padding: 1rem 0;
+    transition: .5s cubic-bezier(0.075, 0.82, 0.165, 1);
     white-space: nowrap;
     overflow: hidden;
 }
+.c-player__file__info--margin-music {
+    margin-left: 1rem;
+}
+.c-player__file__info--margin-video {
+    margin-left: 9rem;
+}
+
 .c-player__file__info__title {
     font-weight: 500;
     overflow: hidden;
@@ -261,7 +274,7 @@
     border: .2rem solid rgb(var(--bg-color--solid));
 }
 
-.player-full-mode {
+.video-full-mode {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -269,7 +282,18 @@
     width: 100%;
     background-color: black;
     border-radius: 0;
-    z-index: 6;
+    z-index: 8;
+}
+
+.video-mini-mode {
+    position: absolute;
+    bottom: .7rem;
+    left: 1rem;
+    width: 8rem;
+    height: 4.5rem;
+    transform: perspective(7.5cm) rotateX(1deg) rotateY(1deg); /* fix: video piscando */
+    border-radius: .3rem;
+    z-index: 11;
 }
 
 @media (max-width: 655px) {

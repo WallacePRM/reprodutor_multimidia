@@ -145,7 +145,7 @@
     outline: none;
     -webkit-transition: .2s;
     transition: .2s;
-    margin-bottom: .6rem;
+    margin: 0;
 }
 
 .input--slider::before {

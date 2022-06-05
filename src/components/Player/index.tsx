@@ -11,15 +11,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardStep, faEllipsis, faForwardStep, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { formatHHMMSS } from '../../common/time';
 import { useDispatch } from 'react-redux';
-import { selectMediaPlaying, setMediaPlaying } from '../../store/mediaPlaying';
+import mediaPlaying, { selectMediaPlaying, setMediaPlaying } from '../../store/mediaPlaying';
 import { selectCurrentMedias } from '../../store/player';
 import ReactDOM from 'react-dom';
 import { selectPlayerMode, setPlayerMode } from '../../store/playerMode';
-
-import './index.css';
 import PreviousRouter from '../PreviousRouter';
 import Logo from '../Logo';
 
+import './index.css';
+
+let timeoutId: any;
 function Player() {
 
     const [ playerState, setPlayerState ] = useState<PlayerState>({
@@ -32,10 +33,12 @@ function Player() {
     const file = useSelector(selectMediaPlaying);
     const currentTimePorcents =  playerState.duration ? playerState.currentTime / playerState.duration * 100 : 0;
     const mediaRef = useRef<HTMLAudioElement>();
+    const videoRef = useRef<HTMLVideoElement>(null);
     const playerMode = useSelector(selectPlayerMode);
     const dispatch = useDispatch();
     const firstMedia = medias && medias[0];
     const lastMedia = medias && medias[medias.length - 1];
+
     const coverStyle = {
         border: '1px solid rgb(var(--border-color--dark), 0.1)',
         borderRadius: '.3rem',
@@ -52,7 +55,7 @@ function Player() {
         if (mediaRef.current.paused) {
 
             mediaRef.current.play();
-            file.type === 'video' && setPlayerHidden(true);
+            // playerMode === 'full' && file.type === 'video' && setPlayerHidden(true);
         }
         else {
             mediaRef.current.pause();
@@ -83,27 +86,64 @@ function Player() {
     };
 
     const handleChangeFullMode = () => {
-        console.log('change full mode');
+
         if (playerMode === 'mini') {
             dispatch(setPlayerMode('full'));
         }
         else {
             dispatch(setPlayerMode('mini'));
+            clearInterval(timeoutId);
         }
     };
 
-    const toggleVideoInterface = (e: React.MouseEvent) => {
+    const handleToggleVideoInterface = (e: React.MouseEvent) => {
         if (playerMode === 'full') {
             e.stopPropagation();
 
-            (file?.isPlaying || playerHidden) && setPlayerHidden(!playerHidden);
+            if (mediaRef.current?.paused) {
+
+                mediaRef.current?.play();
+                setTimeout(() => {
+                    setPlayerHidden(true);
+                    document.body.style.cursor = "none";
+                }, 1000);
+            }
+            else {
+                mediaRef.current?.pause();
+                setPlayerHidden(false);
+                document.body.style.cursor = "default";
+            }
+        }
+    };
+
+    const toggleMouseView = (e: any) => {
+
+        e.stopPropagation();
+        clearTimeout(timeoutId);
+
+        if (playerMode === 'full') {
+
+            document.body.style.cursor = "default";
+            playerHidden && setPlayerHidden(false);
+
+            timeoutId = setTimeout(() => {
+                if (mediaRef.current?.paused === false && playerMode === 'full') {
+                    setPlayerHidden(true);
+                    document.body.style.cursor = "none";
+                }
+            }, 3500);
         }
     };
 
     useEffect(() => {
         if (file) {
             if (mediaRef.current) mediaRef.current.pause();
-            mediaRef.current = file.type === 'music' ? new Audio(file.src) : document.getElementById('player-video') as HTMLVideoElement;
+            if (file.type === 'music') {
+                mediaRef.current = new Audio(file.src);
+            }
+            else {
+                mediaRef.current = videoRef.current as HTMLVideoElement;
+            }
             mediaRef.current.addEventListener('loadeddata', () => {
 
                 setPlayerState((previousState) => ({
@@ -135,10 +175,7 @@ function Player() {
                 dispatch(setMediaPlaying(newFile));
 
                 const index = medias.findIndex((media) => media.id === file.id);
-                if (index >= medias.length - 1) {
-                    // dispatch(setMediaPlaying(null));
-                }
-                else {
+                if (!(index >= medias.length - 1)) {
                     const nextFile = medias[index + 1];
                     dispatch(setMediaPlaying(nextFile));
                 }
@@ -170,10 +207,16 @@ function Player() {
         }
     }, [file?.id]);
 
-    let videoComponent = (
-    <video id="player-video" onClick={toggleVideoInterface} className={'c-player__file__cover c-player__file__cover--video' + (playerMode === 'full' ? ' player-full-mode' : '')} style={{ transition: '.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
-        <source src={file?.src} typeof="video/mp4"/>
-    </video>);
+    let videoComponent = ReactDOM.createPortal(
+    <>
+        <div onClick={(e) => e.stopPropagation()} className={'c-player-fullscreen__header' + (playerHidden ? ' c-player-fullscreen__header--hidden' : '')} style={{ display: playerMode === 'full' ? undefined : 'none', backgroundColor: 'rgb(24, 24 , 24, .7)' }}>
+            <PreviousRouter className="c-player-fullscreen__icon"  onClick={ () => {dispatch(setPlayerMode('mini')); clearInterval(timeoutId);} }/>
+            <Logo className="c-player-fullscreen__logo ml-10"/>
+        </div>
+        <video ref={ videoRef } id="player-video" typeof="video/mp4" onClick={handleToggleVideoInterface} onMouseMove={toggleMouseView} className={'c-player__file__cover c-player__file__cover--video' + (playerMode === 'full' ? ' video-full-mode' : ' video-mini-mode')}>
+            <source src={file?.src} typeof="video/mp4"/>
+        </video>
+    </>, document.getElementById('video-container')! );
 
     let audioComponent = (
     <div className={'c-player__file__cover' + (playerMode === 'full' ? ' c-player__file__cover--audio' : '')} style={ file && !file?.cover ? coverStyle : {} }>
@@ -184,33 +227,20 @@ function Player() {
 
         { !file?.cover && file?.type === 'music' && <MusicAlt className="icon-color--light" style={{ height: '1.5rem', width: '1.5rem' }}/>}
     </div>);
-    const audioComponentStyle = {
-        backgroundImage: `url(${file?.cover || ''})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-    }
 
     if (playerMode === 'full') {
         if (file?.type === 'music') {
-            audioComponent = ReactDOM.createPortal( <div onClick={(e) => e.stopPropagation()} className="c-player-fullscreen" style={ audioComponentStyle }>
-            <div style={{ display: 'flex', alignItems: 'flex-end', height: 'calc(100% - 7.3rem)', width: '100%', background: file?.cover ? 'rgb(var(--bg-color--solid), .8)' : 'rgb(var(--bg-color--solid), 1)', backdropFilter: 'blur(1.5rem)' }}>
-                <div className="c-player-fullscreen__header">
-                    <PreviousRouter onClick={ () => dispatch(setPlayerMode('mini')) }/>
-                    <Logo className="ml-10"/>
+        audioComponent = ReactDOM.createPortal(
+            <div onClick={(e) => e.stopPropagation()} className="c-player-fullscreen" style={{ backgroundImage: `url(${file?.cover || ''})` }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end', height: 'calc(100% - 7.3rem)', width: '100%', background: file?.cover ? 'rgb(var(--bg-color--solid), .8)' : 'rgb(var(--bg-color--solid), 1)', backdropFilter: 'blur(1.5rem)' }}>
+                    <div className="c-player-fullscreen__header">
+                        <PreviousRouter onClick={ () => dispatch(setPlayerMode('mini')) }/>
+                        <Logo className="ml-10"/>
+                    </div>
+                    {audioComponent}
                 </div>
-                {audioComponent}
-            </div>
-        </div>, document.body );
-        }
-        else {
-            videoComponent = ReactDOM.createPortal( <div className="c-player-fullscreen">
-                <div className={'c-player-fullscreen__header' + (playerHidden ? ' c-player-fullscreen__header--hidden' : '')} style={{ backgroundColor: 'rgb(24, 24 , 24, .7)' }}>
-                    <PreviousRouter className="c-player-fullscreen__icon"  onClick={ () => dispatch(setPlayerMode('mini')) }/>
-                    <Logo className="c-player-fullscreen__logo ml-10"/>
-                </div>
-                {videoComponent}
-            </div>, document.body );
+            </div>,
+        document.body );
         }
     }
 
@@ -230,7 +260,7 @@ function Player() {
                 <div className="c-player__file">
                     <div className="c-player__file__track" onClick={handleChangeFullMode}>
                         { file?.type !== 'video' ? audioComponent : videoComponent }
-                        <div className="c-player__file__info">
+                        <div className={'c-player__file__info' + (playerMode === 'mini' && file?.type === 'video' ? ' c-player__file__info--margin-video' : '') + (playerMode === 'mini' && file?.type === 'music' ? ' c-player__file__info--margin-music' : '')}>
                             <h3 className="c-player__file__info__title">{file?.name}</h3>
                             <p className="c-player__file__info__singer">{file?.singer}</p>
                         </div>

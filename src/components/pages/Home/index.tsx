@@ -16,11 +16,12 @@ import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import { setPlayerMode } from "../../../store/playerMode";
+import { revertOrder } from "../../../common/array";
 
 function Home() {
 
     const medias: any = [];
-    const listItems = useSelector(selectMedias);
+    const listItems = revertOrder(useSelector(selectMedias));
     const mediaPlaying = useSelector(selectMediaPlaying);
     const dispatch = useDispatch();
 
@@ -36,7 +37,7 @@ function Home() {
                     name: removeExtension(fileList[i].name),
                     type: convertMediaType(fileList[i].type),
                     src: await fileToDataUrl(fileList[i]),
-                    releaseDate: fileList[i].lastModifiedDate.toString(),
+                    releaseDate: (fileList[i].lastModifiedDate || '').toString(),
                     duration: 0,
                     singer: '',
                     cover: '',
