@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence } from "framer-motion";
 
 import PreLoad from '../../components/PreLoad';
@@ -16,8 +16,8 @@ import { selectContainerMargin } from '../../store/containerMargin';
 
 function Main(props: MainProps) {
 
-    const [ windowFocused ] = props.windowState;
-    const [ isLoading, setIsLoading ] = useState(true);
+    const [windowFocused] = props.windowState;
+    const [isLoading, setIsLoading] = useState(true);
     const containerMargin = useSelector(selectContainerMargin);
     const dispatch = useDispatch();
 
@@ -40,25 +40,25 @@ function Main(props: MainProps) {
     return (
         <div className={'c-app noselect' + (windowFocused ? '' : ' window--unfocused')}>
             <main className="c-app__content">
-            <Sidebar />
-            <div style={{ marginLeft: `${containerMargin}rem`}} className="c-container">
-                {document.body.clientWidth < 1000 ?
-                <div className="c-app__logo">
-                    { document.body.clientWidth <= 655 ?
-                    <div className="d-flex a-items-center z-index-6">
-                        <PreviousRouter />
-                        <ToggleSidebar/>
-                        <span className="ml-10"></span>
-                    </div> : null
-                    }
-                    <div className="z-index-6"><Logo/></div>
-                </div> : null }
-                <div className="c-container__pages">
-                    <AnimatePresence>
-                        <Outlet />
-                    </AnimatePresence>
+                <Sidebar />
+                <div style={{ marginLeft: `${containerMargin}rem` }} className="c-container">
+                    {document.body.clientWidth < 1000 ?
+                        <div className="c-app__logo">
+                            {document.body.clientWidth <= 655 ?
+                                <div className="d-flex a-items-center z-index-6">
+                                    <PreviousRouter />
+                                    <ToggleSidebar />
+                                    <span className="ml-10"></span>
+                                </div> : null
+                            }
+                            <div className="z-index-6"><Logo /></div>
+                        </div> : null}
+                    <div className="c-container__pages">
+                        <AnimatePresence>
+                            <Outlet />
+                        </AnimatePresence>
+                    </div>
                 </div>
-            </div>
             </main>
             <Player />
         </div>

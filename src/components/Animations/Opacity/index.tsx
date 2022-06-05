@@ -17,7 +17,7 @@ function Opacity(props: MarginAnimationProps) {
 
     const pageTransition = {
         type: "tween",
-        cubic: "easeIn",
+        cubic: "easeInOut",
         duration: .2
     };
 

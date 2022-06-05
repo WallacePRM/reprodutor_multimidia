@@ -20,7 +20,7 @@ import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
 
-function Musics(props: MusicsProps) {
+function Musics() {
 
     const filterField = 'name';
     const listItems = useSelector(selectMedias);
@@ -206,10 +206,6 @@ function createLastSeparator() {
     else {
         return (separatorsFormatd[0].letter);
     }
-}
-
-type MusicsProps = {
-
 }
 
 export default Musics;

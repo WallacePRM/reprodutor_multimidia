@@ -32,6 +32,7 @@ function Player() {
     const medias = useSelector(selectCurrentMedias) || [];
     const file = useSelector(selectMediaPlaying);
     const currentTimePorcents =  playerState.duration ? playerState.currentTime / playerState.duration * 100 : 0;
+    const mediaPlaying = useSelector(selectMediaPlaying);
     const mediaRef = useRef<HTMLAudioElement>();
     const videoRef = useRef<HTMLVideoElement>(null);
     const playerMode = useSelector(selectPlayerMode);
@@ -62,6 +63,7 @@ function Player() {
                 ...file,
                 isPlaying: false,
             };
+
             dispatch(setMediaPlaying(newFile));
         }
     };
@@ -105,7 +107,7 @@ function Player() {
                 setTimeout(() => {
                     setPlayerHidden(true);
                     document.body.style.cursor = "none";
-                }, 1000);
+                }, 100);
             }
             else {
                 mediaRef.current?.pause();
@@ -136,13 +138,14 @@ function Player() {
 
     useEffect(() => {
         if (file) {
-            if (mediaRef.current) mediaRef.current.pause();
+            if (mediaRef.current)  mediaRef.current.pause();
             if (file.type === 'music') {
                 mediaRef.current = new Audio(file.src);
             }
             else {
                 mediaRef.current = videoRef.current as HTMLVideoElement;
             }
+
             mediaRef.current.addEventListener('loadeddata', () => {
 
                 setPlayerState((previousState) => ({
@@ -212,7 +215,7 @@ function Player() {
             <PreviousRouter className="c-player-fullscreen__icon"  onClick={ () => {dispatch(setPlayerMode('mini')); clearInterval(timeoutId);} }/>
             <Logo className="c-player-fullscreen__logo ml-10"/>
         </div>
-        <video ref={ videoRef } id="player-video" typeof="video/mp4" onClick={handleToggleVideoInterface} onMouseMove={toggleMouseView} className={'c-player__file__cover c-player__file__cover--video' + (playerMode === 'full' ? ' video-full-mode' : ' video-mini-mode')}>
+        <video key={file?.src} ref={ videoRef } id="player-video" typeof="video/mp4" onClick={handleToggleVideoInterface} onMouseMove={toggleMouseView} className={'c-player__file__cover c-player__file__cover--video' + (playerMode === 'full' ? ' video-full-mode' : ' video-mini-mode')}>
             <source src={file?.src} typeof="video/mp4"/>
         </video>
     </>, document.getElementById('video-container')! );
