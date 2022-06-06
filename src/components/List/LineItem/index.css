@@ -9,7 +9,6 @@
   color: rgb(var(--accent-color));
   font-size: 1.2em;
   padding: .5rem 1rem;
-  margin-bottom: .3rem;
   text-transform: uppercase;
 }
 .c-line-list__separator--fixed {

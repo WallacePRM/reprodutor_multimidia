@@ -53,11 +53,15 @@
     background-color: rgb(var(--bg-color--solid), .7);
     transition: .7s cubic-bezier(0.215, 0.610, 0.355, 1);
     z-index: 9;
-    padding: 0 .5rem;
 }
 .c-player-fullscreen__header--hidden {
     transform: translateY(-100%);
     opacity: 0;
+}
+
+.c-player-fullscreen__header__icon {
+    width: 1.5em;
+    border-radius: 0;
 }
 
 .c-player-fullscreen__logo {

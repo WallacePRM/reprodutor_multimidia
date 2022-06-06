@@ -1,4 +1,4 @@
-import { faChevronDown, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus, faShareNodes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 import emptyMessageIcon from '../../../assets/img/yt-gradient.svg';
@@ -40,7 +40,7 @@ function Playlists() {
                 { playlists.length == 0 ?  <EmptyMessage icon={emptyMessageIcon}
                     title="Você não tem playlists"
                     button={<div className="d-flex a-items-center">
-                    <Button className="btn--primary c-button--no-media-style" label="Criar uma nova lista de reprodução" icon={faPlus}/>
+                    <Button className="btn--primary c-button--no-media-style" label="Conectar-se ao Youtube" icon={faShareNodes}/>
                     </div>}
                 /> :
                 <>

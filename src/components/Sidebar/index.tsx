@@ -93,12 +93,12 @@ function Sidebar() {
                 </nav>
             </div>
             <div className="c-sidebar__footer">
-                <a className="c-sidebar__item" title="Entrar">
+                {/* <a className="c-sidebar__item" title="Entrar">
                     <div className="d-flex a-items-center">
                         <FontAwesomeIcon icon={faUser} className="c-sidebar__item__icon pl-3" />
                         <label className="c-sidebar__item__label">Entrar</label>
                     </div>
-                </a>
+                </a> */}
                 <Link onClick={setRotateAnimation} to="/configs" className={'c-sidebar__item' + (rotate ? ' c-sidebar__item--rotate' : '') + (pathname === '/configs' ? ' c-sidebar__item--active' : '')} title="Configurações (Ctrl+G)">
                     <div className="d-flex a-items-center">
                         <Settings className="c-sidebar__item__icon icon-color" />

@@ -42,7 +42,7 @@ function LineItem(props: FileProps) {
                 </div>
             }
             {props.fileTypeVisible &&
-                <div className={'c-line-list__item__type-icon' + (mediaPlaying?.isPlaying ? ' accent--color' : ' icon-color--light')}>
+                <div className={'c-line-list__item__type-icon' + (mediaPlaying?.id === file.id ? ' accent--color' : ' icon-color--light')}>
                     { file?.type === 'music' && <FontAwesomeIcon icon={faMusic} /> }
                     { file?.type === 'video' && <FontAwesomeIcon icon={faFilm} /> }
                 </div>}

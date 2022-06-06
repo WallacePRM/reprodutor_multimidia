@@ -236,7 +236,7 @@ function Player() {
             <div onClick={(e) => e.stopPropagation()} className="c-player-fullscreen" style={{ backgroundImage: `url(${file?.cover || ''})` }}>
                 <div style={{ display: 'flex', alignItems: 'flex-end', height: 'calc(100% - 7.3rem)', width: '100%', background: file?.cover ? 'rgb(var(--bg-color--solid), .8)' : 'rgb(var(--bg-color--solid), 1)', backdropFilter: 'blur(1.5rem)' }}>
                     <div className="c-player-fullscreen__header">
-                        <PreviousRouter onClick={ () => dispatch(setPlayerMode('mini')) }/>
+                        <PreviousRouter className="c-player-fullscreen__header__icon" onClick={ () => dispatch(setPlayerMode('mini')) }/>
                         <Logo className="ml-10"/>
                     </div>
                     {audioComponent}

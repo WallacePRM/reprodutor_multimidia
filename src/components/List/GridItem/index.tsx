@@ -8,6 +8,7 @@ import { ReactComponent as LayoutWidthDefault } from '@icon/themify-icons/icons/
 import { Media } from "../../../service/media/types";
 
 import './index.css';
+import { formatCharacterHHMMSS } from "../../../common/time";
 
 function GridItem(props: FileProps) {
 
@@ -47,7 +48,7 @@ function GridItem(props: FileProps) {
             </div>
             <div className="c-grid-list__item__info">
                 <span className="c-grid-list__item__title" title={file.name + (file.singer ? ` - ${file.singer}` : '')}>{file.name + (file.singer ? ` - ${file.singer}` : '')}</span>
-                { file.type === 'video' ? <span className="c-grid-list__item__subtitle">{file.duration || ''}</span> : null}
+                { file.type === 'video' ? <span className="c-grid-list__item__subtitle">{file.duration === 0 ? formatCharacterHHMMSS(file.duration) :''}</span> : null}
                 { file.type === 'music' ? <span className="c-grid-list__item__subtitle">{file.singer || ''}</span> : null}
             </div>
         </div>
