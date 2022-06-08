@@ -1,3 +1,6 @@
+.c-grid-list__item--video {
+    height: 180px;
+}
 
 .c-grid-list__item--video .c-grid-list__item__thumbnail {
     height: 7.5rem;

@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 
 const playerModeSlice = createSlice({
-    name: 'playerMode',
+    name: 'playerActions',
     initialState: {
-      mode: 'mini',
+      mode: 'default',
     },
     reducers: {
       setPlayerMode: (state, action: PayloadAction<string>) => {

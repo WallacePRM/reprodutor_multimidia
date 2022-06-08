@@ -5,7 +5,9 @@ import containerMarginReducer from './containerMargin';
 import mediasReducer from './medias';
 import mediaPlayingReducer from './mediaPlaying';
 import playerReducer from './player';
+import playerStateReducer from './playerState';
 import playerModeReducer from './playerMode';
+import playerConfigReducer from './playerConfig';
 
 // LOCAL STORAGE
 const saveToLocalStorage = (state: any) => {
@@ -32,8 +34,10 @@ export const store = configureStore({
     containerMargin: containerMarginReducer,
     medias: mediasReducer,
     mediaPlaying: mediaPlayingReducer,
-    player: playerReducer,
+    playerState: playerStateReducer,
     playerMode: playerModeReducer,
+    playerConfig: playerConfigReducer,
+    player: playerReducer,
   },
   preloadedState: loadFromLocalStorage()
 });

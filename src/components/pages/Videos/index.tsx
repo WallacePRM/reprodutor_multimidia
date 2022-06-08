@@ -20,6 +20,7 @@ import { setPlayerMode } from "../../../store/playerMode";
 import './index.css';
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
+import { setPlayerState } from "../../../store/playerState";
 
 function Videos() {
 
@@ -70,7 +71,10 @@ function Videos() {
         }
         else {
             dispatch(setMediaPlaying(null));
-            setTimeout(() => dispatch(setMediaPlaying(file)), 0);
+            setTimeout(() => {
+                dispatch(setPlayerState({ file_id: file.id, currentTime: 0, duration: 0 }));
+                dispatch(setMediaPlaying(file))
+            }, 0);
         }
     };
 

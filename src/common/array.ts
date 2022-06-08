@@ -27,3 +27,12 @@ export const revertOrder = (array: any[]) => {
 
     return array.slice().reverse();
 };
+
+export const arrayUnshiftItem = (array: any[], index: number) => {
+
+    const newArray = [...array];
+    const element = newArray[index];
+    newArray.splice(index, 1);
+    newArray.unshift(element);
+    return newArray;
+};

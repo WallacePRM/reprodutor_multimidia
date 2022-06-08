@@ -5,7 +5,7 @@ import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/music-gradient.svg';
 import LineItem from '../../List/LineItem';
-import { checkNearToBottom, isVisible } from "../../../common/dom";
+import { isVisible } from "../../../common/dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMediaService } from "../../../service/media";
@@ -19,11 +19,15 @@ import { fileToDataUrl } from "../../../common/blob";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
+import { setPlayerState } from "../../../store/playerState";
+import { selectPlayerConfig } from "../../../store/playerConfig";
+
 
 function Musics() {
 
     const filterField = 'name';
     const listItems = useSelector(selectMedias);
+    const playerConfig = useSelector(selectPlayerConfig);
     const musics = listItems.filter(item => item.type === 'music').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
     const listSeparators = createSeparators(musics as any, filterField);
     const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0] || '');
@@ -63,13 +67,18 @@ function Musics() {
 
     const handleSelectMedia = (file: Media) => {
 
-        dispatch(setCurrentMedias(musics));
+        const medias = playerConfig.shuffle ? shuffle(musics) : musics;
+        dispatch(setCurrentMedias(medias));
+
         if (mediaPlaying?.id !== file.id) {
             dispatch(setMediaPlaying(file));
         }
         else {
             dispatch(setMediaPlaying(null));
-            setTimeout(() => dispatch(setMediaPlaying(file)), 0);
+            setTimeout(() => {
+                dispatch(setPlayerState({ file_id: file.id, currentTime: 0, duration: 0 }));
+                dispatch(setMediaPlaying(file))
+            }, 0);
         }
     };
 

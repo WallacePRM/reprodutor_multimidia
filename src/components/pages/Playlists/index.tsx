@@ -40,7 +40,7 @@ function Playlists() {
                 { playlists.length == 0 ?  <EmptyMessage icon={emptyMessageIcon}
                     title="Você não tem playlists"
                     button={<div className="d-flex a-items-center">
-                    <Button className="btn--primary c-button--no-media-style" label="Conectar-se ao Youtube" icon={faShareNodes}/>
+                    <Button className="btn--primary c-button--no-media-style" label="Criar uma nova lista de reprodução" icon={faPlus}/>
                     </div>}
                 /> :
                 <>

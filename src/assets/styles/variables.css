@@ -2,12 +2,14 @@
     --border: 1px solid rgb(var(--border-color));
 
     --bg-color: 247, 250, 252;
-    --bg-color--solid: 253, 254, 254;
+    --bg-color--solid: 246, 246, 246;
+    --bg-color--solid-inverted: 14, 14, 14;
     --bg-color--light: 239, 244, 249;
 
     --title-color: 14, 14, 14;
+    --title-color--inverted: 246, 246, 246;
     --text-color: 54, 54, 54;
-    --text-color--light: 120, 120, 120;
+    --text-color--light: 90, 90, 90;
     --text-color--dark: 24, 24, 24;
     --border-color: 230, 230, 240;
     --border-color--dark: 24, 24, 24;

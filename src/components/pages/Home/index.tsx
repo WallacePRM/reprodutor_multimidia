@@ -9,22 +9,25 @@ import GridItem from '../../List/GridItem';
 import { useDispatch, useSelector } from "react-redux";
 import { getMediaService } from "../../../service/media";
 import { selectMedias, setMedias } from "../../../store/medias";
-import { useEffect } from "react";
 import { Media } from "../../../service/media/types";
 import { setCurrentMedias } from "../../../store/player";
 import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import { setPlayerMode } from "../../../store/playerMode";
-import { revertOrder } from "../../../common/array";
+import { arrayUnshiftItem, revertOrder } from "../../../common/array";
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
+import { setPlayerState } from "../../../store/playerState";
+import { useEffect } from "react";
 
 function Home() {
 
-    const medias: any = [];
-    const listItems = revertOrder(useSelector(selectMedias));
+    const medias: any = null;
+    const listItems = useSelector(selectMedias);
     const mediaPlaying = useSelector(selectMediaPlaying);
+    const itemIndex = listItems.findIndex(item => item.id === mediaPlaying?.id);
+    let recentMedias: any[] = [...listItems];
     const dispatch = useDispatch();
 
     const handleSelectFile = async (e: React.ChangeEvent<any>) => {
@@ -64,22 +67,25 @@ function Home() {
         }
         else {
             dispatch(setMediaPlaying(null));
-            setTimeout(() => dispatch(setMediaPlaying(file)), 0);
+            setTimeout(() => {
+                dispatch(setPlayerState({ file_id: file.id, currentTime: 0, duration: 0 }));
+                dispatch(setMediaPlaying(file))
+            }, 0);
         }
     };
 
     useEffect(() => {
 
-        if (listItems.length > 0) return;
+        const orderByRecents = () => {
 
-        const getMedias = async () => {
-
-            const result = await getMediaService().getMedias();
-            dispatch(setMedias(result));
+            if (itemIndex !== -1) {
+                recentMedias = arrayUnshiftItem(recentMedias, itemIndex);
+                dispatch(setMedias(recentMedias));
+            }
         };
 
-        getMedias();
-    }, []);
+        orderByRecents();
+    }, [mediaPlaying?.id]);
 
     return (
         <div className="c-app c-home">
@@ -109,7 +115,7 @@ function Home() {
                 /> :
                 <>
                     <Margin className="c-list c-grid-list">
-                        {listItems.map((item) => <GridItem onClick={ handleSelectMedia } file={item} key={item.id}/>)}
+                        {recentMedias.map((item) => <GridItem onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </Margin>
                 </>
                 }

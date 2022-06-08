@@ -36,6 +36,7 @@ function Opacity(props: MarginAnimationProps) {
             exit="out"
             variants={pageVariants}
             transition={pageTransition}
+            onClick={ props.onClick ? props.onClick : () => {} }
         >
             {props.children}
         </motion.div>
@@ -46,6 +47,7 @@ type MarginAnimationProps = {
     className?: string;
     style?: {},
     children: React.ReactNode;
+    onClick?: React.ReactEventHandler;
 };
 
 export default Opacity;

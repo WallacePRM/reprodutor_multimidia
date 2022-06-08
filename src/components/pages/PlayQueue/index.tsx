@@ -9,6 +9,8 @@ import { isOdd } from "../../../common/number";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
+import { current } from "@reduxjs/toolkit";
+import { setPlayerState } from "../../../store/playerState";
 
 function PlayQueue() {
 
@@ -18,17 +20,13 @@ function PlayQueue() {
 
     const handleSelectMedia = (file: Media) => {
 
-        const playlist = listItems;
-        const fileIndex = playlist.findIndex((item) => item.id === file.id);
-        playlist.splice(fileIndex, 1);
-        playlist.unshift(file);
-
-        dispatch(setCurrentMedias(playlist));
+        dispatch(setMediaPlaying(file));
     };
 
     const handleClearQueue = () => {
         dispatch(setCurrentMedias([] as Media[]));
         dispatch(setMediaPlaying(null));
+        dispatch(setPlayerState({ file_id: undefined, currentTime: 0 }));
     };
 
     return (

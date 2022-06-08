@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatePresence } from "framer-motion";
 
 import PreLoad from '../../components/PreLoad';
@@ -13,18 +13,18 @@ import { useDispatch } from 'react-redux';
 import { setSidebarOpened } from '../../store/sidebarOpened';
 import { useSelector } from 'react-redux';
 import { selectContainerMargin } from '../../store/containerMargin';
+import { selectMedias, setMedias } from '../../store/medias';
+import { getMediaService } from '../../service/media';
 
 function Main(props: MainProps) {
 
     const [windowFocused] = props.windowState;
     const [isLoading, setIsLoading] = useState(true);
     const containerMargin = useSelector(selectContainerMargin);
+    const listItems = useSelector(selectMedias);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
 
         const hideSidebar = () => {
             dispatch(setSidebarOpened({ isOpened: false }));
@@ -32,6 +32,34 @@ function Main(props: MainProps) {
 
         document.addEventListener('click', hideSidebar);
         return () => document.removeEventListener('click', hideSidebar);
+    }, []);
+
+    useEffect(() => {
+
+        if (listItems.length > 0) {
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000);
+
+            return;
+        };
+
+        const getMedias = async () => {
+
+            try {
+                const result = await getMediaService().getMedias();
+                dispatch(setMedias(result));
+
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 1000);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        };
+
+        getMedias();
     }, []);
 
     if (isLoading) {

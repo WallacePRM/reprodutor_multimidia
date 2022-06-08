@@ -13,8 +13,7 @@
 }
 .c-line-list__separator--fixed {
   position: fixed;
-  background: linear-gradient(rgb(var(--bg-color)), rgb(var(--bg-color), .9));
-  backdrop-filter: blur(.3rem);
+  background: rgb(var(--bg-color));
   width: 100%;
   z-index: 1;
 }
