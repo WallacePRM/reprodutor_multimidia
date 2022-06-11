@@ -1,17 +1,19 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { AnimationsProps } from "../type";
 
-function Opacity(props: MarginAnimationProps) {
+function Opacity(props: AnimationsProps) {
 
+    console.log()
     const pageVariants = {
         initial: {
-            opacity: 0,
+            [props.cssAnimation[0]]: 0,
         },
         in: {
-            opacity: 1,
+            [props.cssAnimation[0]]: 1,
         },
         out: {
-            opacity: 0,
+            [props.cssAnimation[0]]: 0,
         }
     };
 
@@ -22,7 +24,7 @@ function Opacity(props: MarginAnimationProps) {
     };
 
     const pageStyle: any = {
-        opacity: 0,
+        [props.cssAnimation[0]]: 0,
         ...props.style || {}
     };
 
@@ -42,12 +44,5 @@ function Opacity(props: MarginAnimationProps) {
         </motion.div>
     );
 }
-
-type MarginAnimationProps = {
-    className?: string;
-    style?: {},
-    children: React.ReactNode;
-    onClick?: React.ReactEventHandler;
-};
 
 export default Opacity;

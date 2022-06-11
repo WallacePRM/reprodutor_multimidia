@@ -1,5 +1,5 @@
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
+import { faChevronDown, faLink } from "@fortawesome/free-solid-svg-icons";
+import { faFolder, faFolderClosed } from "@fortawesome/free-regular-svg-icons";
 
 import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
@@ -15,11 +15,14 @@ import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import { setPlayerMode } from "../../../store/playerMode";
-import { arrayUnshiftItem, revertOrder } from "../../../common/array";
+import { arrayUnshiftItem } from "../../../common/array";
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
 import { setPlayerState } from "../../../store/playerState";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import Popup from "reactjs-popup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Position from "../../Animations/Position";
 
 function Home() {
 
@@ -27,6 +30,8 @@ function Home() {
     const listItems = useSelector(selectMedias);
     const mediaPlaying = useSelector(selectMediaPlaying);
     const itemIndex = listItems.findIndex(item => item.id === mediaPlaying?.id);
+    const popupRef: any = useRef();
+    const closeTooltip = () => popupRef.current && popupRef.current.close();
     let recentMedias: any[] = [...listItems];
     const dispatch = useDispatch();
 
@@ -94,13 +99,45 @@ function Home() {
                 <div className="c-container__header__actions">
                     { listItems.length > 0 ? <>
                     <Button onRead={ handleSelectFile } accept="audio/*,video/*" title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
-                    <Button title="Mais opções para abrir mídia" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/>
+                    <Popup arrow={false} ref={popupRef} keepTooltipInside=".c-app" trigger={<button className="c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon icon={faChevronDown}/></button>} position="bottom right" >
+                        <Position cssAnimation={["top", "right"]} className="c-popup noselect">
+                            <label className="c-popup__item" onClick={closeTooltip}>
+                                <Button className="c-popup__item__button-hidden" onRead={ handleSelectFile } accept="audio/*,video/*"/>
+                                <div className="c-popup__item__icons">
+                                    <FontAwesomeIcon className="c-popup__item__icon" icon={faFolderClosed} />
+                                </div>
+                                <div className="c-popup__item__label">
+                                    <h3 className="c-popup__item__title">Abrir arquivo(s)</h3>
+                                    <span className="c-popup__item__description">Procure arquivos para reproduzir</span>
+                                </div>
+                            </label>
+                            <div className="c-popup__item" onClick={closeTooltip}>
+                                <Button className="c-popup__item__button-hidden" onlyFolder onRead={ handleSelectFile } accept="audio/*,video/*"/>
+                                <div className="c-popup__item__icons">
+                                    <FontAwesomeIcon className="c-popup__item__icon" icon={faFolder} />
+                                </div>
+                                <div className="c-popup__item__label">
+                                    <h3 className="c-popup__item__title">Abrir pasta</h3>
+                                    <span className="c-popup__item__description">Escolha uma pasta e reproduza todas as mídias nessa pasta</span>
+                                </div>
+                            </div>
+                            <div className="c-popup__item" onClick={closeTooltip}>
+                                <div className="c-popup__item__icons">
+                                    <FontAwesomeIcon className="c-popup__item__icon" icon={faLink} />
+                                </div>
+                                <div className="c-popup__item__label">
+                                    <h3 className="c-popup__item__title">Abrir URL</h3>
+                                    <span className="c-popup__item__description">Insíra uma URL e faça streaming de mídia desse endereço</span>
+                                </div>
+                            </div>
+                        </Position>
+                    </Popup>
                     </> : null }
                 </div>
             </div>
 
             { listItems.length > 0 ?
-                <Opacity className="c-container__content__title">
+                <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
                     <h3 className="c-container__content__title__text">Mídia recente</h3>
                 </Opacity>
             : null }
@@ -114,7 +151,7 @@ function Home() {
                     <Button className="btn--primary" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/></div>}
                 /> :
                 <>
-                    <Margin className="c-list c-grid-list">
+                    <Margin cssAnimation={["marginTop"]} className="c-list c-grid-list">
                         {recentMedias.map((item) => <GridItem onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </Margin>
                 </>

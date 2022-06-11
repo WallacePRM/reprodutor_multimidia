@@ -91,18 +91,7 @@
     width: 100%;
 }
 
-.c-sidebar__highlighter {
-    position: absolute;
-    top: 50%;
-    left: 0rem;
-    transform: translateY(calc(-50% - 1px));
-    height: 0;
-    width: .2rem;
-    background-color: rgb(var(--accent-color));
-    border-radius: 30rem;
-    transition: .2s cubic-bezier(0.68, -0.55, 0.265, 0.5);
-}
-.c-sidebar__item--active .c-sidebar__highlighter {
+.c-sidebar__item--active .highlighter {
     height: 1.1em;
 }
 

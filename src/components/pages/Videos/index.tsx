@@ -88,7 +88,7 @@ function Videos() {
             </div>
 
             { videoList.length > 0 &&
-            <Opacity className="c-container__content__title">
+            <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <div className="c-container__content__title__actions">
                         <div className="c-container__content__title__actions__item box-field box-field--transparent">
@@ -109,7 +109,7 @@ function Videos() {
                     </div>}
                 /> :
                 <>
-                    <Margin className="c-list c-grid-list">
+                    <Margin cssAnimation={["marginTop"]} className="c-list c-grid-list">
                         {videoList.map((item) => <GridItem className="c-grid-list__item--video"  onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </Margin>
                 </>

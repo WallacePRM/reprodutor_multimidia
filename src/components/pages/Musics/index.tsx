@@ -6,13 +6,13 @@ import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/music-gradient.svg';
 import LineItem from '../../List/LineItem';
 import { isVisible } from "../../../common/dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMediaService } from "../../../service/media";
 import { selectMedias, setMedias } from "../../../store/medias";
 import { Media } from "../../../service/media/types";
 import { setCurrentMedias } from "../../../store/player";
-import { shuffle, sortAsc } from "../../../common/array";
+import { arrayUnshiftItem, shuffle, sortAsc } from "../../../common/array";
 import { isOdd } from "../../../common/number";
 import { convertMediaType, hasSymbol, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
@@ -21,6 +21,8 @@ import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
 import { setPlayerState } from "../../../store/playerState";
 import { selectPlayerConfig } from "../../../store/playerConfig";
+import Popup from "reactjs-popup";
+import Position from "../../Animations/Position";
 
 
 function Musics() {
@@ -34,6 +36,8 @@ function Musics() {
     const dispatch = useDispatch();
     const files: any[] = [];
     const mediaPlaying = useSelector(selectMediaPlaying);
+    const popupRef: any = useRef();
+    const closeTooltip = () => popupRef.current && popupRef.current.close();
     let fileIndex: number = 0;
     let timeoutId: any = null;
 
@@ -67,7 +71,12 @@ function Musics() {
 
     const handleSelectMedia = (file: Media) => {
 
-        const medias = playerConfig.shuffle ? shuffle(musics) : musics;
+        let medias = [...musics];
+        if (playerConfig.shuffle) {
+
+            const index = medias.findIndex(item => item.id === file.id);
+            medias = arrayUnshiftItem(medias, index);
+        }
         dispatch(setCurrentMedias(medias));
 
         if (mediaPlaying?.id !== file.id) {
@@ -116,17 +125,37 @@ function Musics() {
             </div>
 
             { musics.length > 0 ?
-            <Opacity className="c-container__content__title">
+            <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <Button onClick={ handleShuffle } className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
                     <div className="c-container__content__title__actions">
-                        <div className="c-container__content__title__actions__item box-field box-field--transparent">
-                            <label>Ordernar por: <span className="accent--color">A - Z</span></label>
-                            <FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} />
-                        </div>
-                        <div className="c-container__content__title__actions__item c-container__content__title__actions__item--options btn--icon">
+
+                        <Popup arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">A - Z</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
+                            <Position cssAnimation={["top", "right"]} className="c-popup noselect" style={{ minWidth: '130px' }}>
+                                <div className="c-popup__item c-popup__item--active c-popup__item--row" onClick={closeTooltip}>
+                                    <div className="c-popup__item__label">
+                                        <h3 className="c-popup__item__title">A - Z</h3>
+                                    </div>
+                                    <div className="highlighter"></div>
+                                </div>
+                                <div className="c-popup__item c-popup__item--row" onClick={closeTooltip}>
+                                    <div className="c-popup__item__label">
+                                        <h3 className="c-popup__item__title">Artista</h3>
+                                    </div>
+                                    <div className="highlighter"></div>
+                                </div>
+                                <div className="c-popup__item c-popup__item--row" onClick={closeTooltip}>
+                                    <div className="c-popup__item__label">
+                                        <h3 className="c-popup__item__title">Ano de lançamento</h3>
+                                    </div>
+                                    <div className="highlighter"></div>
+                                </div>
+                            </Position>
+                        </Popup>
+
+                        {/* <div className="c-container__content__title__actions__item c-container__content__title__actions__item--options btn--icon">
                             <FontAwesomeIcon icon={faEllipsis}/>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </Opacity> : null }
@@ -142,7 +171,7 @@ function Musics() {
                 /> :
 
                 <>
-                    <Margin onScroll={onScrollToBottom} className="c-list c-line-list">
+                    <Margin cssAnimation={["marginTop"]} onScroll={onScrollToBottom} className="c-list c-line-list">
                         <div className={'c-line-list__separator c-line-list__separator--fixed z-index-1'}>{lastSeparatorInvisible}</div>
 
                         {

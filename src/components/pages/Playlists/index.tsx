@@ -24,7 +24,7 @@ function Playlists() {
             </div>
 
             { playlists.length > 0 ?
-            <Opacity className="c-container__content__title">
+            <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <Button className="btn--primary c-button--no-media-style" label="Nova playlist" icon={faPlus} />
                     <div className="c-container__content__title__actions">
@@ -44,7 +44,7 @@ function Playlists() {
                     </div>}
                 /> :
                 <>
-                    <Margin className="c-list c-grid-list">
+                    <Margin cssAnimation={["marginTop"]} className="c-list c-grid-list">
                         {playlists.map((item) => <GridItem className="c-grid-list__item--video"  onClick={ handleSelectMedia } file={item} key={item.id}/>)}
                     </Margin>
                 </>

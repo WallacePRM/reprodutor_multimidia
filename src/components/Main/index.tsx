@@ -67,7 +67,7 @@ function Main(props: MainProps) {
     }
     return (
         <div className={'c-app noselect' + (windowFocused ? '' : ' window--unfocused')}>
-            <main className="c-app__content">
+            <main id="popup-root" className="c-app__content">
                 <Sidebar />
                 <div style={{ marginLeft: `${containerMargin}rem` }} className="c-container">
                     {document.body.clientWidth < 1000 ?

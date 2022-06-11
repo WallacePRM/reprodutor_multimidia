@@ -1,5 +1,5 @@
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
-import { ChangeEventHandler, DOMElement, useRef } from 'react';
+import { ChangeEventHandler, useRef } from 'react';
 import './index.css';
 
 function Button(props: ButtonProps) {

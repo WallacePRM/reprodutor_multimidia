@@ -231,3 +231,15 @@
 .transform-x-scale--active {
     transform: scaleX(.6);
 }
+
+.highlighter {
+    position: absolute;
+    top: 50%;
+    left: 0rem;
+    transform: translateY(calc(-50% - 1px));
+    height: 0;
+    width: .2rem;
+    background-color: rgb(var(--accent-color));
+    border-radius: 30rem;
+    transition: .2s cubic-bezier(0.68, -0.55, 0.265, 0.5);
+}

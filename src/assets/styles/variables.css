@@ -2,7 +2,7 @@
     --border: 1px solid rgb(var(--border-color));
 
     --bg-color: 247, 250, 252;
-    --bg-color--solid: 246, 246, 246;
+    --bg-color--solid: 252, 252, 254;
     --bg-color--solid-inverted: 14, 14, 14;
     --bg-color--light: 239, 244, 249;
 
@@ -21,7 +21,7 @@
     --red-color: 255, 50, 50;
     --green-color: 50, 255, 50;
     --blue-color: 50, 100, 225;
-    --blue-color--dark: 48, 102, 127;
+    --blue-color--dark: 59, 122, 148;
     --yellow-color: 255, 255, 50;
     --purple-color: 255, 50, 255;
     --pink-color: 255, 50, 255;

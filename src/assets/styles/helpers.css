@@ -35,6 +35,14 @@ a {
     justify-content: center;
 }
 
+.f-direction-column {
+    flex-direction: column;
+}
+
+.f-direction-row {
+    flex-direction: row;
+}
+
 .b-0 {
     border: 0 !important;
 }

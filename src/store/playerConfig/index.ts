@@ -8,7 +8,7 @@ const playerConfigSlice = createSlice({
             shuffle: true,
             repeatMode: 'all',
             volume: 1,
-            muted: false,
+            playbackRate: 1,
         } as PlayerConfig,
     },
     reducers: {
@@ -28,7 +28,7 @@ export type PlayerConfig = {
     shuffle: boolean,
     repeatMode: string | boolean,
     volume: number,
-    muted: boolean,
+    playbackRate: number,
 };
 
 export default playerConfigSlice.reducer;

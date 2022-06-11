@@ -67,4 +67,5 @@
     height: 0.25rem;
     background: rgb(var(--accent-color));
     border-radius: 10rem;
+    pointer-events: none;
 }

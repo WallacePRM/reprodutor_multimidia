@@ -17,14 +17,16 @@
     --bg-color: 37, 40, 44;
     --bg-color--light: 29, 33, 37;
     --bg-color--solid: 51, 52, 55;
+    --bg-color--solid-inverted: 246, 246, 246;
 
     --border-color: 25, 30, 34;
     --border-color--light: 66, 66, 66;
     --border-color--dark: 203, 203, 203;
 
     --title-color: 255, 255, 255;
+    --title-color--inverted: 14, 14, 14;
     --text-color: 240, 240, 240;
-    --text-color--light: 104, 105, 107;
+    --text-color--light: 154, 155, 157;
 }
 
 .theme--dark .icon-color,

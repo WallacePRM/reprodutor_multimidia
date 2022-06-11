@@ -2,20 +2,21 @@ import React from "react";
 import { motion } from "framer-motion";
 import { AnimationsProps } from "../type";
 
-function Margin(props: AnimationsProps) {
+function Position(props: AnimationsProps) {
 
+    const { cssAnimation } = props;
     const pageVariants = {
         initial: {
             opacity: 0,
-            [props.cssAnimation[0]]: "1.5rem",
+            [cssAnimation[0]]: "-1.5rem",
         },
         in: {
             opacity: 1,
-            [props.cssAnimation[0]]: 0,
+            [cssAnimation[0]]: ".5rem",
         },
         out: {
             opacity: 0,
-            [props.cssAnimation[0]]: "1.5rem",
+            [cssAnimation[0]]: "-1.5rem",
         }
     };
 
@@ -26,7 +27,8 @@ function Margin(props: AnimationsProps) {
     };
 
     const pageStyle: any = {
-        [props.cssAnimation[0]]: "0",
+        position: "absolute",
+        [cssAnimation[1]]: 0,
         ...props.style || {}
     };
 
@@ -47,4 +49,4 @@ function Margin(props: AnimationsProps) {
     );
 }
 
-export default Margin;
+export default Position;
