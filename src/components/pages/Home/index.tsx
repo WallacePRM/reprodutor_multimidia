@@ -40,23 +40,7 @@ function Home() {
         const input = e.currentTarget;
         const fileList = input.files || [];
 
-        if (fileList.length > 0) {
-            for (let i = 0; i < fileList.length; i++) {
-                medias.push({
-                    id: Date.now() + Math.random(), // Para desenvolvimento
-                    name: removeExtension(fileList[i].name),
-                    type: convertMediaType(fileList[i].type),
-                    src: await fileToDataUrl(fileList[i]),
-                    releaseDate: (fileList[i].lastModifiedDate || '').toString(),
-                    duration: 0,
-                    singer: '',
-                    cover: '',
-                    isPlaying: false,
-                });
-            }
-        }
-
-        await getMediaService().insertMedias(medias);
+        const medias = await getMediaService().insertMedias(fileList);
         dispatch(setMedias(listItems.concat(medias)));
     };
 
@@ -99,7 +83,7 @@ function Home() {
                 <div className="c-container__header__actions">
                     { listItems.length > 0 ? <>
                     <Button onRead={ handleSelectFile } accept="audio/*,video/*" title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
-                    <Popup arrow={false} ref={popupRef} keepTooltipInside=".c-app" trigger={<button className="c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon icon={faChevronDown}/></button>} position="bottom right" >
+                    <Popup arrow={false} ref={popupRef} keepTooltipInside=".c-app" trigger={<button className="c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon className="c-button__icon" icon={faChevronDown}/></button>} position="bottom right" >
                         <Position cssAnimation={["top", "right"]} className="c-popup noselect">
                             <label className="c-popup__item" onClick={closeTooltip}>
                                 <Button className="c-popup__item__button-hidden" onRead={ handleSelectFile } accept="audio/*,video/*"/>
@@ -148,7 +132,39 @@ function Home() {
                     description="Use este aplicativo para reproduzir seus arquivos de áudio e vídeo e explorar suas bibliotecas pessoais."
                     button={<div className="d-flex a-items-center">
                     <Button onRead={ handleSelectFile } accept="audio/*,video/*" className="btn--primary c-button--no-media-style" label="Abrir arquivo" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
-                    <Button className="btn--primary" icon={faChevronDown} style={{ borderRadius: '0 .3rem .3rem 0' }}/></div>}
+                    <Popup arrow={false} ref={popupRef} keepTooltipInside=".c-app" trigger={<button className="btn--primary c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon className="c-button__icon" icon={faChevronDown}/></button>} position="bottom right" >
+                        <Position cssAnimation={["top", "right"]} className="c-popup noselect">
+                            <label className="c-popup__item" onClick={closeTooltip}>
+                                <Button className="c-popup__item__button-hidden" onRead={ handleSelectFile } accept="audio/*,video/*"/>
+                                <div className="c-popup__item__icons">
+                                    <FontAwesomeIcon className="c-popup__item__icon" icon={faFolderClosed} />
+                                </div>
+                                <div className="c-popup__item__label">
+                                    <h3 className="c-popup__item__title">Abrir arquivo(s)</h3>
+                                    <span className="c-popup__item__description">Procure arquivos para reproduzir</span>
+                                </div>
+                            </label>
+                            <div className="c-popup__item" onClick={closeTooltip}>
+                                <Button className="c-popup__item__button-hidden" onlyFolder onRead={ handleSelectFile } accept="audio/*,video/*"/>
+                                <div className="c-popup__item__icons">
+                                    <FontAwesomeIcon className="c-popup__item__icon" icon={faFolder} />
+                                </div>
+                                <div className="c-popup__item__label">
+                                    <h3 className="c-popup__item__title">Abrir pasta</h3>
+                                    <span className="c-popup__item__description">Escolha uma pasta e reproduza todas as mídias nessa pasta</span>
+                                </div>
+                            </div>
+                            <div className="c-popup__item" onClick={closeTooltip}>
+                                <div className="c-popup__item__icons">
+                                    <FontAwesomeIcon className="c-popup__item__icon" icon={faLink} />
+                                </div>
+                                <div className="c-popup__item__label">
+                                    <h3 className="c-popup__item__title">Abrir URL</h3>
+                                    <span className="c-popup__item__description">Insíra uma URL e faça streaming de mídia desse endereço</span>
+                                </div>
+                            </div>
+                        </Position>
+                    </Popup></div>}
                 /> :
                 <>
                     <Margin cssAnimation={["marginTop"]} className="c-list c-grid-list">

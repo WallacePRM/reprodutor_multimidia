@@ -24,7 +24,7 @@ function Slider(props: SliderProps) {
 
     return(
         <div className={'c-slider' + (props.className ? ' ' + props.className : '')} style={props.style || {}}>
-            <input className={'c-slider__input' + (animation ? ' input--slider-held-down' : '')} onChange={props.onChange ? props.onChange : () => {}} type="range" value={value} min={min} max={max} step={step ? step : ''} onMouseDown={onMouseDown} onMouseUp={onMouseUp} />
+            <input onChange={props.onChange ? props.onChange : () => {}} className={'c-slider__input' + (animation ? ' input--slider-held-down' : '')} type="range" value={value} min={min} max={max} step={step ? step : ''} onMouseDown={onMouseDown} onMouseUp={onMouseUp} />
             <div className="c-slider__progress-bar" style={{ width: value + '%'}}></div>
         </div>
     );

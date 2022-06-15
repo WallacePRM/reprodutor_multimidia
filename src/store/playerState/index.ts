@@ -23,9 +23,9 @@ export const { setPlayerState } = playerStateSlice.actions;
 export const selectPlayerState = (state: RootState) => state.playerState.currentState;
 
 export type PlayerState = {
-    file_id: number,
-    duration: number,
-    currentTime: number
+  file_id: number,
+  duration: number,
+  currentTime: number
 };
 
 export default playerStateSlice.reducer;

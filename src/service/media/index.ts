@@ -1,41 +1,31 @@
+import { ApiMediaService } from "./api-media-service";
 import { Media } from "./types";
 
 export interface MediaService {
     getMedias(options?: { type: string }): Promise<Media[]>;
-    insertMedias(medias: Media[]): Promise<void>;
+    insertMedias(medias: Blob[]): Promise<Media[]>;
 }
 
-export class LocalMediaService implements MediaService {
+// export class LocalMediaService implements MediaService {
 
-    getMedias(options: { type: string; }): Promise<Media[]> {
+//     getMedias(options: { type: string; }): Promise<Media[]> {
 
-        const medias = JSON.parse(localStorage.getItem("medias") || "[]");
+//         const medias = JSON.parse(localStorage.getItem("medias") || "[]");
 
-        return Promise.resolve(medias);
-    }
+//         return Promise.resolve(medias);
+//     }
 
-    insertMedias(medias: Media[]): Promise<void> {
+//     insertMedias(medias: Media[]): Promise<void> {
 
-        const currentMedias: Media[] = JSON.parse(localStorage.getItem("medias") || "[]");
-        const newMedias = currentMedias.concat(medias);
+//         const currentMedias: Media[] = JSON.parse(localStorage.getItem("medias") || "[]");
+//         const newMedias = currentMedias.concat(medias);
 
-        localStorage.setItem('medias', JSON.stringify(newMedias));
+//         localStorage.setItem('medias', JSON.stringify(newMedias));
 
-        return Promise.resolve();
-    }
-}
-
-export class ApiMediaService implements MediaService {
-
-    getMedias(options: { type: string; }): Promise<Media[]> {
-        throw new Error("Method not implemented.");
-    }
-
-    insertMedias(medias: Media[]): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-}
+//         return Promise.resolve();
+//     }
+// }
 
 export function getMediaService (): MediaService {
-    return new LocalMediaService();
+    return new ApiMediaService();
 }

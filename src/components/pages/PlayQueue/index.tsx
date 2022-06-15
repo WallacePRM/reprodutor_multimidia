@@ -20,6 +20,7 @@ import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
 import { getMediaService } from "../../../service/media";
 import { setMedias } from "../../../store/medias";
+import { getPlayerService } from "../../../service/player";
 
 function PlayQueue() {
 
@@ -37,23 +38,7 @@ function PlayQueue() {
         const input = e.currentTarget;
         const fileList = input.files || [];
 
-        if (fileList.length > 0) {
-            for (let i = 0; i < fileList.length; i++) {
-                medias.push({
-                    id: Date.now() + Math.random(), // Para desenvolvimento
-                    name: removeExtension(fileList[i].name),
-                    type: convertMediaType(fileList[i].type),
-                    src: await fileToDataUrl(fileList[i]),
-                    releaseDate: (fileList[i].lastModifiedDate || '').toString(),
-                    duration: 0,
-                    singer: '',
-                    cover: '',
-                    isPlaying: false,
-                });
-            }
-        }
-
-        await getMediaService().insertMedias(medias);
+        const medias = await getMediaService().insertMedias(fileList);
         dispatch(setMedias(listItems.concat(medias)));
     };
 
@@ -66,7 +51,10 @@ function PlayQueue() {
         dispatch(setCurrentMedias([] as Media[]));
         dispatch(setMediaPlaying(null));
 
-        setTimeout(() => dispatch(setPlayerState({ file_id: undefined, currentTime: 0 })), 0);
+        setTimeout(async () => {
+            dispatch(setPlayerState({ file_id: undefined, currentTime: 0 }));
+            await getPlayerService().setLastMedia({ file_id: undefined, currentTime: 0, duration: 0 });
+        }, 0);
     };
 
     return (
@@ -75,7 +63,7 @@ function PlayQueue() {
                 <h1 className="c-container__header__title">Fila de reprodução</h1>
                 <div className="c-container__header__actions">
                     <Button title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
-                    <Popup arrow={false} ref={popupRef} keepTooltipInside=".c-app" trigger={<button className="c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon icon={faChevronDown}/></button>} position="bottom right" >
+                    <Popup arrow={false} ref={popupRef} keepTooltipInside=".c-app" trigger={<button className="c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon className="c-button__icon" icon={faChevronDown}/></button>} position="bottom right" >
                         <Position cssAnimation={["top", "right"]} className="c-popup noselect">
                             <label className="c-popup__item" onClick={closeTooltip}>
                                 <Button className="c-popup__item__button-hidden" onRead={ handleSelectFile } accept="audio/*,video/*"/>

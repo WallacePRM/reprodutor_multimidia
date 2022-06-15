@@ -19,7 +19,6 @@ import { formatHHMMSS } from '../../common/time';
 import { useDispatch } from 'react-redux';
 import { selectMediaPlaying, setMediaPlaying } from '../../store/mediaPlaying';
 import { selectCurrentMedias, setCurrentMedias } from '../../store/player';
-import { selectPlayerState, setPlayerState } from '../../store/playerState';
 import { selectPlayerMode, setPlayerMode } from '../../store/playerMode';
 import ReactDOM from 'react-dom';
 import PreviousRouter from '../PreviousRouter';
@@ -30,7 +29,9 @@ import { selectPlayerConfig, setPlayerConfig } from '../../store/playerConfig';
 import { arrayUnshiftItem, shuffle, sortAsc } from '../../common/array';
 import Popup from 'reactjs-popup';
 import Position from '../Animations/Position';
-import { toggleFullScreen } from '../../common/dom';
+import { CheckInteraction, toggleFullScreen } from '../../common/dom';
+import { getPlayerService } from '../../service/player';
+import { selectPlayerState, setPlayerState } from '../../store/playerState';
 
 import './index.css';
 
@@ -40,19 +41,28 @@ function Player() {
     const dispatch = useDispatch();
     const [ playerHidden, setPlayerHidden ] = useState(false);
 
+    const playerService = getPlayerService();
     const playerConfig = useSelector(selectPlayerConfig);
-    const playerState = useSelector(selectPlayerState);
     const medias = useSelector(selectCurrentMedias) || [];
     const file = useSelector(selectMediaPlaying);
     const playerMode = useSelector(selectPlayerMode);
     const mediaRef = useRef<HTMLAudioElement>();
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    const fileState = playerState && playerState.file_id === file?.id ? {...playerState} : { duration: 0, currentTime: 0 };
-    const currentTimePorcents =  fileState.duration ? fileState.currentTime / fileState.duration * 100 : 0;
+    let playerState = useSelector(selectPlayerState);
+    let currentTimePorcents = 0;
+    if (playerState) {
+        currentTimePorcents = playerState.duration > 0 ? playerState.currentTime / playerState.duration * 100 : 0;
+    }
+    else {
+        playerState = { file_id: -1, duration: 0, currentTime: 0 };
+    }
+
     const currentVolumePorcents = playerConfig.volume ? parseInt((playerConfig.volume * 100).toFixed(0)) : 0;
     const firstMedia = medias && medias[0];
     const lastMedia = medias && medias[medias.length - 1];
+    const popupRef: any = useRef();
+    const closeTooltip = () => popupRef.current && popupRef.current.close();
     const coverStyle = {
         border: '1px solid rgb(var(--border-color--dark), 0.1)',
         borderRadius: '.3rem',
@@ -61,8 +71,6 @@ function Player() {
         alignItems: 'center',
         justifyContent: 'center',
     };
-    const popupRef: any = useRef();
-    const closeTooltip = () => popupRef.current && popupRef.current.close();
 
     const handlePlayPause = () => {
 
@@ -132,17 +140,19 @@ function Player() {
         }
     };
 
-    const handleChangeFileCurrentTime = (e: any) => {
-
+    const handleChangeFileCurrentTime = async (e: any) => {
         if (mediaRef.current) {
 
             const newTime = e.target.value / 100 * playerState.duration;
             mediaRef.current.currentTime = newTime;
-            dispatch(setPlayerState({ currentTime: newTime }));
+
+            const newLastMedia = { currentTime: newTime };
+            await playerService.setLastMedia(newLastMedia);
+            dispatch(setPlayerState(newLastMedia));
         }
     };
 
-    const handleToggleShuffle = () => {
+    const handleToggleShuffle = async () => {
 
         let newMedias = [...medias];
         if (playerConfig.shuffle) {
@@ -150,6 +160,7 @@ function Player() {
             dispatch(setCurrentMedias(newMedias));
 
             dispatch(setPlayerConfig({ shuffle: false }));
+            await playerService.setPlayerConfig({ shuffle: false });
         }
         else {
             newMedias = shuffle(newMedias);
@@ -160,41 +171,51 @@ function Player() {
 
             dispatch(setCurrentMedias(newMedias));
             dispatch(setPlayerConfig({ shuffle: true }));
+            await playerService.setPlayerConfig({ shuffle: true });
         }
     };
 
-    const handleChangeRepeatMode = () => {
+    const handleChangeRepeatMode = async () => {
 
         if (playerConfig.repeatMode === 'all') {
             dispatch(setPlayerConfig({ repeatMode: 'once' }));
+            await playerService.setPlayerConfig({ repeatMode: 'once' });
         }
 
         if (playerConfig.repeatMode === 'once') {
             dispatch(setPlayerConfig({ repeatMode: false }));
+            await playerService.setPlayerConfig({ repeatMode: false });
         }
 
         if (playerConfig.repeatMode === false) {
             dispatch(setPlayerConfig({ repeatMode: 'all' }));
+            await playerService.setPlayerConfig({ repeatMode: 'all' });
         }
     };
 
-    const handleTimeForward = () => {
+    const handleTimeForward = async () => {
 
         if (mediaRef.current) {
 
             const newTime = mediaRef.current.currentTime + 30;
             mediaRef.current.currentTime = newTime;
-            dispatch(setPlayerState({ currentTime: newTime }));
+
+            const newLastMedia = { currentTime: newTime };
+            await playerService.setLastMedia(newLastMedia);
+            dispatch(setPlayerState(newLastMedia));
         }
     };
 
-    const handleTimeBack = () => {
+    const handleTimeBack = async () => {
 
         if (mediaRef.current) {
 
             const newTime = mediaRef.current.currentTime - 10;
             mediaRef.current.currentTime = newTime;
-            dispatch(setPlayerState({ currentTime: newTime }));
+
+            const newLastMedia = { currentTime: newTime };
+            await playerService.setLastMedia(newLastMedia);
+            dispatch(setPlayerState(newLastMedia));
         }
     };
 
@@ -230,7 +251,7 @@ function Player() {
         return 'Desativado';
     };
 
-    const handleChangeVolume = (e: any) => {
+    const handleChangeVolume = async (e: any) => {
 
         const newVolume = e.target.value / 100;
         if (mediaRef.current) {
@@ -238,9 +259,10 @@ function Player() {
         }
 
         dispatch(setPlayerConfig({ volume: newVolume }));
+        await playerService.setPlayerConfig({ volume: newVolume });
     };
 
-    const handleMute = () => {
+    const handleMute = async () => {
 
         if (playerConfig.volume > 0) {
 
@@ -248,6 +270,7 @@ function Player() {
                 mediaRef.current.volume = 0;
             }
             dispatch(setPlayerConfig({ volume: 0 }));
+            await playerService.setPlayerConfig({ volume: 0 });
         }
         else {
 
@@ -255,17 +278,20 @@ function Player() {
                 mediaRef.current.volume = 1;
             }
             dispatch(setPlayerConfig({ volume: 1 }));
+            await playerService.setPlayerConfig({ volume: 1 });
         }
     };
 
-    const handleSetPlayerbackRate = (e: any) => {
+    const handleSetPlayerbackRate = async (e: any) => {
 
         console.log('chamou');
         const newRate = parseFloat(e.target.value);
         if (mediaRef.current) {
             mediaRef.current.playbackRate = newRate;
         }
+
         dispatch(setPlayerConfig({ playbackRate: newRate }));
+        await playerService.setPlayerConfig({ playbackRate: newRate });
     };
 
     const setPlayerVisible = () => {
@@ -276,8 +302,12 @@ function Player() {
         }
     };
 
+    const refLastFileId = useRef<number>();
+    (window as any).audio = mediaRef;
     useEffect(() => {
         if (file) {
+
+            refLastFileId.current = file.id;
             if (mediaRef.current)  {
                 mediaRef.current.pause();
             }
@@ -289,37 +319,42 @@ function Player() {
             }
 
             mediaRef.current.addEventListener('loadeddata', () => {
-                setTimeout(() => {
-                if (mediaRef.current)  {
-                    mediaRef.current.currentTime = file.id === playerState.file_id ? playerState.currentTime : 0;
-                    mediaRef.current.playbackRate = playerConfig.playbackRate;
-                    mediaRef.current.volume = playerConfig.volume;
-                }
+                setTimeout(async () => {
+                    if (mediaRef.current)  {
+                        mediaRef.current.currentTime = file.id === playerState.file_id ? playerState.currentTime : 0;
+                        mediaRef.current.playbackRate = playerConfig.playbackRate;
+                        mediaRef.current.volume = playerConfig.volume;
+                    }
 
-                dispatch(setPlayerState({
-                    file_id: file.id,
-                    duration: mediaRef.current?.duration || 0,
-                    currentTime: mediaRef.current?.currentTime || 0,
-                }));
+                    const newLastMedia = {
+                        file_id: file.id,
+                        duration: mediaRef.current?.duration || 0,
+                        currentTime: mediaRef.current?.currentTime || 0,
+                    };
 
-                mediaRef.current?.play();
+                    await playerService.setLastMedia(newLastMedia);
+                    dispatch(setPlayerState(newLastMedia));
 
-            }, 200);
+                    if (CheckInteraction.getInstance().hasInteraction()) {
+                        mediaRef.current?.play();
+                    }
+
+                }, 200);
             });
-            mediaRef.current.addEventListener('timeupdate', () => {
+            mediaRef.current.addEventListener('timeupdate', async () => {
 
-                dispatch(setPlayerState({
-                    currentTime: mediaRef.current?.currentTime || 0,
-                }));
+                const newLastMedia = {currentTime: mediaRef.current?.currentTime || 0,};
+                await playerService.setLastMedia(newLastMedia);
+                dispatch(setPlayerState(newLastMedia));
 
             });
-            mediaRef.current.addEventListener('ended', () => {
+            mediaRef.current.addEventListener('ended', async () => {
 
                 file.type === 'video' && setPlayerHidden(false);
 
-                dispatch(setPlayerState({
-                    currentTime: 0,
-                }));
+                const newLastMedia = {currentTime: 0};
+                await playerService.setLastMedia(newLastMedia);
+                dispatch(setPlayerState(newLastMedia));
 
                 const newFile = {
                     ...file,
@@ -328,8 +363,11 @@ function Player() {
 
                 if (playerConfig.repeatMode === 'once') {
                     dispatch(setMediaPlaying(null));
-                    setTimeout(() => {
-                        dispatch(setPlayerState({ currentTime: 0 }));
+                    setTimeout(async () => {
+
+                        const newLastMedia = {currentTime: 0}
+                        await playerService.setLastMedia(newLastMedia);
+                        dispatch(setPlayerState(newLastMedia));
                         dispatch(setMediaPlaying(newFile));
                     }, 0);
                     return;
@@ -359,17 +397,23 @@ function Player() {
             });
             mediaRef.current.addEventListener('error', () => {
 
-               alert('Falha ao carregar o arquivo');
-               return;
+                alert('Falha ao carregar o arquivo');
+                return;
             });
         }
         else {
             if (mediaRef.current) {
                 mediaRef.current.pause();
-                setTimeout(() => setPlayerState({
-                    duration: 0,
-                    currentTime: 0,
-                }), 0);
+
+                setTimeout(async () => {
+                    const newLastMedia = {
+                        duration: 0,
+                        currentTime: 0,
+                    };
+
+                    await playerService.setLastMedia(newLastMedia);
+                    dispatch(setPlayerState(newLastMedia));
+                }, 0);
             };
         }
     }, [file?.id]);
@@ -387,21 +431,21 @@ function Player() {
     );
 
     let audioComponent = (
-        <Opacity cssAnimation={["opacity"]} className={'c-player__file__cover' + (playerMode === 'full' ? ' c-player__file__cover--music' : '')} style={ file && !file?.cover ? coverStyle : {} }>
-            { file?.cover && <img src={file?.cover}/> }
-            { !file?.cover && file?.type === 'folder' &&
+        <Opacity cssAnimation={["opacity"]} className={'c-player__file__cover' + (playerMode === 'full' ? ' c-player__file__cover--music' : '')} style={ file && !file?.thumbnail ? coverStyle : {} }>
+            { file?.thumbnail && <img src={file?.thumbnail}/> }
+            { !file?.thumbnail && file?.type === 'folder' &&
             <><FontAwesomeIcon className="c-grid-list__item__icon__folder" icon={faFolderClosed} />
             <FontAwesomeIcon className="c-grid-list__item__icon__list" icon={faBars}/></> }
 
-            { !file?.cover && file?.type === 'music' && <MusicAlt className="icon-color--light" style={{ height: '1.5rem', width: '1.5rem' }}/>}
+            { !file?.thumbnail && file?.type === 'music' && <MusicAlt className="icon-color--light" style={{ height: '1.5rem', width: '1.5rem' }}/>}
         </Opacity>
     );
 
     if (playerMode === 'full') {
         if (file?.type === 'music') {
         audioComponent = ReactDOM.createPortal(
-            <Opacity cssAnimation={["opacity"]} onClick={(e) => e.stopPropagation()} className="c-player-fullscreen" style={{ backgroundImage: `url(${file?.cover || ''})` }}>
-                <div style={{ display: 'flex', alignItems: 'flex-end', height: 'calc(100% - 7.3rem)', width: '100%', background: file?.cover ? 'rgb(var(--bg-color--solid), .8)' : 'rgb(var(--bg-color--solid), 1)', backdropFilter: 'blur(2rem)' }}>
+            <Opacity cssAnimation={["opacity"]} onClick={(e) => e.stopPropagation()} className="c-player-fullscreen" style={{ backgroundImage: `url(${file?.thumbnail || ''})` }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end', height: 'calc(100% - 7.3rem)', width: '100%', background: file?.thumbnail ? 'rgb(var(--bg-color--solid), .8)' : 'rgb(var(--bg-color--solid), 1)', backdropFilter: 'blur(2rem)' }}>
                     <div className="c-player-fullscreen__header">
                         <PreviousRouter className="c-player-fullscreen__header__icon" onClick={ () => dispatch(setPlayerMode('default'))} title="Voltar"/>
                         <Logo className="ml-10"/>
@@ -419,9 +463,9 @@ function Player() {
         (playerMode === 'full' && file?.type === 'music' ? ' c-player--full-mode-music' : '') +
         (!file ? ' c-player--disabled ' : '')}>
             <div className="c-player__progress">
-                <span className="c-player__progress__time">{formatHHMMSS(playerState.currentTime) || '00:00:00'}</span>
+                <span className="c-player__progress__time">{playerState ? formatHHMMSS(playerState.currentTime) : '00:00:00'}</span>
                 <Slider className="c-player__progress__bar" onChange={handleChangeFileCurrentTime} data={ {value: currentTimePorcents, min: 0, max: 100} } style={!file ? {filter: 'grayscale(1)'} : {}} />
-                <span className="c-player__left__time">{formatHHMMSS(playerState.duration - playerState.currentTime) || '00:00:00'}</span>
+                <span className="c-player__left__time">{playerState ? formatHHMMSS(playerState.duration - playerState.currentTime) : '00:00:00'}</span>
             </div>
             <div  className="c-player__actions">
                 <div className="c-player__file">
@@ -429,7 +473,7 @@ function Player() {
                         { file?.type !== 'video' ? audioComponent : videoComponent }
                         <div className={'c-player__file__info' + (playerMode === 'default' && file?.type === 'video' ? ' c-player__file__info--margin-video' : '') + (playerMode === 'default' && file?.type === 'music' ? ' c-player__file__info--margin-music' : '')}>
                             <h3 className="c-player__file__info__title">{file?.name}</h3>
-                            <p className="c-player__file__info__singer">{file?.singer}</p>
+                            <p className="c-player__file__info__author">{file?.author} { file?.album && <span className="c-player__file__info__album">{file?.album}</span>}</p>
                         </div>
                     </div>
                 </div>

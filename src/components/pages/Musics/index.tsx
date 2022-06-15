@@ -46,33 +46,17 @@ function Musics() {
         const input = e.currentTarget;
         const fileList = input.files || [];
 
-        if (fileList.length > 0) {
-            for (let i = 0; i < fileList.length; i++) {
 
-                if (convertMediaType(fileList[i].type) === 'music') {
-                    files.push({
-                        id: Date.now() + Math.random(), // Para desenvolvimento
-                        name: removeExtension(fileList[i].name),
-                        type: 'music',
-                        src: await fileToDataUrl(fileList[i]),
-                        releaseDate: (fileList[i].lastModifiedDate || '').toString(),
-                        duration: 0,
-                        singer: '',
-                        cover: '',
-                        isPlaying: false,
-                    });
-                }
-            };
-        }
-
-        await getMediaService().insertMedias(files);
-        dispatch(setMedias(listItems.concat(files)));
+        const medias = await getMediaService().insertMedias(fileList);
+        dispatch(setMedias(listItems.concat(medias)));
     };
 
     const handleSelectMedia = (file: Media) => {
 
         let medias = [...musics];
         if (playerConfig.shuffle) {
+
+            medias = shuffle(medias);
 
             const index = medias.findIndex(item => item.id === file.id);
             medias = arrayUnshiftItem(medias, index);

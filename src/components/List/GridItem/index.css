@@ -13,6 +13,7 @@
   width: max-content;
   padding: .35rem;
   border-radius: .5rem;
+  border: 1px solid transparent;
 }
 
 .c-grid-list__item:hover {

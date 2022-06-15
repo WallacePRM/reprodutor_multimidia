@@ -41,3 +41,48 @@ export const toggleFullScreen = () => {
     }
   }
 };
+
+export class CheckInteraction {
+
+  private static _instance: CheckInteraction;
+
+  public static getInstance() {
+    if (!this._instance) {
+      this._instance = new CheckInteraction();
+    }
+
+    return this._instance;
+  }
+
+  private _interaction: boolean = false;
+
+  private constructor() {
+    this.bindEvents();
+  }
+
+  public hasInteraction() {
+    return this._interaction;
+  }
+
+  private handleInteraction() {
+    this._interaction = true;
+
+    this.unbindEvents();
+  }
+
+  private bindEvents() {
+    document.body.addEventListener('mousemove', this.handleInteraction.bind(this));
+    document.body.addEventListener('scroll', this.handleInteraction.bind(this));
+    document.body.addEventListener('keydown', this.handleInteraction.bind(this));
+    document.body.addEventListener('click', this.handleInteraction.bind(this));
+    document.body.addEventListener('touchstart', this.handleInteraction.bind(this));
+  }
+
+  private unbindEvents() {
+    document.body.removeEventListener('mousemove', this.handleInteraction);
+    document.body.removeEventListener('scroll', this.handleInteraction);
+    document.body.removeEventListener('keydown', this.handleInteraction);
+    document.body.removeEventListener('click', this.handleInteraction);
+    document.body.removeEventListener('touchstart', this.handleInteraction);
+  }
+}

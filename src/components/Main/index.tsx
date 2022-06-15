@@ -8,13 +8,18 @@ import Logo from '../../components/Logo';
 import ToggleSidebar from '../../components/ToggleSidebar';
 import PreviousRouter from '../../components/PreviousRouter';
 import { WindowState } from '../../App.hook';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setSidebarOpened } from '../../store/sidebarOpened';
 import { useSelector } from 'react-redux';
 import { selectContainerMargin } from '../../store/containerMargin';
 import { selectMedias, setMedias } from '../../store/medias';
 import { getMediaService } from '../../service/media';
+import { getPlayerService } from '../../service/player';
+import { setMediaPlaying } from '../../store/mediaPlaying';
+import { setCurrentMedias } from '../../store/player';
+import { setPlayerState } from '../../store/playerState';
+import { setPlayerConfig } from '../../store/playerConfig';
 
 function Main(props: MainProps) {
 
@@ -23,6 +28,7 @@ function Main(props: MainProps) {
     const containerMargin = useSelector(selectContainerMargin);
     const listItems = useSelector(selectMedias);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -50,12 +56,27 @@ function Main(props: MainProps) {
                 const result = await getMediaService().getMedias();
                 dispatch(setMedias(result));
 
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 1000);
+                const playerService = getPlayerService();
+                const playerState = await playerService.getLastMedia();
+                const playerConfig = await playerService.getPlayerConfig();
+
+                if (playerConfig) {
+                    dispatch(setPlayerConfig(playerConfig));
+                }
+
+                if (playerState) {
+                    dispatch(setPlayerState(playerState));
+
+                    const media = result.find(item => item.id === playerState.file_id) || null;
+                    dispatch(setCurrentMedias(media ? [media] : null));
+                    dispatch(setMediaPlaying(media));
+                }
+
+                setIsLoading(false);
             }
             catch (error) {
                 console.log(error);
+
             }
         };
 

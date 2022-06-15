@@ -9,6 +9,7 @@ import NotFound from './components/pages/NotFound';
 import PlayQueue from './components/pages/PlayQueue';
 import Videos from './components/pages/Videos';
 import Playlists from './components/pages/Playlists';
+import { CheckInteraction } from './common/dom';
 
 import './App.css';
 
@@ -32,5 +33,6 @@ function App() {
   );
 }
 
+CheckInteraction.getInstance();
 
 export default App;

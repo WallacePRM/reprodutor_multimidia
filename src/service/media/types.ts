@@ -2,9 +2,10 @@ export type Media = {
     id: number,
     type: string,
     name: string;
-    singer?: string;
+    author?: string;
+    album?: string;
     genre?: string;
-    cover?: string,
+    thumbnail?: string,
     src: string,
     duration: number,
     isPlaying: boolean,

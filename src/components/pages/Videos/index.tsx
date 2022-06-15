@@ -36,27 +36,8 @@ function Videos() {
         const input = e.currentTarget;
         const fileList = input.files || [];
 
-        if (fileList.length > 0) {
-            for (let i = 0; i < fileList.length; i++) {
-
-                if (convertMediaType(fileList[i].type) === 'video') {
-                    files.push({
-                        id: Date.now() + Math.random(), // Para desenvolvimento
-                        name: removeExtension(fileList[i].name),
-                        type: 'video',
-                        src: await fileToDataUrl(fileList[i]),
-                        releaseDate: (fileList[i].lastModifiedDate || '').toString(),
-                        duration: 0,
-                        singer: '',
-                        cover: '',
-                        isPlaying: false,
-                    });
-                }
-            };
-        }
-
-        await getMediaService().insertMedias(files);
-        dispatch(setMedias(listItems.concat(files)));
+        const medias = await getMediaService().insertMedias(fileList);
+        dispatch(setMedias(listItems.concat(medias)));
     };
 
     const handleSelectMedia = (file: Media) => {

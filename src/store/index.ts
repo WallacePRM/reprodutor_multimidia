@@ -39,12 +39,12 @@ export const store = configureStore({
     playerConfig: playerConfigReducer,
     player: playerReducer,
   },
-  preloadedState: loadFromLocalStorage()
+  // preloadedState: loadFromLocalStorage()
 });
 
-store.subscribe(() => {
-  saveToLocalStorage(store.getState());
-});
+// store.subscribe(() => {
+//   saveToLocalStorage(store.getState());
+// });
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

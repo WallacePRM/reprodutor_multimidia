@@ -109,6 +109,10 @@
   overflow: hidden;
 }
 
+.c-line-list__item__title {
+  flex: 2;
+}
+
 .c-line-list__item__info span {
   overflow: hidden;
   text-overflow: ellipsis;

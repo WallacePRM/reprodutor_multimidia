@@ -1,15 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactComponent as Play } from '@icon/themify-icons/icons/control-play.svg';
-import { ReactComponent as MusicAlt } from '@icon/themify-icons/icons/music-alt.svg';
-import { ReactComponent as LayoutWidthDefault } from '@icon/themify-icons/icons/layout-width-default.svg';
-import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { formatMMSS } from '../../../common/time';
 import { Media } from "../../../service/media/types";
 import { selectMediaPlaying } from '../../../store/mediaPlaying';
+import { faFilm, faMusic } from '@fortawesome/free-solid-svg-icons';
 
 import './index.css';
-import { faFilm, faMusic } from '@fortawesome/free-solid-svg-icons';
 
 function LineItem(props: FileProps) {
 
@@ -17,16 +14,6 @@ function LineItem(props: FileProps) {
     let duration = file.duration;
     const inputId = Date.now() + Math.random().toString();
     const mediaPlaying = useSelector(selectMediaPlaying);
-    const audioRef = useRef<HTMLAudioElement>();
-
-    useEffect(() => {
-        if (file) {
-            audioRef.current = new Audio(file.src);
-            audioRef.current.addEventListener('loadedmetadata', () => {
-                duration = audioRef.current?.duration || 0;
-            });
-        }
-    }, [file]);
 
     const handleSelectFile = () => {
         props.onClick(file);
@@ -57,10 +44,13 @@ function LineItem(props: FileProps) {
                 <span>{file.name}</span>
             </div>
             <div className="c-line-list__item__info c-line-list__item__singer" >
-                <span> {file.singer ? file.singer : 'Artista desconhecido'}</span>
+                <span>{file.author ? file.author : 'Artista desconhecido'}</span>
+            </div>
+            <div className="c-line-list__item__info c-line-list__item__album" >
+                <span>{file.album ? file.album : 'Álbum desconhecido'}</span>
             </div>
             <div className="c-line-list__item__info c-line-list__item__genre" >
-                <span> {file.releaseDate ? new Date(file.releaseDate).getFullYear() : ''}</span>
+                <span>{file.releaseDate ? new Date(file.releaseDate).getFullYear() : ''}</span>
                 <span className="ml-10"> {file.genre ? file.genre : 'Gênero desconhecido'}</span>
             </div>
             <div className="c-line-list__item__info c-line-list__item__duration">
