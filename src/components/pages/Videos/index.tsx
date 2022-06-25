@@ -21,6 +21,8 @@ import './index.css';
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
 import { setPlayerState } from "../../../store/playerState";
+import Popup from "reactjs-popup";
+import { useRef } from "react";
 
 function Videos() {
 
@@ -29,6 +31,8 @@ function Videos() {
     const videoList = listItems.filter(item => item.type === 'video').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
     const files: any[] = [];
     const mediaPlaying = useSelector(selectMediaPlaying);
+    const popupRef: any = useRef();
+    const closeTooltip = () => popupRef.current && popupRef.current.close();
     const dispatch = useDispatch();
 
     const handleSelectFile = async (e: React.ChangeEvent<any>) => {
@@ -72,10 +76,27 @@ function Videos() {
             <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <div className="c-container__content__title__actions">
-                        <div className="c-container__content__title__actions__item box-field box-field--transparent">
+                        {/* <div className="c-container__content__title__actions__item box-field box-field--transparent">
                             <label>Ordernar por: <span className="accent--color">A - Z</span></label>
                             <FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} />
-                        </div>
+                        </div> */}
+
+                        <Popup keepTooltipInside arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">A - Z</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
+                            <div  className="c-popup noselect" style={{ minWidth: '130px' }}>
+                                <div className="c-popup__item c-popup__item--active c-popup__item--row" onClick={closeTooltip}>
+                                    <div className="c-popup__item__label">
+                                        <h3 className="c-popup__item__title">A - Z</h3>
+                                    </div>
+                                    <div className="highlighter"></div>
+                                </div>
+                                <div className="c-popup__item c-popup__item--row" onClick={closeTooltip}>
+                                    <div className="c-popup__item__label">
+                                        <h3 className="c-popup__item__title">Data de modificação</h3>
+                                    </div>
+                                    <div className="highlighter"></div>
+                                </div>
+                            </div>
+                        </Popup>
                     </div>
                 </div>
             </Opacity>

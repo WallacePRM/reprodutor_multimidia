@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactComponent as Home } from '@icon/themify-icons/icons/home.svg';
 import { ReactComponent as MusicAlt } from '@icon/themify-icons/icons/music-alt.svg';
@@ -76,7 +75,7 @@ function Sidebar() {
                         <div className="highlighter"></div>
                     </Link>
                     <div className="c-sidebar__separator" ></div>
-                    <Link to="/queue" className={'c-sidebar__item' + (pathname === '/queue' ? ' c-sidebar__item--active' : '')} title="File de reprodução (Ctrl+Q)">
+                    <Link to="/queue" className={'c-sidebar__item' + (pathname === '/queue' ? ' c-sidebar__item--active' : '')} title="Fila de reprodução (Ctrl+Q)">
                         <div className="d-flex a-items-center">
                             <LayoutListThumb className="c-sidebar__item__icon icon-color" />
                             <label className="c-sidebar__item__label">Fila de reprodução</label>
@@ -93,12 +92,6 @@ function Sidebar() {
                 </nav>
             </div>
             <div className="c-sidebar__footer">
-                {/* <a className="c-sidebar__item" title="Entrar">
-                    <div className="d-flex a-items-center">
-                        <FontAwesomeIcon icon={faUser} className="c-sidebar__item__icon pl-3" />
-                        <label className="c-sidebar__item__label">Entrar</label>
-                    </div>
-                </a> */}
                 <Link onClick={setRotateAnimation} to="/configs" className={'c-sidebar__item' + (rotate ? ' c-sidebar__item--rotate' : '') + (pathname === '/configs' ? ' c-sidebar__item--active' : '')} title="Configurações (Ctrl+G)">
                     <div className="d-flex a-items-center">
                         <Settings className="c-sidebar__item__icon icon-color" />

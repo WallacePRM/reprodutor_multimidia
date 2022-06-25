@@ -2,17 +2,20 @@ import React from "react";
 import { motion } from "framer-motion";
 import { AnimationsProps } from "../type";
 
-function Opacity(props: AnimationsProps) {
+function TranformOpacity(props: AnimationsProps) {
 
     const pageVariants = {
         initial: {
-            [props.cssAnimation[0]]: 0,
+            [props.cssAnimation[0]]: "scale(1.05)",
+            opacity: 0,
         },
         in: {
-            [props.cssAnimation[0]]: 1,
+            [props.cssAnimation[0]]: "scale(1)",
+            opacity: 1,
         },
         out: {
-            [props.cssAnimation[0]]: 0,
+            [props.cssAnimation[0]]: "scale(1.05)",
+            opacity: 0,
         }
     };
 
@@ -23,7 +26,7 @@ function Opacity(props: AnimationsProps) {
     };
 
     const pageStyle: any = {
-        [props.cssAnimation[0]]: 0,
+        [props.cssAnimation[0]]: "scale(1)",
         ...props.style || {}
     };
 
@@ -48,4 +51,4 @@ function Opacity(props: AnimationsProps) {
     );
 }
 
-export default Opacity;
+export default TranformOpacity;

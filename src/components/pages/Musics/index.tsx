@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faEllipsis, faShuffle } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
 import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
@@ -14,29 +14,32 @@ import { Media } from "../../../service/media/types";
 import { setCurrentMedias } from "../../../store/player";
 import { arrayUnshiftItem, shuffle, sortAsc } from "../../../common/array";
 import { isOdd } from "../../../common/number";
-import { convertMediaType, hasSymbol, removeExtension } from "../../../common/string";
-import { fileToDataUrl } from "../../../common/blob";
+import { capitalizeFirstLetter, hasSymbol } from "../../../common/string";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
 import { setPlayerState } from "../../../store/playerState";
 import { selectPlayerConfig } from "../../../store/playerConfig";
 import Popup from "reactjs-popup";
-import Position from "../../Animations/Position";
+import { selectPageConfig, setPageConfig } from "../../../store/pageConfig";
+import { getPageService } from "../../../service/page";
+import { selectContainerMargin } from "../../../store/containerMargin";
 
 
 function Musics() {
 
-    const filterField = 'name';
+    const pageConfig = useSelector(selectPageConfig);
+    const filterField: string = pageConfig ? pageConfig.orderBy : 'name';
     const listItems = useSelector(selectMedias);
     const playerConfig = useSelector(selectPlayerConfig);
-    const musics = listItems.filter(item => item.type === 'music').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
+    const musics = (listItems.filter(item => item.type === 'music')).sort((a, b) => sortAsc(((a as any)[filterField] || '').toLocaleLowerCase(), ((b as any)[filterField] || '').toLocaleLowerCase()));
     const listSeparators = createSeparators(musics as any, filterField);
     const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0] || '');
     const dispatch = useDispatch();
-    const files: any[] = [];
     const mediaPlaying = useSelector(selectMediaPlaying);
+    const containerMargin = useSelector(selectContainerMargin);
     const popupRef: any = useRef();
+    const separatorRef: any = useRef();
     const closeTooltip = () => popupRef.current && popupRef.current.close();
     let fileIndex: number = 0;
     let timeoutId: any = null;
@@ -88,13 +91,28 @@ function Musics() {
         }
     };
 
+    const handleChangeOrderBy = async (e: React.ChangeEvent<any>) => {
+
+        const value = e.currentTarget.value;
+        dispatch(setPageConfig({ orderBy: value }));
+        await getPageService().setPageConfig({ orderBy: value });
+        setLastSeparatorInvisible(createLastSeparator());
+    };
+
     const onScrollToBottom = () => {
 
         if (timeoutId) clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
 
             setLastSeparatorInvisible(createLastSeparator());
-        }, 100);
+        }, 50);
+    };
+
+    const mapSeparatorByFilter = (filter: string) => {
+
+        if (!filter) return mapOrderBy(filterField) + ' desconhecido';
+
+        return filter;
     };
 
     return (
@@ -114,32 +132,46 @@ function Musics() {
                     <Button onClick={ handleShuffle } className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
                     <div className="c-container__content__title__actions">
 
-                        <Popup arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">A - Z</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
-                            <Position cssAnimation={["top", "right"]} className="c-popup noselect" style={{ minWidth: '130px' }}>
-                                <div className="c-popup__item c-popup__item--active c-popup__item--row" onClick={closeTooltip}>
+                        <Popup keepTooltipInside arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">{mapOrderBy(filterField)}</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
+                            <div  className="c-popup noselect" style={{ minWidth: '130px' }}>
+                                <div className={'c-popup__item  c-popup__item--row' + (pageConfig.orderBy === 'name' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="name"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">A - Z</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                                <div className="c-popup__item c-popup__item--row" onClick={closeTooltip}>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'author' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="author"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">Artista</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                                <div className="c-popup__item c-popup__item--row" onClick={closeTooltip}>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'album' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="album"/>
+                                    <div className="c-popup__item__label">
+                                        <h3 className="c-popup__item__title">Álbum</h3>
+                                    </div>
+                                    <div className="highlighter"></div>
+                                </div>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'genre' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="genre"/>
+                                    <div className="c-popup__item__label">
+                                        <h3 className="c-popup__item__title">Gênero</h3>
+                                    </div>
+                                    <div className="highlighter"></div>
+                                </div>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'releaseDate' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="releaseDate"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">Ano de lançamento</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                            </Position>
+                            </div>
                         </Popup>
 
-                        {/* <div className="c-container__content__title__actions__item c-container__content__title__actions__item--options btn--icon">
-                            <FontAwesomeIcon icon={faEllipsis}/>
-                        </div> */}
                     </div>
                 </div>
             </Opacity> : null }
@@ -156,15 +188,22 @@ function Musics() {
 
                 <>
                     <Margin cssAnimation={["marginTop"]} onScroll={onScrollToBottom} className="c-list c-line-list">
-                        <div className={'c-line-list__separator c-line-list__separator--fixed z-index-1'}>{lastSeparatorInvisible}</div>
+                        <div ref={separatorRef} className="w-100"><div className={'c-line-list__separator c-line-list__separator--fixed z-index-1'} style={{width: separatorRef.current ? separatorRef.current.offsetWidth : '100%'}}>{capitalizeFirstLetter(lastSeparatorInvisible || '')}</div></div>
 
                         {
                             listSeparators.map((separator) => {
 
                                 const elements: React.ReactNode[] = [];
-                                elements.push(<div className={'c-line-list__separator'} key={separator}>{separator}</div>);
+                                elements.push(<div className={'c-line-list__separator'} key={separator}>{capitalizeFirstLetter(separator)}</div>);
 
-                                const musicsFiltred = musics.filter(item => mapListSeparators(((item as any)[filterField] || '').charAt(0).toLocaleUpperCase()) === separator);
+                                let musicsFiltred: Media[] = [];
+                                if (filterField === 'name') {
+                                    musicsFiltred = musics.filter(item => mapListSeparators((item[filterField] || '').charAt(0).toLocaleUpperCase()) === separator);
+                                }
+                                else {
+                                    musicsFiltred = musics.filter(item => mapSeparatorByFilter((item as any)[filterField]) === separator);
+                                }
+
                                 musicsFiltred.forEach((item) => {
 
                                     elements.push(<LineItem onClick={ handleSelectMedia } className={(isOdd(fileIndex) ? 'c-line-list__item--nostyle' : '') + (item.id === mediaPlaying?.id ? ' c-line-list__item--active' : '')} file={item} key={item.id}/>);
@@ -182,6 +221,17 @@ function Musics() {
     );
 }
 
+function mapOrderBy(orderBy: string) {
+
+    if (orderBy === 'name') return 'A - Z';
+    if (orderBy === 'author') return 'Artista';
+    if (orderBy === 'album') return 'Álbum';
+    if (orderBy === 'genre') return 'Gênero';
+    if (orderBy === 'releaseDate') return 'Ano de lançamento';
+
+    return 'Aleatório';
+}
+
 function mapListSeparators(letter: string) {
 
     // Se for número, adicionar #
@@ -193,15 +243,27 @@ function mapListSeparators(letter: string) {
     return letter;
 }
 
-function createSeparators(listItems: Media[], filterField = 'name') {
+function createSeparators(listItems: Media[], filterField: string) {
 
-    const listSeparators: string[] = listItems.reduce((obj, item) => {
+    const listSeparators: string[] = listItems.reduce((obj, item: any) => {
 
-        const firstLetter = mapListSeparators(((item as any)[filterField] || '').charAt(0).toLocaleUpperCase());
-        if (!obj.index[firstLetter]) {
-            obj.index[firstLetter] = true;
+        let separator: string = '';
+        if (filterField === 'name') {
+            separator = mapListSeparators((item[filterField] || '').charAt(0).toLocaleUpperCase());
+        }
+        else {
+            if (item[filterField]) {
+                separator = item[filterField];
+            }
+            else {
+                separator = mapOrderBy(filterField) + ' desconhecido';
+            }
+        }
 
-            obj.separators.push(firstLetter);
+        if (!obj.index[separator]) {
+            obj.index[separator] = true;
+
+            obj.separators.push(separator);
         }
 
         return obj;

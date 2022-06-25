@@ -32,6 +32,11 @@ function Position(props: AnimationsProps) {
         ...props.style || {}
     };
 
+    if (cssAnimation[1] === 'center') {
+        pageStyle.left = '50%';
+        pageStyle.transform = 'translate(-50%)';
+    }
+
 
     return (
         <motion.div

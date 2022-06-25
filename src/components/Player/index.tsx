@@ -510,14 +510,14 @@ function Player() {
                     </div>}
                 </div>
                 <div className="c-player__options">
-                    <Popup arrow={false} ref={popupRef} trigger={ <div className="c-player__controls__options__item player--button"><VolumeIcon className="icon-color" title="Volume"/></div>} position="top right" >
-                        <Position cssAnimation={["bottom", "right"]} className="c-popup noselect" style={{ minWidth: '250px' }}>
+                    <Popup keepTooltipInside arrow={false} ref={popupRef} trigger={ <div className="c-player__controls__options__item player--button"><VolumeIcon className="icon-color" title="Volume"/></div>} position="top center" >
+                        <div className="c-popup noselect" style={{ minWidth: '250px' }}>
                             <div className="c-player__volume">
                                 <VolumeIcon onClick={handleMute} className="c-player__volume__icon icon-color" title="Mudo"/>
                                 <Slider  onChange={handleChangeVolume} className="c-player__volume__slider" data={{ min: 0, value: currentVolumePorcents, max: 100 }}></Slider>
                                 <span className="c-player__volume__value">{currentVolumePorcents}</span>
                             </div>
-                        </Position>
+                        </div>
                     </Popup>
 
 
@@ -525,8 +525,8 @@ function Player() {
                     <div onClick={toggleFullScreen} className={'c-player__controls__options__item player--button' + (!file ? ' disabled' : '')}>
                         <ArrowsCornerIcon className="icon-color icon--inverted" title="Tela inteira(F11)"/>
                     </div>}
-                    <Popup nested arrow={false} ref={popupRef} trigger={<div className="c-player__controls__options__item player--button c-player__controls__options__item--config" title="Mais opções"><FontAwesomeIcon icon={faEllipsis}/></div>} position="top right" >
-                        <Position cssAnimation={["bottom", "right"]} className="c-popup noselect">
+                    <Popup keepTooltipInside nested arrow={false} ref={popupRef} trigger={<div className="c-player__controls__options__item player--button c-player__controls__options__item--config" title="Mais opções"><FontAwesomeIcon icon={faEllipsis}/></div>} position="top right" >
+                        <div className="c-popup noselect">
                             <div className={'c-popup__item c-popup__item--row' + (!file ? ' disabled' : '')} onClick={closeTooltip}>
                                 <div className="c-popup__item__icons">
                                     <InfoIcon className="c-popup__item__icon icon-color" />
@@ -536,8 +536,8 @@ function Player() {
                                     <span className="c-popup__item__description">Ctrl+I</span>
                                 </div>
                             </div>
-                            <Popup closeOnDocumentClick={false} arrow={false} nested on="hover" mouseLeaveDelay={300} mouseEnterDelay={300} trigger={<div className={'c-popup__item c-popup__item--row' + (!file ? ' disabled' : '')}><div className="c-popup__item__icons"><SpeedometerIcon className="c-popup__item__icon icon-color icon--inverted" /></div><div className="c-popup__item__label"><h3 className="c-popup__item__title">Velocidade</h3><FontAwesomeIcon className="c-popup__item__description" icon={faChevronRight}/></div></div>} position="top right" >
-                                <Position cssAnimation={["bottom", "right"]} className="c-popup noselect" style={{ minWidth: '150px' }}>
+                            <Popup keepTooltipInside closeOnDocumentClick={false} arrow={false} nested on="hover" mouseLeaveDelay={300} mouseEnterDelay={300} trigger={<div className={'c-popup__item c-popup__item--row' + (!file ? ' disabled' : '')}><div className="c-popup__item__icons"><SpeedometerIcon className="c-popup__item__icon icon-color icon--inverted" /></div><div className="c-popup__item__label"><h3 className="c-popup__item__title">Velocidade</h3><FontAwesomeIcon className="c-popup__item__description" icon={faChevronRight}/></div></div>} position="top right" >
+                                <div className="c-popup noselect" style={{ minWidth: '150px' }}>
                                     <div className={'c-popup__item c-popup__item--row' + (playerConfig.playbackRate === 0.25 ? ' c-popup__item--active' : '') + (!file ? ' disabled' : '')} onClick={closeTooltip}>
                                         <input onClick={handleSetPlayerbackRate} className="c-popup__item__button-hidden" type="number" defaultValue={0.25}/>
                                         <div className="c-popup__item__label">
@@ -578,7 +578,7 @@ function Player() {
                                         </div>
                                         <div className="highlighter"></div>
                                     </div>
-                                </Position>
+                                </div>
                             </Popup>
 
                             <div className={'c-popup__item c-popup__item--row' + (!file ? ' disabled' : '')} onClick={closeTooltip}>
@@ -635,7 +635,7 @@ function Player() {
                                     <span className="c-popup__item__description">F11</span>
                                 </div>
                             </div></>}
-                        </Position>
+                        </div>
                     </Popup>
                 </div>
             </div>

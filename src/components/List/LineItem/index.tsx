@@ -5,6 +5,7 @@ import { formatMMSS } from '../../../common/time';
 import { Media } from "../../../service/media/types";
 import { selectMediaPlaying } from '../../../store/mediaPlaying';
 import { faFilm, faMusic } from '@fortawesome/free-solid-svg-icons';
+import Opacity from '../../Animations/Opacity';
 
 import './index.css';
 
@@ -20,7 +21,7 @@ function LineItem(props: FileProps) {
     };
 
     return (
-        <div className={'c-line-list__item' + (props.className ? ` ${props.className}` : '')}>
+        <Opacity cssAnimation={["opacity"]} className={'c-line-list__item' + (props.className ? ` ${props.className}` : '')}>
             { mediaPlaying?.id === file.id &&
                 <div className={'c-line-animated c-line-list__item--active-icon' + ( mediaPlaying.isPlaying ? ' c-line-animated--start' : '')}>
                     <div className="c-line-animated__item c-line-animated__item--first"></div>
@@ -56,7 +57,7 @@ function LineItem(props: FileProps) {
             <div className="c-line-list__item__info c-line-list__item__duration">
                 <span>{duration ? formatMMSS(duration) : '00:00'}</span>
             </div>
-        </div>
+        </Opacity>
     );
 }
 

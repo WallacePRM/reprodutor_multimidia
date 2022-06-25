@@ -16,10 +16,12 @@ import { selectContainerMargin } from '../../store/containerMargin';
 import { selectMedias, setMedias } from '../../store/medias';
 import { getMediaService } from '../../service/media';
 import { getPlayerService } from '../../service/player';
+import { getPageService } from '../../service/page';
 import { setMediaPlaying } from '../../store/mediaPlaying';
 import { setCurrentMedias } from '../../store/player';
 import { setPlayerState } from '../../store/playerState';
 import { setPlayerConfig } from '../../store/playerConfig';
+import { setPageConfig } from '../../store/pageConfig';
 
 function Main(props: MainProps) {
 
@@ -60,6 +62,12 @@ function Main(props: MainProps) {
                 const playerState = await playerService.getLastMedia();
                 const playerConfig = await playerService.getPlayerConfig();
 
+                const pageConfig = await getPageService().getPageConfig();
+
+                if (pageConfig) {
+                    dispatch(setPageConfig(pageConfig));
+                }
+
                 if (playerConfig) {
                     dispatch(setPlayerConfig(playerConfig));
                 }
@@ -77,6 +85,7 @@ function Main(props: MainProps) {
             catch (error) {
                 console.log(error);
 
+                throw new Error("Falha ao baixar mídias");
             }
         };
 

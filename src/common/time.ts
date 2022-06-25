@@ -15,23 +15,20 @@ export const formatHHMMSS = (time: number) => {
     return `${hStr}:${mStr}:${sStr}`;
 };
 
-export const formatCharacterHHMMSS = (time: number) => {
+export const formatStrHHMMSS = (time: number) => {
 
     const hourTemp = time / 3600;
     const hour = Math.trunc(hourTemp);
-
     const minutesTemp = (hourTemp - hour) * 60;
     const minutes =  Math.trunc(minutesTemp);
-
     const seconds = Math.round((minutesTemp - minutes) * 60);
 
-    const hStr = hour > 0 ? `${hour} horas` : '';
-    const mStr = minutes > 0 ? `${minutes} minutos` : '';
-    const sStr = seconds > 0 ? `${seconds} segundos` : '';
+    const hStr = hour > 0 ? `${hour}  ${hour > 1 ? 'horas' : 'hora'}` : '';
+    const mStr = minutes > 0 ? `${minutes}  ${minutes > 1 ? 'minutos' : 'minuto'}` : '';
+    const sStr = hour <= 0 && seconds > 0 ? `${seconds} ${seconds > 1 ? 'segundos' : 'segundo'}` : '';
 
     return `${hStr} ${mStr} ${sStr}`;
 };
-
 
 export const formatMMSS = (time: number) => {
 

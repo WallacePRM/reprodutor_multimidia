@@ -13,3 +13,9 @@ export const convertMediaType = (str: string) => {
     else if (str.indexOf("video") > -1) return 'video';
     else return 'folder';
 };
+
+export const capitalizeFirstLetter = (str: string) => {
+
+    const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+    return capitalized;
+};

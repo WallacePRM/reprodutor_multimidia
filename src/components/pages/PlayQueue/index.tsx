@@ -14,7 +14,7 @@ import { current } from "@reduxjs/toolkit";
 import { setPlayerState } from "../../../store/playerState";
 import Popup from "reactjs-popup";
 import Position from "../../Animations/Position";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { convertMediaType, removeExtension } from "../../../common/string";
 import { fileToDataUrl } from "../../../common/blob";
@@ -57,14 +57,19 @@ function PlayQueue() {
         }, 0);
     };
 
+    const handleAddToQueue = () => {
+        const medias = [...listItems];
+        dispatch(setCurrentMedias(listItems.concat(medias)));
+    }
+
     return (
         <div className="c-page c-play-queue">
             <div className="c-container__header">
                 <h1 className="c-container__header__title">Fila de reprodução</h1>
                 <div className="c-container__header__actions">
                     <Button title="Procure arquivos para reproduzir" label="Abrir arquivo(s)" icon={faFolderClosed} style={{ borderRadius: '.3rem 0 0 .3rem', borderRight: 0 }}/>
-                    <Popup arrow={false} ref={popupRef} keepTooltipInside=".c-app" trigger={<button className="c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon className="c-button__icon" icon={faChevronDown}/></button>} position="bottom right" >
-                        <Position cssAnimation={["top", "right"]} className="c-popup noselect">
+                    <Popup keepTooltipInside arrow={false} ref={popupRef} trigger={<button className="c-button box-field" style={{ borderRadius: '0 .3rem .3rem 0' }} title="Mais opções para abrir mídia"><FontAwesomeIcon className="c-button__icon" icon={faChevronDown}/></button>} position="bottom right" >
+                        <div className="c-popup noselect">
                             <label className="c-popup__item" onClick={closeTooltip}>
                                 <Button className="c-popup__item__button-hidden" onRead={ handleSelectFile } accept="audio/*,video/*"/>
                                 <div className="c-popup__item__icons">
@@ -94,7 +99,7 @@ function PlayQueue() {
                                     <span className="c-popup__item__description">Insíra uma URL e a mídia desse endereço à fila de reprodução</span>
                                 </div>
                             </div>
-                        </Position>
+                        </div>
                     </Popup>
                 </div>
             </div>
@@ -104,8 +109,9 @@ function PlayQueue() {
                         <Button onClick={handleClearQueue} className="mr-10" label="Limpar" icon={faTrashCan} title="Limpar (Ctrl+Shift+X)" />
 
                         <Popup keepTooltipInside ref={popupAction}  arrow={false} trigger={<button className="c-button box-field"><FontAwesomeIcon className="c-button__icon" icon={faPlus}/>{document.body.clientWidth > 655 && <span className="c-button__label ml-10">Adicionar a</span>}</button>} position="bottom left" >
-                            <Position cssAnimation={["top", "left"]} className="c-popup noselect" style={{ minWidth: '130px' }}>
+                            <div className="c-popup noselect" style={{ minWidth: '130px' }}>
                                 <div className="c-popup__item c-popup__item--row" onClick={closeActionTooltip} style={{ borderBottom: 'var(--border)'}}>
+                                    <div onClick={handleAddToQueue} className="c-popup__item__button-hidden"></div>
                                     <div className="c-popup__item__icons">
                                         <LayoutListThumb className="c-popup__item__icon icon-color" />
                                     </div>
@@ -121,7 +127,7 @@ function PlayQueue() {
                                         <h3 className="c-popup__item__title">Nova playlist</h3>
                                     </div>
                                 </div>
-                            </Position>
+                            </div>
                         </Popup>
                     </div>
                 </div>

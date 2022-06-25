@@ -39,4 +39,29 @@ export class ApiMediaService implements MediaService {
         const newMedias = await response.json();
         return newMedias;
     }
+
+    public async removeMedia(id: number) {
+
+        const response = await fetch(urlBase + `/medias/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.status !== 200) {
+            throw new Error(`Error ${response.status}`);
+        }
+    }
+
+    public async putMedia(media: Partial<Media>) {
+
+        const response = await fetch(urlBase + '/medias', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(media)
+        });
+        if (response.status !== 200) {
+            throw new Error(`Error ${response.status}`);
+        }
+    }
 }
