@@ -3,7 +3,6 @@
     align-items: center;
     justify-content: space-between;
     padding: .7rem 1rem;
-    width: 100%;
     background-color: rgb(var(--bg-color--solid), 1);
     font-size: .85rem;
     border-radius: .5rem;

@@ -213,8 +213,10 @@ function Home() {
 
             { listItems.length > 0 ?
                 <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
-                    {/* <h3 className="c-container__content__title__text">Mídia recente</h3> */}
-                    <SelectBlock />
+                    <h3 className="c-container__content__title__text">Mídia recente</h3>
+                    {/* <Opacity cssAnimation={["opacity"]}>
+                        <SelectBlock />
+                    </Opacity> */}
                 </Opacity>
             : null }
 

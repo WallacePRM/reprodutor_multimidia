@@ -13,15 +13,15 @@ function SelectBlock() {
     return (
         <div className="c-select-block">
             <div className="c-select-block__info">
-                <label htmlFor={inputId}>
+                <label className="d-flex a-items-center" htmlFor={inputId}>
                     <input id={inputId} className="checkbox-input" type="checkbox" />
                     <div className="checkbox-box mr-5"></div>
+                    <span>1 item selecionado</span>
                 </label>
-                <span>1 item selecionado</span>
                 <span className="c-select-block__item--clear accent-color">Limpar</span>
             </div>
             <div className="c-select-block__actions">
-                <button className="c-button box-field btn--primary">
+                <button className="c-button box-field btn--primary c-button--no-media-style">
                     <PlayIcon className="c-button__icon icon-color--inverted mr-5"/>
                     <span className="c-button__label">Reproduzir</span>
                 </button>

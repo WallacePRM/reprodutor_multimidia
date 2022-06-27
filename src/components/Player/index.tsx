@@ -28,7 +28,6 @@ import Slider from '../Slider';
 import { selectPlayerConfig, setPlayerConfig } from '../../store/playerConfig';
 import { arrayUnshiftItem, shuffle, sortAsc } from '../../common/array';
 import Popup from 'reactjs-popup';
-import Position from '../Animations/Position';
 import { CheckInteraction, toggleFullScreen } from '../../common/dom';
 import { getPlayerService } from '../../service/player';
 import { selectPlayerState, setPlayerState } from '../../store/playerState';
