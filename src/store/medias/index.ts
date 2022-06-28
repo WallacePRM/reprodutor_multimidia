@@ -3,7 +3,7 @@ import { RootState } from "..";
 import { Media } from "../../service/media/types";
 
 const mediasSlice = createSlice({
-    name: 'medias',
+    name: 'selectedFiles',
     initialState: {
       data: [] as Media[],
     },

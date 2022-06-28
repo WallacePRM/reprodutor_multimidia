@@ -9,6 +9,7 @@ import playerStateReducer from './playerState';
 import playerModeReducer from './playerMode';
 import playerConfigReducer from './playerConfig';
 import pageConfigReducer from './pageConfig';
+import selectedFilesReducer from './selectedFiles';
 
 // LOCAL STORAGE
 const saveToLocalStorage = (state: any) => {
@@ -40,6 +41,7 @@ export const store = configureStore({
     playerConfig: playerConfigReducer,
     player: playerReducer,
     pageConfig: pageConfigReducer,
+    selectedFiles: selectedFilesReducer,
   },
   // preloadedState: loadFromLocalStorage()
 });

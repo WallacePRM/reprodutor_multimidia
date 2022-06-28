@@ -17,6 +17,10 @@
   border: 1px solid transparent;
 }
 
+.select-mode .c-grid-list__item__interface {
+  pointer-events: none;
+}
+
 .c-grid-list__item:hover {
   background-color: rgb(var(--border-color), .4);
   border-color: rgb(var(--border-color), .5);
@@ -65,10 +69,6 @@
   font-size: 2rem;
 }
 
-.c-grid-list__item:hover .c-grid-list__item__actions {
-  opacity: 1;
-}
-
 .c-grid-list__item__actions {
   position: absolute;
   top: 0;
@@ -77,7 +77,10 @@
   width: 100%;
   opacity: 0;
   pointer-events: none;
-  z-index: 1;
+}
+
+.c-grid-list__item__interface:hover .c-grid-list__item__actions {
+  opacity: 1;
 }
 
 .c-grid-list__item__actions__item {
@@ -91,29 +94,50 @@
   width: 2rem;
   border: 1px solid rgb(var(--border-color--dark), .7);
   color: rgb(var(--text-color), 1);
-  transform: scale(0);
-  transition: .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-size: .7em;
-  pointer-events: all;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .c-grid-list__item:hover .c-grid-list__item__actions__item {
-  transform: scale(1);
+  opacity: 1;
+  pointer-events: all;
 }
 
 .c-grid-list__item__actions__item:hover {
   background-color: rgb(var(--bg-color--solid), .9);
 }
 
+.select-mode .c-grid-list__item__actions__item--checkbox {
+  pointer-events: all !important;
+  opacity: 1;
+  z-index: 1;
+}
+
+
 .c-grid-list__item__actions__item--checkbox {
-  top: .5rem;
-  left: .5rem;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
   border: none;
+  opacity: 0;
   background-color: transparent;
+  pointer-events: none !important;
 }
 
 .c-grid-list__item__actions__item--checkbox:hover {
   background-color: transparent;
+  pointer-events: none;
+}
+
+.c-grid-list__item__actions__item--checkbox .checkbox-box {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  margin: .2rem;
+  pointer-events: all;
 }
 
 .c-grid-list__item__actions__item--play {

@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TranformOpacity from "../../Animations/TransformOpacity";
 import { validateUrl } from "../../../common/async";
 import SelectBlock from "../../SelectBlock";
+import { selectSelectedFiles } from "../../../store/selectedFiles";
 
 function Home() {
 
@@ -31,6 +32,7 @@ function Home() {
 
     const listItems = useSelector(selectMedias);
     const mediaPlaying = useSelector(selectMediaPlaying);
+    const selectedItems = useSelector(selectSelectedFiles);
     const itemIndex = listItems.findIndex(item => item.id === mediaPlaying?.id);
     let recentMedias: any[] = [...listItems];
     const dispatch = useDispatch();
@@ -213,10 +215,11 @@ function Home() {
 
             { listItems.length > 0 ?
                 <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
-                    <h3 className="c-container__content__title__text">Mídia recente</h3>
-                    {/* <Opacity cssAnimation={["opacity"]}>
-                        <SelectBlock />
-                    </Opacity> */}
+                    { selectedItems.length === 0 ?
+                    <h3 className="c-container__content__title__text">Mídia recente</h3> :
+                    <Opacity cssAnimation={["opacity"]}>
+                        <SelectBlock list={listItems}/>
+                    </Opacity>}
                 </Opacity>
             : null }
 
