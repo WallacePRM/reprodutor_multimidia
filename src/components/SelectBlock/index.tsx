@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { setCurrentMedias } from '../../store/player';
 import { setMediaPlaying } from '../../store/mediaPlaying';
 import { Media } from '../../service/media/types';
+import { setPlayerState } from '../../store/playerState';
 
 import './index.css';
 
@@ -29,8 +30,14 @@ function SelectBlock(props: SelectBlockProps) {
 
         const selectedMedias = medias.filter(m => selectedItems.some(s => s.id === m.id));
 
-        dispatch((setCurrentMedias(selectedMedias)));
-        dispatch(setMediaPlaying(selectedMedias[0]));
+        dispatch((setCurrentMedias(null)));
+        dispatch(setMediaPlaying(null));
+        dispatch(setPlayerState({file_id: -1, currentTime: 0, duration: 0}));
+
+        setTimeout(() => {
+            dispatch((setCurrentMedias(selectedMedias)));
+            dispatch(setMediaPlaying(selectedMedias[0]));
+        }, 0);
 
         dispatch(setSelectedFiles([]));
     };

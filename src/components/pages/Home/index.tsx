@@ -215,8 +215,8 @@ function Home() {
 
             { listItems.length > 0 ?
                 <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
-                    { selectedItems.length === 0 ?
-                    <h3 className="c-container__content__title__text">Mídia recente</h3> :
+                    <h3 className="c-container__content__title__text">Mídia recente</h3>
+                    { selectedItems.length > 0 &&
                     <Opacity cssAnimation={["opacity"]}>
                         <SelectBlock list={listItems}/>
                     </Opacity>}

@@ -70,6 +70,7 @@
 /* CONTAINER CONTENT */
 
 .c-container__content__title {
+  position: relative;
   padding: 1.5rem 55px;
   padding-top: 1rem;
   margin: 0 5px;
@@ -100,7 +101,6 @@
 .c-container__content__title__text {
   font-size: 1.3em;
   font-weight: 500;
-  padding: .8rem 0;
 }
 
 .c-page {

@@ -24,10 +24,13 @@ import Popup from "reactjs-popup";
 import { selectPageConfig, setPageConfig } from "../../../store/pageConfig";
 import { getPageService } from "../../../service/page";
 import { selectContainerMargin } from "../../../store/containerMargin";
+import SelectBlock from "../../SelectBlock";
+import { selectSelectedFiles } from "../../../store/selectedFiles";
 
 
 function Musics() {
 
+    const selectedItems = useSelector(selectSelectedFiles);
     const pageConfig = useSelector(selectPageConfig);
     const filterField: string = pageConfig ? pageConfig.orderBy : 'name';
     const listItems = useSelector(selectMedias);
@@ -37,7 +40,6 @@ function Musics() {
     const [ lastSeparatorInvisible, setLastSeparatorInvisible ] = useState<string | null>(listSeparators[0] || '');
     const dispatch = useDispatch();
     const mediaPlaying = useSelector(selectMediaPlaying);
-    const containerMargin = useSelector(selectContainerMargin);
     const popupRef: any = useRef();
     const separatorRef: any = useRef();
     const closeTooltip = () => popupRef.current && popupRef.current.close();
@@ -174,6 +176,10 @@ function Musics() {
 
                     </div>
                 </div>
+                { selectedItems.length > 0 &&
+                <Opacity cssAnimation={["opacity"]}>
+                    <SelectBlock list={musics}/>
+                </Opacity>}
             </Opacity> : null }
 
             <div className="c-container__content" style={{ height: musics.length === 0 ? '100%' : '' }}>

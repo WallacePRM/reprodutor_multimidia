@@ -231,10 +231,10 @@ function GridItem(props: FileProps) {
                     { file.type === 'music' ? <span className="c-grid-list__item__subtitle">{file.author || ''}</span> : null}
                 </div>
             </div>
-            <label onClick={selectedItems.length > 0 ? handleChangeSelected : (e) => e.stopPropagation()} className="c-grid-list__item__actions__item c-grid-list__item__actions__item--checkbox">
+            <div onClick={selectedItems.length > 0 ? handleChangeSelected : (e) => e.stopPropagation()} className="c-grid-list__item__actions__item c-grid-list__item__actions__item--checkbox">
                 <input onChange={() => {}} checked={selected} className="checkbox-input" type="checkbox" />
-                <label onClick={selectedItems.length === 0 ? handleChangeSelected : () => {}} className="checkbox-box"></label>
-            </label>
+                <div onClick={selectedItems.length === 0 ? handleChangeSelected : () => {}} className="checkbox-box"></div>
+            </div>
         </Opacity>
     );
 }
