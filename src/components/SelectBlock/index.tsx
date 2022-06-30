@@ -70,6 +70,9 @@ function SelectBlock(props: SelectBlockProps) {
         if (selectedItems.length !== medias.length) {
             setSelected(false);
         }
+        else {
+            setSelected(true);
+        }
 
     }, [selectedItems]);
 

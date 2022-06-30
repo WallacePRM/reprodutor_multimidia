@@ -16,17 +16,20 @@ import { fileToDataUrl } from "../../../common/blob";
 import { getMediaService } from "../../../service/media";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import { setPlayerMode } from "../../../store/playerMode";
-
-import './index.css';
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
 import { setPlayerState } from "../../../store/playerState";
 import Popup from "reactjs-popup";
 import { useRef } from "react";
+import SelectBlock from "../../SelectBlock";
+import { selectSelectedFiles } from "../../../store/selectedFiles";
+
+import './index.css';
 
 function Videos() {
 
     const filterField = 'name';
+    const selectedItems = useSelector(selectSelectedFiles);
     const listItems = useSelector(selectMedias);
     const videoList = listItems.filter(item => item.type === 'video').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
     const files: any[] = [];
@@ -99,6 +102,10 @@ function Videos() {
                         </Popup>
                     </div>
                 </div>
+                { selectedItems.length > 0 &&
+                <Opacity cssAnimation={["opacity"]}>
+                    <SelectBlock list={videoList}/>
+                </Opacity>}
             </Opacity>
             }
 

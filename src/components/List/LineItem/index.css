@@ -44,6 +44,10 @@
   opacity: 0;
 }
 
+.select-mode:hover .c-line-list__item__type-icon {
+  opacity: 1;
+}
+
 .c-line-list__item:hover {
   background-color: rgb(var(--border-color), .4);
 }

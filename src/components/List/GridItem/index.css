@@ -89,10 +89,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: rgb(var(--bg-color--light), .8);
+  background-color: rgb(var(--bg-color--light), .7);
+  border: 1px solid rgb(var(--border-color--dark), .7);
   height: 2rem;
   width: 2rem;
-  border: 1px solid rgb(var(--border-color--dark), .7);
   color: rgb(var(--text-color), 1);
   transition: .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-size: .7em;

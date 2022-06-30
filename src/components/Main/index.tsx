@@ -22,6 +22,7 @@ import { setCurrentMedias } from '../../store/player';
 import { setPlayerState } from '../../store/playerState';
 import { setPlayerConfig } from '../../store/playerConfig';
 import { setPageConfig } from '../../store/pageConfig';
+import { setSelectedFiles } from '../../store/selectedFiles';
 
 function Main(props: MainProps) {
 
@@ -91,6 +92,15 @@ function Main(props: MainProps) {
 
         getMedias();
     }, []);
+
+    useEffect(() => {
+
+        const resetSelectedItems = () => {
+            dispatch(setSelectedFiles([]));
+        };
+
+        resetSelectedItems();
+    }, [window.history.state.idx]);
 
     if (isLoading) {
         return <PreLoad />

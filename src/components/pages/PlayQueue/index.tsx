@@ -10,21 +10,20 @@ import { isOdd } from "../../../common/number";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import Margin from "../../Animations/Margin";
 import Opacity from "../../Animations/Opacity";
-import { current } from "@reduxjs/toolkit";
 import { setPlayerState } from "../../../store/playerState";
 import Popup from "reactjs-popup";
-import Position from "../../Animations/Position";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { convertMediaType, removeExtension } from "../../../common/string";
-import { fileToDataUrl } from "../../../common/blob";
 import { getMediaService } from "../../../service/media";
 import { setMedias } from "../../../store/medias";
 import { getPlayerService } from "../../../service/player";
+import { selectSelectedFiles, setSelectedFiles } from "../../../store/selectedFiles";
+import SelectBlock from "../../SelectBlock";
 
 function PlayQueue() {
 
     const medias: any = null;
+    const selectedItems = useSelector(selectSelectedFiles);
     let listItems = useSelector(selectCurrentMedias) || [];
     const mediaPlaying = useSelector(selectMediaPlaying);
     const popupAction: any = useRef();
@@ -60,7 +59,8 @@ function PlayQueue() {
     const handleAddToQueue = () => {
         const medias = [...listItems];
         dispatch(setCurrentMedias(listItems.concat(medias)));
-    }
+    };
+
 
     return (
         <div className="c-page c-play-queue">
@@ -131,6 +131,10 @@ function PlayQueue() {
                         </Popup>
                     </div>
                 </div>
+                { selectedItems.length > 0 &&
+                <Opacity cssAnimation={["opacity"]}>
+                    <SelectBlock list={listItems}/>
+                </Opacity>}
             </Opacity>
 
             <div className="c-container__content" style={{ height: listItems.length === 0 ? '100%' : '' }}>
