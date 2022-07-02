@@ -24,6 +24,10 @@
     align-items: center;
 }
 
+.c-select-block__actions__item {
+    margin-left: .5rem;
+}
+
 .c-select-block__item--clear {
     position: relative;
     margin: 0 1rem;

@@ -30,7 +30,7 @@ function Sidebar() {
     useEffect(() => {
 
         const margin = document.body.offsetWidth > 655 ? (ref.current?.offsetWidth || 321) * 0.0625 : 0;
-        dispatch(setContainerMargin({ margin }));
+        dispatch(setContainerMargin({ margin: margin }));
     }, [ref.current]);
 
     const setRotateAnimation = () => {

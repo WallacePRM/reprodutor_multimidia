@@ -71,8 +71,6 @@ function GridItem(props: FileProps) {
 
     const handleChangeSelected = (e: React.SyntheticEvent) => {
 
-        e.stopPropagation();
-
         const newSelectState = !selected;
 
         setTimeout(() => {
@@ -85,6 +83,8 @@ function GridItem(props: FileProps) {
                 setTimeout(() => dispatch(removeSelectedFile({id: file.id})), 10);
             }
         },0);
+
+        // popupRef.current && popupRef.current.close();
     };
 
     const closeTooltip = (e: any) => {
@@ -213,7 +213,8 @@ function GridItem(props: FileProps) {
                                         <h3 className="c-popup__item__title">Propriedades</h3>
                                     </div>
                                 </div>
-                                <div className="c-popup__item c-popup__item--row" style={{ borderTop: 'var(--border)'}}>
+                                <div className="c-popup__item c-popup__item--row" style={{ borderTop: 'var(--border)'}} onClick={closeTooltip}>
+                                    <div onClick={handleChangeSelected} className="c-popup__item__button-hidden"></div>
                                     <div className="c-popup__item__icons">
                                         <CheckICon className="c-popup__item__icon icon-color" />
                                     </div>

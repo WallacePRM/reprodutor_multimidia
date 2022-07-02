@@ -36,9 +36,7 @@
   width: 10rem;
   height: 10rem;
   border-radius: .3rem;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  border: 1px solid rgb(var(--border-color--dark), .15)
 }
 
 .c-grid-list__item__thumbnail img {
@@ -46,7 +44,7 @@
   height: 100%;
   object-fit: cover;
   border-radius: .3rem;
-  border: 1px solid rgb(var(--border-color--dark), .15);
+  /* border: 1px solid rgb(var(--border-color--dark), .15); */
 }
 
 .c-grid-list__item__icon {

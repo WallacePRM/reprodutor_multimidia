@@ -8,7 +8,7 @@ import Logo from '../../components/Logo';
 import ToggleSidebar from '../../components/ToggleSidebar';
 import PreviousRouter from '../../components/PreviousRouter';
 import { WindowState } from '../../App.hook';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setSidebarOpened } from '../../store/sidebarOpened';
 import { useSelector } from 'react-redux';
@@ -31,7 +31,6 @@ function Main(props: MainProps) {
     const containerMargin = useSelector(selectContainerMargin);
     const listItems = useSelector(selectMedias);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -109,7 +108,7 @@ function Main(props: MainProps) {
         <div className={'c-app noselect' + (windowFocused ? '' : ' window--unfocused')}>
             <main id="popup-root" className="c-app__content">
                 <Sidebar />
-                <div style={{ marginLeft: `${containerMargin}rem` }} className="c-container">
+                <div style={{ marginLeft: `${containerMargin.margin}rem` }} className="c-container">
                     {document.body.clientWidth < 1000 ?
                         <div className="c-app__logo">
                             {document.body.clientWidth <= 655 ?

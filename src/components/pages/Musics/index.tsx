@@ -23,7 +23,6 @@ import { selectPlayerConfig } from "../../../store/playerConfig";
 import Popup from "reactjs-popup";
 import { selectPageConfig, setPageConfig } from "../../../store/pageConfig";
 import { getPageService } from "../../../service/page";
-import { selectContainerMargin } from "../../../store/containerMargin";
 import SelectBlock from "../../SelectBlock";
 import { selectSelectedFiles } from "../../../store/selectedFiles";
 

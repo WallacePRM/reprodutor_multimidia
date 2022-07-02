@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { delay } from './common/async';
 import { setContainerMargin } from "./store/containerMargin";
-import { setSidebarOpened, toggleSidebar } from "./store/sidebarOpened";
+import { setSidebarOpened } from "./store/sidebarOpened";
 
 export function useWindowState(): WindowState {
 
@@ -26,15 +26,24 @@ export function useWindowState(): WindowState {
       delay(() => {
         if (document.body.clientWidth < 1000) {
           if (document.body.clientWidth <= 655) {
-            dispatch(setContainerMargin({ margin: 0 }));
+            dispatch(setContainerMargin({
+              margin: 0,
+              appWidth: document.body.clientWidth
+            }));
           }
           else {
-            dispatch(setContainerMargin({ margin: 3 }));
+            dispatch(setContainerMargin({
+              margin: 3,
+              appWidth: document.body.clientWidth
+            }));
           }
         }
 
         if (document.body.clientWidth >= 1000) {
-          dispatch(setContainerMargin({ margin: 20 }));
+          dispatch(setContainerMargin({
+            margin: 20,
+            appWidth: document.body.clientWidth
+          }));
         }
 
         dispatch(setSidebarOpened({ isOpened: false }));
