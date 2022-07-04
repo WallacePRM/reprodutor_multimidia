@@ -6,29 +6,29 @@ import { ReactComponent as PlusIcon } from '@icon/themify-icons/icons/plus.svg';
 import { ReactComponent as PencilIcon } from '@icon/themify-icons/icons/pencil.svg';
 import { ReactComponent as InfoAltIcon } from '@icon/themify-icons/icons/info-alt.svg';
 import { ReactComponent as LayoutListThumb } from '@icon/themify-icons/icons/layout-list-thumb.svg';
-import { ReactComponent as CheckICon } from '@icon/themify-icons/icons/check.svg';
-import { ReactComponent as CloseIcon } from '@icon/themify-icons/icons/close.svg';
 import { ReactComponent as InfoIcon } from '@icon/themify-icons/icons/info-alt.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faEllipsis, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
 import { selectSelectedFiles, setSelectedFiles } from '../../store/selectedFiles';
 import { useDispatch } from 'react-redux';
-import { setCurrentMedias } from '../../store/player';
-import { setMediaPlaying } from '../../store/mediaPlaying';
+import { selectCurrentMedias, setCurrentMedias } from '../../store/player';
+import { selectMediaPlaying, setMediaPlaying } from '../../store/mediaPlaying';
 import { Media } from '../../service/media/types';
 import { setPlayerState } from '../../store/playerState';
 import { selectContainerMargin } from '../../store/containerMargin';
-
-import './index.css';
 import Popup from 'reactjs-popup';
 import Margin from '../Animations/Margin';
+
+import './index.css';
 
 function SelectBlock(props: SelectBlockProps) {
 
     const [ selected, setSelected ] = useState(false);
 
     const medias = props.list;
+    const currentMedias: Media[] | null = useSelector(selectCurrentMedias);
+    const mediaPlaying = useSelector(selectMediaPlaying);
     const selectedItems = useSelector(selectSelectedFiles);
     const containerMargin = useSelector(selectContainerMargin);
     const containerWidth = containerMargin.appWidth - (containerMargin.margin / 0.0625);
@@ -40,9 +40,13 @@ function SelectBlock(props: SelectBlockProps) {
         popupRef.current && popupRef.current.close();
     };
 
+    const clearSelectedItems = () => {
+        dispatch(setSelectedFiles([]));
+    };
+
     const handleClearSelectedItems = () => {
 
-        dispatch(setSelectedFiles([]));
+        clearSelectedItems();
     };
 
     const handlePlaySelectedItems = () => {
@@ -58,7 +62,7 @@ function SelectBlock(props: SelectBlockProps) {
             dispatch(setMediaPlaying(selectedMedias[0]));
         }, 0);
 
-        dispatch(setSelectedFiles([]));
+        clearSelectedItems();
     };
 
     const handleSelectAllItems = () => {
@@ -82,6 +86,29 @@ function SelectBlock(props: SelectBlockProps) {
                 dispatch(setSelectedFiles([]));
             }
         }, 0);
+    };
+
+    const handleSetNextMedias = (e: React.MouseEvent) => {
+
+        if (e.target !== e.currentTarget) return;
+
+        const nextMedias = currentMedias ? [...currentMedias] : [];
+        for (let item of selectedItems) {
+
+            const media = medias.find(x => x.id === item.id);
+            if (media) {
+                if (media.id !== mediaPlaying?.id) {
+                    nextMedias.push(media);
+                }
+            }
+        }
+
+        dispatch(setCurrentMedias(nextMedias));
+        if (nextMedias.length === 1) {
+            dispatch(setMediaPlaying(nextMedias[0]));
+        }
+
+        clearSelectedItems();
     };
 
     useEffect(() => {
@@ -110,7 +137,7 @@ function SelectBlock(props: SelectBlockProps) {
                     <PlayIcon className="c-button__icon icon-color--inverted mr-5"/>
                     <span className="c-button__label">Reproduzir</span>
                 </button>
-                {containerWidth >= 790 && <button className="c-select-block__actions__item c-button box-field ">
+                {containerWidth >= 790 && <button onClick={handleSetNextMedias} className="c-select-block__actions__item c-button box-field ">
                     <PlayForwardIcon className="c-button__icon mr-5"/>
                     <span className="c-button__label">Reproduzir em seguida</span>
                 </button>}
@@ -133,7 +160,7 @@ function SelectBlock(props: SelectBlockProps) {
                     </button>} position="top center">
                     <Margin cssAnimation={["marginTop"]} className="c-popup noselect" style={{ minWidth: '200px' }}>
                         {containerWidth < 790 && <div className={'c-popup__item c-popup__item--row'} onClick={closeTooltip}>
-                            <div onClick={() => {}} className="c-popup__item__button-hidden"></div>
+                            <div onClick={handleSetNextMedias} className="c-popup__item__button-hidden"></div>
                             <div className="c-popup__item__icons">
                                 <PlayForwardIcon className="c-popup__item__icon icon-color" />
                             </div>
@@ -141,7 +168,7 @@ function SelectBlock(props: SelectBlockProps) {
                                 <h3 className="c-popup__item__title">Reproduzir em seguida</h3>
                             </div>
                         </div>}
-                        {containerWidth < 910 && <Popup keepTooltipInside closeOnDocumentClick={false} nested arrow={false} on="hover" mouseLeaveDelay={300} mouseEnterDelay={300} trigger={<div style={{ borderTop: 'var(--border)'}} className={'c-popup__item c-popup__item--row'}><div className="c-popup__item__icons"><PlusIcon className="c-popup__item__icon icon-color" /></div><div className="c-popup__item__label"><h3 className="c-popup__item__title">Adicionar a</h3><FontAwesomeIcon className="c-popup__item__description" icon={faChevronRight}/></div></div>} position="right top" >
+                        {containerWidth < 910 && <Popup keepTooltipInside closeOnDocumentClick={false} nested arrow={false} on="hover" mouseLeaveDelay={300} mouseEnterDelay={300} trigger={<div className={'c-popup__item c-popup__item--row'}><div className="c-popup__item__icons"><PlusIcon className="c-popup__item__icon icon-color" /></div><div className="c-popup__item__label"><h3 className="c-popup__item__title">Adicionar a</h3><FontAwesomeIcon className="c-popup__item__description" icon={faChevronRight}/></div></div>} position="right top" >
                             <div role="tooltip" className="c-popup noselect" style={{ minWidth: '130px' }}>
                                 <div className="c-popup__item c-popup__item--row" style={{ borderBottom: 'var(--border)'}}>
                                     <div className="c-popup__item__icons">
@@ -161,7 +188,7 @@ function SelectBlock(props: SelectBlockProps) {
                                 </div>
                             </div>
                         </Popup>}
-                        {containerWidth < 1030 && <div className={'c-popup__item c-popup__item--row'} onClick={closeTooltip}>
+                        {containerWidth < 1030 && selectedItems.length === 1 && <div className={'c-popup__item c-popup__item--row'} onClick={closeTooltip}>
                             <div className="c-popup__item__icons">
                                 <PencilIcon className="c-popup__item__icon icon-color" />
                             </div>
@@ -169,7 +196,7 @@ function SelectBlock(props: SelectBlockProps) {
                                 <h3 className="c-popup__item__title">Editar informações</h3>
                             </div>
                         </div>}
-                        {containerWidth < 1150 && <div className={'c-popup__item c-popup__item--row'} onClick={closeTooltip}>
+                        {containerWidth < 1150 && selectedItems.length === 1 && <div className={'c-popup__item c-popup__item--row'} onClick={closeTooltip}>
                             <div className="c-popup__item__icons">
                                 <InfoIcon className="c-popup__item__icon icon-color" />
                             </div>

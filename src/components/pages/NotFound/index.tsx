@@ -13,7 +13,7 @@ function NotFound() {
                 <h1  className="c-notfound__title">Ooops...404!</h1>
                 <span  className="c-notfound__description">A página solicitada não pôde ser encontrada.</span>
             </div>
-            <Link to="/" className="link">Voltar para o início</Link>
+            <Link to="/home" className="link">Voltar para o início</Link>
         </div>
     );
 }

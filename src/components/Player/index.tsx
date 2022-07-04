@@ -33,6 +33,7 @@ import { getPlayerService } from '../../service/player';
 import { selectPlayerState, setPlayerState } from '../../store/playerState';
 
 import './index.css';
+import { Media } from '../../service/media/types';
 
 let timeoutId: any;
 function Player() {
@@ -42,11 +43,13 @@ function Player() {
 
     const playerService = getPlayerService();
     const playerConfig = useSelector(selectPlayerConfig);
-    const medias = useSelector(selectCurrentMedias) || [];
+    const currentMedias = useSelector(selectCurrentMedias) || [];
     const file = useSelector(selectMediaPlaying);
     const playerMode = useSelector(selectPlayerMode);
     const mediaRef = useRef<HTMLAudioElement>();
     const videoRef = useRef<HTMLVideoElement>(null);
+    const currentMediasRef = useRef<Media[] | null>();
+    currentMediasRef.current = currentMedias;
 
     let playerState = useSelector(selectPlayerState);
     let currentTimePorcents = 0;
@@ -58,8 +61,8 @@ function Player() {
     }
 
     const currentVolumePorcents = playerConfig.volume ? parseInt((playerConfig.volume * 100).toFixed(0)) : 0;
-    const firstMedia = medias && medias[0];
-    const lastMedia = medias && medias[medias.length - 1];
+    const firstMedia = currentMedias && currentMedias[0];
+    const lastMedia = currentMedias && currentMedias[currentMedias.length - 1];
     const popupRef: any = useRef();
     const closeTooltip = () => popupRef.current && popupRef.current.close();
     const coverStyle = {
@@ -92,18 +95,18 @@ function Player() {
 
     const handlePrevious = () => {
 
-        const index = medias.findIndex((media) => media.id === file?.id);
+        const index = currentMedias.findIndex((media) => media.id === file?.id);
         if (index > 0) {
-            const newFile = medias[index - 1];
+            const newFile = currentMedias[index - 1];
             dispatch(setMediaPlaying(newFile));
         }
     };
 
     const handleNext = () => {
 
-        const index = medias.findIndex((media) => media.id === file?.id);
-        if (index < medias.length - 1) {
-            const newFile = medias[index + 1];
+        const index = currentMedias.findIndex((media) => media.id === file?.id);
+        if (index < currentMedias.length - 1) {
+            const newFile = currentMedias[index + 1];
             dispatch(setMediaPlaying(newFile));
         }
     };
@@ -153,7 +156,7 @@ function Player() {
 
     const handleToggleShuffle = async () => {
 
-        let newMedias = [...medias];
+        let newMedias = [...currentMedias];
         if (playerConfig.shuffle) {
             newMedias = newMedias.sort((a, b) => sortAsc(a.name, b.name));
             dispatch(setCurrentMedias(newMedias));
@@ -349,6 +352,7 @@ function Player() {
             });
             mediaRef.current.addEventListener('ended', async () => {
 
+                const currentMedias = currentMediasRef.current || [];
                 file.type === 'video' && setPlayerHidden(false);
 
                 const newLastMedia = {currentTime: 0};
@@ -375,15 +379,18 @@ function Player() {
                     dispatch(setMediaPlaying(newFile));
                 }
 
-
-                const index = medias.findIndex((media) => media.id === file.id);
-                if (!(index >= medias.length - 1)) {
-                    const nextFile = medias[index + 1];
+                const index = currentMedias.findIndex((media) => media.id === file.id);
+                if (!(index >= currentMedias.length - 1)) {
+                    const nextFile = currentMedias[index + 1];
                     dispatch(setMediaPlaying(nextFile));
                 }
 
-                if (playerConfig.repeatMode === 'all' && index >= medias.length - 1) {
-                    dispatch(setMediaPlaying(medias[0]));
+                if (playerConfig.repeatMode === 'all' && index >= currentMedias.length - 1) {
+                    if (newFile.id === currentMedias[0].id) {
+                        dispatch(setMediaPlaying(null));
+                    }
+
+                    setTimeout(() => dispatch(setMediaPlaying(currentMedias[0])), 0);
                 }
             });
             mediaRef.current.addEventListener('playing', () => {
@@ -482,7 +489,7 @@ function Player() {
                         {!playerConfig.shuffle && <ShuffleDesativeIcon className="icon-color c-player__controls__item--desatived"/>}
                         <ShuffleIcon className="icon-color"/>
                     </div>}
-                    <div onClick={handlePrevious} className={'c-player__controls__item player--button' + (file && (medias?.length === 1 || firstMedia?.id === file?.id) ? ' disabled' : '')} title="Voltar (Ctrl+B)">
+                    <div onClick={handlePrevious} className={'c-player__controls__item player--button' + (file && (currentMedias?.length === 1 || firstMedia?.id === file?.id) ? ' disabled' : '')} title="Voltar (Ctrl+B)">
                         <FontAwesomeIcon icon={faBackwardStep}/>
                     </div>
                     { document.body.clientWidth > 655 && file?.type === 'video' && playerMode === 'full' &&
@@ -498,7 +505,7 @@ function Player() {
                             <BackRightIcon className="icon-color"/>
                         </div>
                     }
-                    <div onClick={handleNext } className={'c-player__controls__item player--button' + (file && (medias?.length === 1 || lastMedia?.id  === file?.id) ? ' disabled' : '')} title="Avançar (Ctrl+F)">
+                    <div onClick={handleNext } className={'c-player__controls__item player--button' + (file && (currentMedias?.length === 1 || lastMedia?.id  === file?.id) ? ' disabled' : '')} title="Avançar (Ctrl+F)">
                         <FontAwesomeIcon icon={faForwardStep}/>
                     </div>
                     { document.body.clientWidth > 655 &&

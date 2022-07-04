@@ -21,11 +21,12 @@ import './index.css';
 
 function Sidebar() {
 
-    const ref = useRef<HTMLHeadingElement>(null);
-    const { pathname } = useLocation();
-    const sidebarIsOpened = useSelector(selectSidebarOpened);
-    const dispatch = useDispatch();
     const [ rotate, setRotate ] = useState(false);
+
+    const { pathname } = useLocation();
+    const sidebarIsOpened: boolean = useSelector(selectSidebarOpened);
+    const ref = useRef<HTMLHeadingElement>(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
 
@@ -53,7 +54,7 @@ function Sidebar() {
                     <Searchbar />
                 </div>
                 <nav className="c-sidebar__nav">
-                    <Link to="/" className={'c-sidebar__item' + (pathname === '/' ? ' c-sidebar__item--active' : '')}  title="Início (Ctrl+Shifht+F)">
+                    <Link to="/home" className={'c-sidebar__item' + (pathname === '/home' ? ' c-sidebar__item--active' : '')}  title="Início (Ctrl+Shifht+F)">
                         <div className="d-flex a-items-center">
                             <Home className="c-sidebar__item__icon icon-color" />
                             <label className="c-sidebar__item__label" >Início</label>

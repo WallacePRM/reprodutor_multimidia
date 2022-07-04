@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useWindowState } from './App.hook';
 
 import Main from './components/Main';
@@ -16,16 +16,18 @@ import './App.css';
 function App() {
 
   const windowState = useWindowState();
+  const lastRoute = localStorage.getItem('lastRoute') || '/home';
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main windowState={windowState} /> }>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/musics" element={<Musics />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="/queue" element={<PlayQueue />} />
           <Route path="/playlists/youtube" element={<Playlists />} />
+          <Route path="/" element={<Navigate to={lastRoute} replace/>}></Route>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -24,6 +24,7 @@ import TranformOpacity from "../../Animations/TransformOpacity";
 import { validateUrl } from "../../../common/async";
 import SelectBlock from "../../SelectBlock";
 import { selectSelectedFiles } from "../../../store/selectedFiles";
+import { useLocation } from "react-router-dom";
 
 function Home() {
 

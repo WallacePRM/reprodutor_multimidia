@@ -27,6 +27,7 @@ import { selectMedias, setMedias } from "../../../store/medias";
 import { removeSelectedFile, selectSelectedFiles, setSelectedFile } from "../../../store/selectedFiles";
 
 import './index.css';
+import { setMediaPlaying } from "../../../store/mediaPlaying";
 
 function GridItem(props: FileProps) {
 
@@ -49,7 +50,14 @@ function GridItem(props: FileProps) {
 
         if (e.target !== e.currentTarget) return;
 
-        dispatch(setCurrentMedias([...currentMedias, file]));
+        const nextMedias = currentMedias ? [...currentMedias] : [];
+        nextMedias.push(file);
+
+        dispatch(setCurrentMedias(nextMedias));
+
+        if (nextMedias.length === 1) {
+            dispatch(setMediaPlaying(nextMedias[0]));
+        }
     };
 
     const handleDeleteMedia = async (e: React.MouseEvent) => {

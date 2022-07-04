@@ -8,7 +8,7 @@ import Logo from '../../components/Logo';
 import ToggleSidebar from '../../components/ToggleSidebar';
 import PreviousRouter from '../../components/PreviousRouter';
 import { WindowState } from '../../App.hook';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setSidebarOpened } from '../../store/sidebarOpened';
 import { useSelector } from 'react-redux';
@@ -28,6 +28,7 @@ function Main(props: MainProps) {
 
     const [windowFocused] = props.windowState;
     const [isLoading, setIsLoading] = useState(true);
+    const location = useLocation();
     const containerMargin = useSelector(selectContainerMargin);
     const listItems = useSelector(selectMedias);
     const dispatch = useDispatch();
@@ -100,6 +101,17 @@ function Main(props: MainProps) {
 
         resetSelectedItems();
     }, [window.history.state.idx]);
+
+    useEffect(() => {
+
+        const setDefaultRoute = () => {
+
+            const lastRoute = location.pathname;
+            localStorage.setItem('lastRoute', lastRoute);
+        };
+
+        setDefaultRoute();
+    }, [location]);
 
     if (isLoading) {
         return <PreLoad />
