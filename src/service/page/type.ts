@@ -1,4 +1,5 @@
 
 export type PageConfig = {
-    orderBy: string;
+    musicsOrderBy?: string;
+    videosOrderBy?: string;
 }

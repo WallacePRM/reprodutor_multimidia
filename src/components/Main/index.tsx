@@ -22,7 +22,7 @@ import { setCurrentMedias } from '../../store/player';
 import { setPlayerState } from '../../store/playerState';
 import { setPlayerConfig } from '../../store/playerConfig';
 import { setPageConfig } from '../../store/pageConfig';
-import { setSelectedFiles } from '../../store/selectedFiles';
+import { selectSelectedFiles, setSelectedFiles } from '../../store/selectedFiles';
 
 function Main(props: MainProps) {
 
@@ -30,6 +30,7 @@ function Main(props: MainProps) {
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
     const containerMargin = useSelector(selectContainerMargin);
+    const selectedItems = useSelector(selectSelectedFiles);
     const listItems = useSelector(selectMedias);
     const dispatch = useDispatch();
 
@@ -99,8 +100,10 @@ function Main(props: MainProps) {
             dispatch(setSelectedFiles([]));
         };
 
-        resetSelectedItems();
-    }, [window.history.state.idx]);
+        if (selectedItems.length > 0) {
+            resetSelectedItems();
+        }
+    }, [location.pathname]);
 
     useEffect(() => {
 

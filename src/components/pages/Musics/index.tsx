@@ -31,7 +31,7 @@ function Musics() {
 
     const selectedItems = useSelector(selectSelectedFiles);
     const pageConfig = useSelector(selectPageConfig);
-    const filterField: string = pageConfig ? pageConfig.orderBy : 'name';
+    const filterField: string = pageConfig?.musicsOrderBy ? pageConfig.musicsOrderBy : 'name';
     const listItems = useSelector(selectMedias);
     const playerConfig = useSelector(selectPlayerConfig);
     const musics = (listItems.filter(item => item.type === 'music')).sort((a, b) => sortAsc(((a as any)[filterField] || '').toLocaleLowerCase(), ((b as any)[filterField] || '').toLocaleLowerCase()));
@@ -92,11 +92,11 @@ function Musics() {
         }
     };
 
-    const handleChangeOrderBy = async (e: React.ChangeEvent<any>) => {
+    const handleChangemusicsOrderBy = async (e: React.ChangeEvent<any>) => {
 
         const value = e.currentTarget.value;
-        dispatch(setPageConfig({ orderBy: value }));
-        await getPageService().setPageConfig({ orderBy: value });
+        dispatch(setPageConfig({ musicsOrderBy: value }));
+        await getPageService().setPageConfig({ musicsOrderBy: value });
         setLastSeparatorInvisible(createLastSeparator());
     };
 
@@ -111,7 +111,7 @@ function Musics() {
 
     const mapSeparatorByFilter = (filter: string) => {
 
-        if (!filter) return mapOrderBy(filterField) + ' desconhecido';
+        if (!filter) return mapmusicsOrderBy(filterField) + ' desconhecido';
 
         return filter;
     };
@@ -133,38 +133,38 @@ function Musics() {
                     <Button onClick={ handleShuffle } className="btn--primary c-button--no-media-style" label="Ordem aleatória e reproduzir" icon={faShuffle} title={ document.body.clientWidth <= 655 ? 'Ordem aleatória e reproduzir' : ''}/>
                     <div className="c-container__content__title__actions">
 
-                        <Popup keepTooltipInside arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">{mapOrderBy(filterField)}</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
+                        <Popup keepTooltipInside arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">{mapmusicsOrderBy(filterField)}</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
                             <div  className="c-popup noselect" style={{ minWidth: '130px' }}>
-                                <div className={'c-popup__item  c-popup__item--row' + (pageConfig.orderBy === 'name' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
-                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="name"/>
+                                <div className={'c-popup__item  c-popup__item--row' + (pageConfig.musicsOrderBy === 'name' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangemusicsOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="name"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">A - Z</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'author' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
-                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="author"/>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.musicsOrderBy === 'author' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangemusicsOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="author"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">Artista</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'album' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
-                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="album"/>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.musicsOrderBy === 'album' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangemusicsOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="album"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">Álbum</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'genre' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
-                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="genre"/>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.musicsOrderBy === 'genre' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangemusicsOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="genre"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">Gênero</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.orderBy === 'releaseDate' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
-                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="releaseDate"/>
+                                <div className={'c-popup__item c-popup__item--row' + (pageConfig.musicsOrderBy === 'releaseDate' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangemusicsOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="releaseDate"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">Ano de lançamento</h3>
                                     </div>
@@ -226,13 +226,13 @@ function Musics() {
     );
 }
 
-function mapOrderBy(orderBy: string) {
+function mapmusicsOrderBy(musicsOrderBy: string) {
 
-    if (orderBy === 'name') return 'A - Z';
-    if (orderBy === 'author') return 'Artista';
-    if (orderBy === 'album') return 'Álbum';
-    if (orderBy === 'genre') return 'Gênero';
-    if (orderBy === 'releaseDate') return 'Ano de lançamento';
+    if (musicsOrderBy === 'name') return 'A - Z';
+    if (musicsOrderBy === 'author') return 'Artista';
+    if (musicsOrderBy === 'album') return 'Álbum';
+    if (musicsOrderBy === 'genre') return 'Gênero';
+    if (musicsOrderBy === 'releaseDate') return 'Ano de lançamento';
 
     return 'Aleatório';
 }
@@ -261,7 +261,7 @@ function createSeparators(listItems: Media[], filterField: string) {
                 separator = item[filterField];
             }
             else {
-                separator = mapOrderBy(filterField) + ' desconhecido';
+                separator = mapmusicsOrderBy(filterField) + ' desconhecido';
             }
         }
 

@@ -5,7 +5,8 @@ const pageConfigSlice = createSlice({
     name: 'pageConfig',
     initialState: {
         config: {
-           orderBy: 'name',
+           musicsOrderBy: 'name',
+           videosOrderBy: 'name',
         } as pageConfig,
     },
     reducers: {
@@ -22,7 +23,8 @@ export const { setPageConfig } = pageConfigSlice.actions;
 export const selectPageConfig = (state: RootState) => state.pageConfig.config;
 
 export type pageConfig = {
-    orderBy: string;
+    musicsOrderBy?: string;
+    videosOrderBy?: string;
 };
 
 export default pageConfigSlice.reducer;

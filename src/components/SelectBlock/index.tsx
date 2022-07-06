@@ -104,7 +104,7 @@ function SelectBlock(props: SelectBlockProps) {
         }
 
         dispatch(setCurrentMedias(nextMedias));
-        if (nextMedias.length === 1) {
+        if (!mediaPlaying) {
             dispatch(setMediaPlaying(nextMedias[0]));
         }
 

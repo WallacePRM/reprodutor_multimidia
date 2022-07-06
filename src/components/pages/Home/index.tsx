@@ -48,13 +48,13 @@ function Home() {
 
     const handleSelectFile = async (e: React.ChangeEvent<any>) => {
 
+        popupRef.current.close();
+
         const input = e.currentTarget;
         const fileList = input.files || [];
 
         const medias = await getMediaService().insertMedias(fileList);
         dispatch(setMedias(listItems.concat(medias)));
-
-        popupRef.current.close();
     };
 
     const handleSelectMedia = (file: Media) => {

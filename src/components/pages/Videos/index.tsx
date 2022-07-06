@@ -11,8 +11,6 @@ import { setCurrentMedias } from "../../../store/player";
 import { Media } from "../../../service/media/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { convertMediaType, removeExtension } from "../../../common/string";
-import { fileToDataUrl } from "../../../common/blob";
 import { getMediaService } from "../../../service/media";
 import { selectMediaPlaying, setMediaPlaying } from "../../../store/mediaPlaying";
 import { setPlayerMode } from "../../../store/playerMode";
@@ -23,15 +21,18 @@ import Popup from "reactjs-popup";
 import { useRef } from "react";
 import SelectBlock from "../../SelectBlock";
 import { selectSelectedFiles } from "../../../store/selectedFiles";
+import { selectPageConfig, setPageConfig } from "../../../store/pageConfig";
+import { getPageService } from "../../../service/page";
 
 import './index.css';
 
 function Videos() {
 
-    const filterField = 'name';
     const selectedItems = useSelector(selectSelectedFiles);
     const listItems = useSelector(selectMedias);
-    const videoList = listItems.filter(item => item.type === 'video').sort((a, b) => sortAsc((a as any)[filterField].toLocaleLowerCase(), (b as any)[filterField].toLocaleLowerCase()));
+    const pageConfig = useSelector(selectPageConfig);
+    const filterField = pageConfig?.videosOrderBy ? pageConfig.videosOrderBy : 'name';
+    const videoList = getVideosFromMedias(listItems, filterField);
     const files: any[] = [];
     const mediaPlaying = useSelector(selectMediaPlaying);
     const popupRef: any = useRef();
@@ -66,6 +67,13 @@ function Videos() {
         }
     };
 
+    const handleChangeOrderBy = async (e: React.ChangeEvent<any>) => {
+
+        const value = e.currentTarget.value;
+        dispatch(setPageConfig({ videosOrderBy: value }));
+        await getPageService().setPageConfig({ videosOrderBy: value });
+    };
+
     return (
         <div className="c-page c-videos">
             <div className="c-container__header">
@@ -79,20 +87,17 @@ function Videos() {
             <Opacity cssAnimation={["opacity"]} className="c-container__content__title">
                 <div className="d-flex a-items-center">
                     <div className="c-container__content__title__actions">
-                        {/* <div className="c-container__content__title__actions__item box-field box-field--transparent">
-                            <label>Ordernar por: <span className="accent--color">A - Z</span></label>
-                            <FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} />
-                        </div> */}
-
-                        <Popup keepTooltipInside arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">A - Z</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
+                        <Popup keepTooltipInside arrow={false} mouseLeaveDelay={300} mouseEnterDelay={0} ref={popupRef} trigger={<div className="c-container__content__title__actions__item box-field box-field--transparent"><label>Ordernar por: <span className="accent--color">{mapvideosOrderBy(filterField)}</span></label><FontAwesomeIcon className="box-field__icon ml-10" icon={faChevronDown} /></div>} position="bottom right" >
                             <div  className="c-popup noselect" style={{ minWidth: '130px' }}>
-                                <div className="c-popup__item c-popup__item--active c-popup__item--row" onClick={closeTooltip}>
+                                <div className={'c-popup__item  c-popup__item--row' + (pageConfig.videosOrderBy === 'name' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onChange={() => {}} onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" type="text" defaultValue="name"/>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">A - Z</h3>
                                     </div>
                                     <div className="highlighter"></div>
                                 </div>
-                                <div className="c-popup__item c-popup__item--row" onClick={closeTooltip}>
+                                <div onChange={() => {}} className={'c-popup__item  c-popup__item--row' + (pageConfig.videosOrderBy === 'releaseDate' ? ' c-popup__item--active' : '')} onClick={closeTooltip}>
+                                    <input onClick={handleChangeOrderBy} className="c-popup__item__button-hidden" value="releaseDate"></input>
                                     <div className="c-popup__item__label">
                                         <h3 className="c-popup__item__title">Data de modificação</h3>
                                     </div>
@@ -127,5 +132,33 @@ function Videos() {
         </div>
     );
 }
+
+const getVideosFromMedias = (list: Media[], filterField: string) => {
+
+    const videos = list.filter(item => item.type === 'video');
+    videos.sort((a, b) => {
+
+        let aValue = (a as any)[filterField].toLocaleLowerCase();
+        let bValue = (b as any)[filterField].toLocaleLowerCase();
+
+        if (filterField === 'releaseDate') {
+            aValue = new Date(aValue);
+            bValue = new Date(bValue);
+        }
+
+        return sortAsc(aValue, bValue);
+    });
+
+    return videos;
+};
+
+const mapvideosOrderBy = (videosOrderBy: string) => {
+
+    if (videosOrderBy === 'name') return 'A - Z';
+    if (videosOrderBy === 'releaseDate') return 'Data de modificação';
+
+    return 'Aleatório';
+};
+
 
 export default Videos;
