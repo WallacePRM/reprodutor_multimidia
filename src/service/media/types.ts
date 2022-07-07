@@ -11,3 +11,8 @@ export type Media = {
     isPlaying: boolean,
     releaseDate: string,
 };
+
+export type GetMediasOptions = {
+    offSet: number,
+    limit: number
+};

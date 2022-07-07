@@ -1,13 +1,13 @@
 import { MediaService } from ".";
-import { Media } from "./types";
+import { GetMediasOptions, Media } from "./types";
 
 export const urlBase = window.location.hostname === 'localhost' ? 'http://localhost:5004' : 'https://api.media.com';
 
 export class ApiMediaService implements MediaService {
 
-    public async getMedias(options: { type: string; }): Promise<Media[]> {
+    public async getMedias(options: GetMediasOptions): Promise<Media[]> {
 
-        const response = await fetch(urlBase + '/medias', {
+        const response = await fetch(urlBase + `/medias?offset=${options.offSet || 0}&limit=${options.limit || 50}`, {
             headers: {
                 'Content-Type': 'application/json',
             }

@@ -23,11 +23,15 @@ import { setPlayerState } from '../../store/playerState';
 import { setPlayerConfig } from '../../store/playerConfig';
 import { setPageConfig } from '../../store/pageConfig';
 import { selectSelectedFiles, setSelectedFiles } from '../../store/selectedFiles';
+import Load from '../Load';
+import { Media } from '../../service/media/types';
 
 function Main(props: MainProps) {
 
+    const [ preLoad, setPreLoad ] = useState(true);
+    const [ load, setLoad ] = useState(false);
+
     const [windowFocused] = props.windowState;
-    const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
     const containerMargin = useSelector(selectContainerMargin);
     const selectedItems = useSelector(selectSelectedFiles);
@@ -45,10 +49,10 @@ function Main(props: MainProps) {
     }, []);
 
     useEffect(() => {
-
+        console.log('medias');
         if (listItems.length > 0) {
             setTimeout(() => {
-                setIsLoading(false);
+                setPreLoad(false);
             }, 1000);
 
             return;
@@ -57,13 +61,27 @@ function Main(props: MainProps) {
         const getMedias = async () => {
 
             try {
-                const result = await getMediaService().getMedias();
-                dispatch(setMedias(result));
+                const mediasOptions = {
+                    offSet: 0,
+                    limit: 20,
+                };
+
+                let medias: Media[] = [];
+                while(true) {
+                    const result = await getMediaService().getMedias(mediasOptions);
+                    medias = medias.concat(result);
+                    mediasOptions.offSet += mediasOptions.limit;
+
+                    if (result.length === 0) {
+                        break;
+                    }
+                }
+
+                dispatch(setMedias(medias));
 
                 const playerService = getPlayerService();
                 const playerState = await playerService.getLastMedia();
                 const playerConfig = await playerService.getPlayerConfig();
-
                 const pageConfig = await getPageService().getPageConfig();
 
                 if (pageConfig) {
@@ -77,12 +95,12 @@ function Main(props: MainProps) {
                 if (playerState) {
                     dispatch(setPlayerState(playerState));
 
-                    const media = result.find(item => item.id === playerState.file_id) || null;
+                    const media = medias.find(item => item.id === playerState.file_id) || null;
                     dispatch(setCurrentMedias(media ? [media] : null));
                     dispatch(setMediaPlaying(media));
                 }
 
-                setIsLoading(false);
+                setPreLoad(false);
             }
             catch (error) {
                 console.log(error);
@@ -111,12 +129,15 @@ function Main(props: MainProps) {
 
             const lastRoute = location.pathname;
             localStorage.setItem('lastRoute', lastRoute);
+
+            // setLoad(true);
+            // setTimeout(() => setLoad(false), 200);
         };
 
         setDefaultRoute();
     }, [location]);
 
-    if (isLoading) {
+    if (preLoad) {
         return <PreLoad />
     }
     return (
@@ -137,7 +158,10 @@ function Main(props: MainProps) {
                         </div> : null}
                     <div className="c-container__pages">
                         <AnimatePresence>
-                            <Outlet />
+                            { load ?
+                                <Load /> :
+                                <Outlet />
+                            }
                         </AnimatePresence>
                     </div>
                 </div>

@@ -149,13 +149,12 @@ function SelectBlock(props: SelectBlockProps) {
                     <PencilIcon className="c-button__icon mr-5"/>
                     <span className="c-button__label">Editar informações</span>
                 </button>}
-                {containerWidth > 1150 && selectedItems.length === 1 ? <button className="c-select-block__actions__item c-button box-field ">
+                {containerWidth > 1150 && selectedItems.length === 1 && <button className="c-select-block__actions__item c-button box-field ">
                     <InfoAltIcon className="c-button__icon mr-5"/>
                     <span className="c-button__label">Propriedades</span>
-                </button>
-                :
+                </button>}
 
-                <Popup onOpen={e => e?.stopPropagation()} keepTooltipInside arrow={false} ref={popupRef} trigger={ <button className="c-select-block__actions__item c-button box-field ml-10">
+                {(containerWidth < 1150 && selectedItems.length === 1 || containerWidth < 910 && selectedItems.length > 1) && <Popup onOpen={e => e?.stopPropagation()} keepTooltipInside arrow={false} ref={popupRef} trigger={ <button className="c-select-block__actions__item c-button box-field ml-10">
                     <FontAwesomeIcon icon={faEllipsis} className="c-button__icon icon-color"/>
                     </button>} position="top center">
                     <Margin cssAnimation={["marginTop"]} className="c-popup noselect" style={{ minWidth: '200px' }}>
@@ -205,8 +204,7 @@ function SelectBlock(props: SelectBlockProps) {
                             </div>
                         </div>}
                     </Margin>
-                </Popup>
-                }
+                </Popup>}
             </div>
         </div>
     );

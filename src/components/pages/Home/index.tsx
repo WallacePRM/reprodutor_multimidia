@@ -5,7 +5,6 @@ import Button from "../../Button";
 import EmptyMessage from "../../EmptyMessage";
 import emptyMessageIcon from '../../../assets/img/men-headset.svg';
 import GridItem from '../../List/GridItem';
-
 import { useDispatch, useSelector } from "react-redux";
 import { getMediaService } from "../../../service/media";
 import { selectMedias, setMedias } from "../../../store/medias";
@@ -24,7 +23,6 @@ import TranformOpacity from "../../Animations/TransformOpacity";
 import { validateUrl } from "../../../common/async";
 import SelectBlock from "../../SelectBlock";
 import { selectSelectedFiles } from "../../../store/selectedFiles";
-import { useLocation } from "react-router-dom";
 
 function Home() {
 
@@ -36,15 +34,21 @@ function Home() {
     const selectedItems = useSelector(selectSelectedFiles);
     const itemIndex = listItems.findIndex(item => item.id === mediaPlaying?.id);
     let recentMedias: any[] = [...listItems];
-    const dispatch = useDispatch();
-
     const popupRef: any = useRef();
-    const closeTooltip = () => setTimeout(() => popupRef.current && popupRef.current.close(), 0);
     const modalRef: any = useRef();
+    const urlRef: any = useRef(null);
+    const closeTooltip = () => setTimeout(() => popupRef.current && popupRef.current.close(), 0);
     const closeModalTooltip = () => modalRef.current && modalRef.current.close();
     const openModalTooltip = () => modalRef.current && modalRef.current.open();
+    const dispatch = useDispatch();
 
-    const urlRef: any = useRef(null);
+    const mapUrlType = (type: string) => {
+
+        if (type === 'video')  return 'Vídeo(s)';
+        if (type === 'music')  return 'Música(s)';
+
+        return 'Arquivo(s)';
+    };
 
     const handleSelectFile = async (e: React.ChangeEvent<any>) => {
 
@@ -107,14 +111,6 @@ function Home() {
 
         const url = (e.currentTarget as any).value;
         setUrlValidate(validateUrl(url));
-    };
-
-    const mapUrlType = (type: string) => {
-
-        if (type === 'video')  return 'Vídeo(s)';
-        if (type === 'music')  return 'Música(s)';
-
-        return 'Arquivo(s)';
     };
 
     useEffect(() => {

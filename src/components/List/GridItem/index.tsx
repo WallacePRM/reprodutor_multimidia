@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import { faFolderClosed } from "@fortawesome/free-regular-svg-icons";
 import { faBars,faChevronRight, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -25,9 +26,9 @@ import { selectCurrentMedias, setCurrentMedias } from "../../../store/player";
 import { ApiMediaService } from "../../../service/media/api-media-service";
 import { selectMedias, setMedias } from "../../../store/medias";
 import { removeSelectedFile, selectSelectedFiles, setSelectedFile } from "../../../store/selectedFiles";
+import { setMediaPlaying } from "../../../store/mediaPlaying";
 
 import './index.css';
-import { setMediaPlaying } from "../../../store/mediaPlaying";
 
 function GridItem(props: FileProps) {
 
@@ -139,7 +140,7 @@ function GridItem(props: FileProps) {
                 <div className="c-grid-list__item__thumbnail" style={ !file.thumbnail ? { border: '1px solid rgb(var(--border-color--dark), .1)'} : {}}>
                     { file.thumbnail ?
                         <div className="h-100 w-100">
-                            <img src={file.thumbnail} />
+                            <LazyLoadImage src={file.thumbnail}/>
                         </div> :
                         <div className="c-grid-list__item__icon">
                             { file.type === 'folder' ?

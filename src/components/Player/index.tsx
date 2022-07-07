@@ -38,7 +38,6 @@ import { Media } from '../../service/media/types';
 let timeoutId: any;
 function Player() {
 
-    const dispatch = useDispatch();
     const [ playerHidden, setPlayerHidden ] = useState(false);
 
     const playerService = getPlayerService();
@@ -50,6 +49,8 @@ function Player() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const currentMediasRef = useRef<Media[] | null>();
     currentMediasRef.current = currentMedias;
+    const refLastFileId = useRef<number>();
+    (window as any).audio = mediaRef;
 
     let playerState = useSelector(selectPlayerState);
     let currentTimePorcents = 0;
@@ -65,6 +66,7 @@ function Player() {
     const lastMedia = currentMedias && currentMedias[currentMedias.length - 1];
     const popupRef: any = useRef();
     const closeTooltip = () => popupRef.current && popupRef.current.close();
+    const dispatch = useDispatch();
     const coverStyle = {
         border: '1px solid rgb(var(--border-color--dark), 0.1)',
         borderRadius: '.3rem',
@@ -72,6 +74,46 @@ function Player() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+    };
+
+    const toggleMouseView = (e: any) => {
+
+        e.stopPropagation();
+        clearTimeout(timeoutId);
+
+        if (playerMode === 'full') {
+
+            document.body.style.cursor = "default";
+            playerHidden && setPlayerHidden(false);
+
+            timeoutId = setTimeout(() => {
+                if (mediaRef.current?.paused === false && playerMode === 'full') {
+                    setPlayerHidden(true);
+                    document.body.style.cursor = "none";
+                }
+            }, 3500);
+        }
+    };
+
+    const mapRepeatMode = (mode: string | boolean) => {
+
+        if (mode === 'all') {
+            return 'Tudo';
+        }
+
+        if (mode === 'once') {
+            return 'Um';
+        }
+
+        return 'Desativado';
+    };
+
+    const setPlayerVisible = () => {
+
+        if (file && file.type === 'video') {
+            clearTimeout(timeoutId);
+            document.body.style.cursor = "default";
+        }
     };
 
     const handlePlayPause = () => {
@@ -221,38 +263,6 @@ function Player() {
         }
     };
 
-    const toggleMouseView = (e: any) => {
-
-        e.stopPropagation();
-        clearTimeout(timeoutId);
-
-        if (playerMode === 'full') {
-
-            document.body.style.cursor = "default";
-            playerHidden && setPlayerHidden(false);
-
-            timeoutId = setTimeout(() => {
-                if (mediaRef.current?.paused === false && playerMode === 'full') {
-                    setPlayerHidden(true);
-                    document.body.style.cursor = "none";
-                }
-            }, 3500);
-        }
-    };
-
-    const mapRepeatMode = (mode: string | boolean) => {
-
-        if (mode === 'all') {
-            return 'Tudo';
-        }
-
-        if (mode === 'once') {
-            return 'Um';
-        }
-
-        return 'Desativado';
-    };
-
     const handleChangeVolume = async (e: any) => {
 
         const newVolume = e.target.value / 100;
@@ -296,16 +306,6 @@ function Player() {
         await playerService.setPlayerConfig({ playbackRate: newRate });
     };
 
-    const setPlayerVisible = () => {
-
-        if (file && file.type === 'video') {
-            clearTimeout(timeoutId);
-            document.body.style.cursor = "default";
-        }
-    };
-
-    const refLastFileId = useRef<number>();
-    (window as any).audio = mediaRef;
     useEffect(() => {
         if (file) {
 
