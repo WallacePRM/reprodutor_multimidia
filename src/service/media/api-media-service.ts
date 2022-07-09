@@ -1,7 +1,7 @@
 import { MediaService } from ".";
 import { GetMediasOptions, Media } from "./types";
 
-export const urlBase = window.location.hostname === 'localhost' ? 'http://localhost:5004' : 'https://api.media.com';
+export const urlBase = window.location.hostname === 'localhost' ? 'http://localhost:5004' : 'https://reprodutor-multimidia-api.azurewebsites.net';
 
 export class ApiMediaService implements MediaService {
 
