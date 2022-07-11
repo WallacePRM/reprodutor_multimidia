@@ -19,7 +19,7 @@ import { getPlayerService } from '../../service/player';
 import { getPageService } from '../../service/page';
 import { setMediaPlaying } from '../../store/mediaPlaying';
 import { setCurrentMedias } from '../../store/player';
-import { setPlayerState } from '../../store/playerState';
+import { PlayerState, setPlayerState } from '../../store/playerState';
 import { setPlayerConfig } from '../../store/playerConfig';
 import { setPageConfig } from '../../store/pageConfig';
 import { selectSelectedFiles, setSelectedFiles } from '../../store/selectedFiles';
@@ -36,7 +36,16 @@ function Main(props: MainProps) {
     const containerMargin = useSelector(selectContainerMargin);
     const selectedItems = useSelector(selectSelectedFiles);
     const listItems = useSelector(selectMedias);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+
+        if (!localStorage.getItem('lastRoute') || window.location.pathname === '/') {
+            navigate('/home');
+        }
+
+    }, []);
 
     useEffect(() => {
 
@@ -49,7 +58,6 @@ function Main(props: MainProps) {
     }, []);
 
     useEffect(() => {
-        console.log('medias');
         if (listItems.length > 0) {
             setTimeout(() => {
                 setPreLoad(false);
@@ -93,6 +101,7 @@ function Main(props: MainProps) {
                 }
 
                 if (playerState) {
+                    playerState.first_load = true;
                     dispatch(setPlayerState(playerState));
 
                     const media = medias.find(item => item.id === playerState.file_id) || null;

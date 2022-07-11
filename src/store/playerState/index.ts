@@ -6,7 +6,8 @@ const playerStateSlice = createSlice({
     initialState: {
       currentState: {
         duration: 0,
-        currentTime: 0
+        currentTime: 0,
+        first_load: false,
       } as PlayerState,
     },
     reducers: {
@@ -25,7 +26,8 @@ export const selectPlayerState = (state: RootState) => state.playerState.current
 export type PlayerState = {
   file_id: number,
   duration: number,
-  currentTime: number
+  currentTime: number,
+  first_load?: boolean,
 };
 
 export default playerStateSlice.reducer;

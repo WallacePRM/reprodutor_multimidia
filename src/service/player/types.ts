@@ -3,6 +3,7 @@ export type LastMedia = {
     file_id?: number;
     duration?: number;
     currentTime?: number;
+    first_load?: boolean;
 };
 
 export type PlayerConfig = {

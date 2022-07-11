@@ -34,11 +34,13 @@ import { selectPlayerState, setPlayerState } from '../../store/playerState';
 
 import './index.css';
 import { Media } from '../../service/media/types';
+import Load from '../Load';
 
 let timeoutId: any;
 function Player() {
 
     const [ playerHidden, setPlayerHidden ] = useState(false);
+    const [ mediaLoad, setMediaLoad ] = useState(false);
 
     const playerService = getPlayerService();
     const playerConfig = useSelector(selectPlayerConfig);
@@ -49,6 +51,8 @@ function Player() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const currentMediasRef = useRef<Media[] | null>();
     currentMediasRef.current = currentMedias;
+    const mediaLoadRef = useRef<boolean>();
+    mediaLoadRef.current = mediaLoad;
     const refLastFileId = useRef<number>();
     (window as any).audio = mediaRef;
 
@@ -73,7 +77,7 @@ function Player() {
         backgroundColor: 'rgb(var(--bg-color--light))',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     };
 
     const toggleMouseView = (e: any) => {
@@ -126,12 +130,6 @@ function Player() {
         }
         else {
             mediaRef.current.pause();
-            const newFile = {
-                ...file,
-                isPlaying: false,
-            };
-
-            dispatch(setMediaPlaying(newFile));
         }
     };
 
@@ -332,12 +330,13 @@ function Player() {
                         file_id: file.id,
                         duration: mediaRef.current?.duration || 0,
                         currentTime: mediaRef.current?.currentTime || 0,
+                        first_load: false,
                     };
 
                     await playerService.setLastMedia(newLastMedia);
                     dispatch(setPlayerState(newLastMedia));
 
-                    if (CheckInteraction.getInstance().hasInteraction()) {
+                    if (playerState.first_load !== true) {
                         mediaRef.current?.play();
                     }
 
@@ -349,6 +348,10 @@ function Player() {
                 await playerService.setLastMedia(newLastMedia);
                 dispatch(setPlayerState(newLastMedia));
 
+            });
+            mediaRef.current.addEventListener('waiting', () => {
+
+                if (mediaLoadRef.current === false) setMediaLoad(true);
             });
             mediaRef.current.addEventListener('ended', async () => {
 
@@ -400,6 +403,18 @@ function Player() {
                     isPlaying: true,
                 };
                 dispatch(setMediaPlaying(newFile));
+
+                if (mediaLoadRef.current) setMediaLoad(false);
+            });
+            mediaRef.current.addEventListener('pause', () => {
+
+                const newFile = {
+                    ...file,
+                    isPlaying: false,
+                };
+                dispatch(setMediaPlaying(newFile));
+
+                if (mediaLoadRef.current) setMediaLoad(false);
             });
             mediaRef.current.addEventListener('error', () => {
 
@@ -425,7 +440,7 @@ function Player() {
     }, [file?.id]);
 
     let videoComponent = ReactDOM.createPortal(
-        <Opacity cssAnimation={["opacity"]}>
+        <Opacity cssAnimation={["opacity"]} >
             <div onClick={(e) => e.stopPropagation()} className={'c-player-fullscreen__header' + (playerHidden ? ' c-player-fullscreen__header--hidden' : '')} style={{ display: playerMode === 'full' ? undefined : 'none', backgroundColor: 'rgb(24, 24 , 24, .7)' }}>
                 <PreviousRouter className="c-player-fullscreen__icon"  onClick={ () => {dispatch(setPlayerMode('default')); clearInterval(timeoutId);} } title="Voltar"/>
                 <Logo className="c-player-fullscreen__logo ml-10"/>
@@ -433,6 +448,7 @@ function Player() {
             <video key={file?.src} ref={ videoRef } id="player-video" typeof="video/mp4" onClick={handleToggleVideoInterface} onMouseMove={toggleMouseView} className={'c-player__file__cover c-player__file__cover--video' + (playerMode === 'full' ? ' video-full-mode' : ' video-default-mode')}>
                 <source src={file?.src} typeof="video/mp4"/>
             </video>
+
         </Opacity>, document.getElementById('video-container')!
     );
 
@@ -440,9 +456,8 @@ function Player() {
         <Opacity cssAnimation={["opacity"]} className={'c-player__file__cover' + (playerMode === 'full' ? ' c-player__file__cover--music' : '')} style={ file && !file?.thumbnail ? coverStyle : {} }>
             { file?.thumbnail && <img src={file?.thumbnail}/> }
             { !file?.thumbnail && file?.type === 'folder' &&
-            <><FontAwesomeIcon className="c-grid-list__item__icon__folder" icon={faFolderClosed} />
-            <FontAwesomeIcon className="c-grid-list__item__icon__list" icon={faBars}/></> }
-
+                <><FontAwesomeIcon className="c-grid-list__item__icon__folder" icon={faFolderClosed} />
+                <FontAwesomeIcon className="c-grid-list__item__icon__list" icon={faBars}/></> }
             { !file?.thumbnail && file?.type === 'music' && <MusicAlt className="icon-color--light" style={{ height: '1.5rem', width: '1.5rem' }}/>}
         </Opacity>
     );
@@ -468,6 +483,7 @@ function Player() {
         (playerMode === 'full' && file?.type === 'video' ? ' c-player--full-mode-video theme--dark' : '') +
         (playerMode === 'full' && file?.type === 'music' ? ' c-player--full-mode-music' : '') +
         (!file ? ' c-player--disabled ' : '')}>
+            {mediaLoad && <Load />}
             <div className="c-player__progress">
                 <span className="c-player__progress__time">{playerState ? formatHHMMSS(playerState.currentTime) : '00:00:00'}</span>
                 <Slider className="c-player__progress__bar" onChange={handleChangeFileCurrentTime} data={ {value: currentTimePorcents, min: 0, max: 100} } style={!file ? {filter: 'grayscale(1)'} : {}} />

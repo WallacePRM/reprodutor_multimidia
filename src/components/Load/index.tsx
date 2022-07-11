@@ -4,7 +4,7 @@ import './index.css';
 
 function Load() {
     return (
-        <div className="c-load-container">
+        <div onClick={e => e.stopPropagation()} className="c-load-container">
             <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
         </div>
     );
